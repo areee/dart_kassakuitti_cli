@@ -1,0 +1,10 @@
+# Files and directories created by pub.
+.dart_tool/
+.packages
+
+# Conventional directory for build output.
+build/
+
+# For privacy reasons, do not save cash receipt (txt and final csv) into Git.
+*.txt
+*.csv
