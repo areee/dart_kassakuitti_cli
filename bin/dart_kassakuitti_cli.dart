@@ -4,7 +4,7 @@ import 'product.dart';
 
 void main(List<String> arguments) {
   var lines = readFile('cashReceipt.txt');
-  var products = strings4Products(lines ?? []);
+  var products = strings2Products(lines ?? []);
 
   // Save products into CSV file
   saveProducts(products);
@@ -21,7 +21,7 @@ List<String>? readFile(String fileName) {
 }
 
 /// Goes through the list of lines and returns a list of products.
-List<Product> strings4Products(List<String> lines) {
+List<Product> strings2Products(List<String> lines) {
   var helper = Helper();
   List<Product> products = [];
 
