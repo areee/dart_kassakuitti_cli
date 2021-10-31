@@ -64,8 +64,8 @@ List<Product> strings2Products(List<String> lines) {
       var name = items[0];
       var price = items[1];
 
-      var a = Product(name: name, totalPrice: price);
-      products.add(a);
+      var product = Product(name: name, totalPrice: price);
+      products.add(product);
     }
   }
 
