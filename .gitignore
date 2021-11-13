@@ -8,3 +8,4 @@ build/
 # For privacy reasons, do not save cash receipt (txt and final csv) into Git.
 *.txt
 *.csv
+*.html

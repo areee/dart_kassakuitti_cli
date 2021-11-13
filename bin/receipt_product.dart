@@ -1,10 +1,10 @@
-class Product {
+class ReceiptProduct {
   final String? name;
   final String? totalPrice;
   int? quantity;
   String? pricePerUnit;
 
-  Product({
+  ReceiptProduct({
     this.name,
     this.totalPrice,
     this.quantity = 1,

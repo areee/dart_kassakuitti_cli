@@ -12,3 +12,9 @@ environment:
 
 dev_dependencies:
   lints: ^1.0.0
+dependencies: 
+  html: ^0.15.0
+  intl: ^0.17.0
+
+assets:
+  - assets/files/

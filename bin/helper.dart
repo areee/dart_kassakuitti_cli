@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class Helper {
   PreviousLine previousLine;
   int calcLines;
@@ -6,3 +8,8 @@ class Helper {
 }
 
 enum PreviousLine { notSet, refund }
+
+/// Formatted date time for file name.
+String formattedDateTime() {
+  return DateFormat('yyyyMMddHHmmss').format(DateTime.now());
+}
