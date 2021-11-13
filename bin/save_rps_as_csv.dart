@@ -2,8 +2,8 @@ import 'dart:io';
 import 'helper.dart';
 import 'receipt_product.dart';
 
-/// Saves products into a CSV file.
-void products2CSV(List<Product> products) {
+/// Saves receipt products as a CSV file.
+void receiptProducts2CSV(List<ReceiptProduct> products) {
   var csv = StringBuffer();
 
   csv.write('name;quantity;pricePerUnit;totalPrice\n');

@@ -2,9 +2,9 @@ import 'helper.dart';
 import 'receipt_product.dart';
 
 /// Goes through the list of lines and returns a list of products.
-List<Product> strings2Products(List<String> lines) {
+List<ReceiptProduct> strings2Products(List<String> lines) {
   var helper = Helper();
-  List<Product> products = [];
+  List<ReceiptProduct> products = [];
 
   for (var item in lines) {
     item = item.trim();
@@ -45,7 +45,7 @@ List<Product> strings2Products(List<String> lines) {
       var name = items[0];
       var price = items[1];
 
-      var product = Product(name: name, totalPrice: price);
+      var product = ReceiptProduct(name: name, totalPrice: price);
       products.add(product);
     }
   }
