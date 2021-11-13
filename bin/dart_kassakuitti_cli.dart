@@ -1,18 +1,21 @@
 import 'dart:io';
 import 'package:intl/intl.dart';
+import 'package:html/parser.dart';
 import 'helper.dart';
 import 'product.dart';
 
 void main(List<String> arguments) {
-  var lines = readFile('assets/files/cashReceipt.txt');
-  var products = strings2Products(lines ?? []);
+  // var lines = _readFile('assets/files/cashReceipt.txt');
+  // var products = _strings2Products(lines ?? []);
+  // _saveProductsIntoCSV(products);
 
-  // Save products into CSV file
-  saveProducts(products);
+  // ^ TODO: Uncomment these lines to run the program.
+
+  _loadHtmlFromAssets();
 }
 
 /// Read a text file and return as a list of lines.
-List<String>? readFile(String fileName) {
+List<String>? _readFile(String fileName) {
   File file = File(fileName);
   try {
     return file.readAsLinesSync();
@@ -22,7 +25,7 @@ List<String>? readFile(String fileName) {
 }
 
 /// Goes through the list of lines and returns a list of products.
-List<Product> strings2Products(List<String> lines) {
+List<Product> _strings2Products(List<String> lines) {
   var helper = Helper();
   List<Product> products = [];
 
@@ -73,7 +76,7 @@ List<Product> strings2Products(List<String> lines) {
   return products;
 }
 
-void saveProducts(List<Product> products) {
+void _saveProductsIntoCSV(List<Product> products) {
   var csv = StringBuffer();
 
   csv.write('name;quantity;pricePerUnit;totalPrice\n');
@@ -87,4 +90,23 @@ void saveProducts(List<Product> products) {
 
   var file = File('assets/files/products_$date.csv');
   file.writeAsString(csv.toString());
+}
+
+/// Loads the HTML file from assets and parses it.
+void _loadHtmlFromAssets() async {
+  var file = File('assets/files/orderedProducts.html');
+  var html = await file.readAsString();
+  var document = parse(html);
+
+  // print(document.outerHtml);
+
+  var responseString = document.getElementsByClassName(
+      'styled-order-page__StyledOrderItemContainer-sc-qzridm-1')[0];
+
+  var children1 = responseString.children[1];
+
+  // TODO: Continue
+  children1.attributes.forEach((key, value) {
+    print('$key: $value');
+  });
 }
