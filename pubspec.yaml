@@ -12,3 +12,5 @@ environment:
 
 dev_dependencies:
   lints: ^1.0.0
+dependencies: 
+  intl: ^0.17.0

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:intl/intl.dart';
 import 'helper.dart';
 import 'product.dart';
 
@@ -82,6 +83,8 @@ void saveProducts(List<Product> products) {
         '${product.name};${product.quantity};${product.pricePerUnit};${product.totalPrice}\n');
   }
 
-  var file = File('products.csv');
+  var date = DateFormat('yyyyMMddHHmmss').format(DateTime.now());
+
+  var file = File('products_$date.csv');
   file.writeAsString(csv.toString());
 }
