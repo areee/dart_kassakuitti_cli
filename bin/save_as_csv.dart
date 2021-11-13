@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:intl/intl.dart';
+import 'helper.dart';
 import 'receipt_product.dart';
 
 /// Saves products into a CSV file.
@@ -13,8 +13,8 @@ void products2CSV(List<Product> products) {
         '${product.name};${product.quantity};${product.pricePerUnit};${product.totalPrice}\n');
   }
 
-  var date = DateFormat('yyyyMMddHHmmss').format(DateTime.now());
+  var date = formattedDateTime();
 
-  var file = File('assets/files/products_$date.csv');
+  var file = File('assets/files/receipt_products_$date.csv');
   file.writeAsString(csv.toString());
 }
