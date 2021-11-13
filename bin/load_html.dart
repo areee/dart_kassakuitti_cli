@@ -31,10 +31,19 @@ Future<List<EANProduct>> loadHtmlFromAssets() async {
       var productQuantity = product.children[0].children[0].children[1]
           .children[1].children[1].children[0].children[0].text;
 
-      eanProducts.add(EANProduct(
+      var productPrice = product.children[0].children[0].children[1].children[1]
+          .children[1].children[1].text
+          .trim();
+      productPrice = productPrice.replaceAll(' €', '');
+
+      eanProducts.add(
+        EANProduct(
           ean: eanCode,
           name: productName,
-          quantity: int.parse(productQuantity)));
+          quantity: int.parse(productQuantity),
+          price: productPrice,
+        ),
+      );
     }
   }
   return eanProducts;
