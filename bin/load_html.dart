@@ -1,13 +1,15 @@
 import 'dart:io';
 import 'package:html/parser.dart';
 
-/// Loads the HTML file from assets and parses it.
-void loadHtmlFromAssets() async {
+import 'ean_product.dart';
+
+/// Loads the HTML file from assets and parses it. Then, it returns a list of EANProduct objects.
+Future<List<EANProduct>> loadHtmlFromAssets() async {
+  List<EANProduct> eanProducts = [];
+
   var file = File('assets/files/orderedProducts.html');
   var html = await file.readAsString();
   var document = parse(html);
-
-  // print(document.outerHtml);
 
   var responseString = document.getElementsByClassName(
       'styled-order-page__StyledOrderItemContainer-sc-qzridm-1')[0];
@@ -16,8 +18,16 @@ void loadHtmlFromAssets() async {
 
   for (var i = 0; i < responseString.children.length; i++) {
     if (i > 0) {
-      var attributes = children[i].attributes;
-      print(attributes['data-product-id']);
+      var product = children[i];
+
+      var eanCode = product.attributes['data-product-id'] ?? '';
+
+      var productName = product
+          .children[0].children[0].children[1].children[0].children[0].text
+          .trim();
+
+      eanProducts.add(EANProduct(ean: eanCode, name: productName));
     }
   }
+  return eanProducts;
 }
