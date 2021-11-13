@@ -25,8 +25,16 @@ Future<List<EANProduct>> loadHtmlFromAssets() async {
       var productName = product
           .children[0].children[0].children[1].children[0].children[0].text
           .trim();
+      productName = productName.replaceAll('\n', '');
+      productName = productName.replaceAll(RegExp(r'\s{30}'), ' ');
 
-      eanProducts.add(EANProduct(ean: eanCode, name: productName));
+      var productQuantity = product.children[0].children[0].children[1]
+          .children[1].children[1].children[0].children[0].text;
+
+      eanProducts.add(EANProduct(
+          ean: eanCode,
+          name: productName,
+          quantity: int.parse(productQuantity)));
     }
   }
   return eanProducts;
