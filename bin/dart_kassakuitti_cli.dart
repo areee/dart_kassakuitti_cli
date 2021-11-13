@@ -4,7 +4,7 @@ import 'helper.dart';
 import 'product.dart';
 
 void main(List<String> arguments) {
-  var lines = readFile('cashReceipt.txt');
+  var lines = readFile('assets/files/cashReceipt.txt');
   var products = strings2Products(lines ?? []);
 
   // Save products into CSV file
@@ -85,6 +85,6 @@ void saveProducts(List<Product> products) {
 
   var date = DateFormat('yyyyMMddHHmmss').format(DateTime.now());
 
-  var file = File('products_$date.csv');
+  var file = File('assets/files/products_$date.csv');
   file.writeAsString(csv.toString());
 }
