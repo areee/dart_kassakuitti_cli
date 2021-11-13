@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:intl/intl.dart';
-import 'product.dart';
+import 'receipt_product.dart';
 
 /// Saves products into a CSV file.
 void products2CSV(List<Product> products) {

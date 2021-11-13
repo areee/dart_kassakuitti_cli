@@ -1,5 +1,5 @@
 import 'helper.dart';
-import 'product.dart';
+import 'receipt_product.dart';
 
 /// Goes through the list of lines and returns a list of products.
 List<Product> strings2Products(List<String> lines) {
