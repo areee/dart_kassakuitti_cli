@@ -103,10 +103,12 @@ void _loadHtmlFromAssets() async {
   var responseString = document.getElementsByClassName(
       'styled-order-page__StyledOrderItemContainer-sc-qzridm-1')[0];
 
-  var children1 = responseString.children[1];
+  var children = responseString.children;
 
-  // TODO: Continue
-  children1.attributes.forEach((key, value) {
-    print('$key: $value');
-  });
+  for (var i = 0; i < responseString.children.length; i++) {
+    if (i > 0) {
+      var attributes = children[i].attributes;
+      print(attributes['data-product-id']);
+    }
+  }
 }
