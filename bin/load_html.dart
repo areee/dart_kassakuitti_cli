@@ -4,10 +4,10 @@ import 'package:html/parser.dart';
 import 'ean_product.dart';
 
 /// Loads the HTML file from assets and parses it. Then, it returns a list of EANProduct objects.
-Future<List<EANProduct>> loadHtmlFromAssets() async {
+Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
   List<EANProduct> eanProducts = [];
 
-  var file = File('assets/files/orderedProducts.html');
+  var file = File(filePath);
   var html = await file.readAsString();
   var document = parse(html);
 
