@@ -30,21 +30,26 @@ List<ReceiptProduct> strings2Products(List<String> lines) {
     // A discount line:
     else if (item.contains('alennus')) {
       var items = item.split(RegExp(r'\s{12,33}'));
-      var price = items[1].replaceAll(RegExp(r'\-'), '');
-
-      price = price.replaceAll(RegExp(r','), '.');
-      var priceAsDouble = double.parse(price);
+      var discountPrice =
+          items[1].replaceAll(RegExp(r'\-'), '').replaceAll(RegExp(r','), '.');
+      var discountPriceAsDouble = double.parse(discountPrice);
 
       var lastProduct = products.last;
-      var normalPrice = lastProduct.totalPrice;
+      var origTotalPrice = lastProduct.totalPrice.replaceAll(RegExp(r','), '.');
+      var origTotalPriceAsDouble = double.parse(origTotalPrice);
 
-      normalPrice = normalPrice.replaceAll(RegExp(r','), '.');
-      var normalPriceAsDouble = double.parse(normalPrice);
-      var discount = normalPriceAsDouble - priceAsDouble;
+      var discountedPrice = origTotalPriceAsDouble - discountPriceAsDouble;
+      var discountedPriceAsString =
+          discountedPrice.toStringAsFixed(2).replaceAll(RegExp(r'\.'), ',');
 
-      var discountAsString = discount.toStringAsFixed(2);
-      discountAsString = discountAsString.replaceAll(RegExp(r'\.'), ',');
-      lastProduct.totalPrice = discountAsString;
+      if (lastProduct.quantity > 1) {
+        var discountedPricePerUnit = (discountedPrice / lastProduct.quantity)
+            .toStringAsFixed(2)
+            .replaceAll(RegExp(r'\.'), ',');
+
+        lastProduct.pricePerUnit = discountedPricePerUnit;
+      }
+      lastProduct.totalPrice = discountedPriceAsString;
       lastProduct.discountCounted = 'yes';
     }
     // If a line starts with a digit, it is a quantity and price per unit row:
