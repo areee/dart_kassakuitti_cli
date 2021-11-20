@@ -27,6 +27,26 @@ List<ReceiptProduct> strings2Products(List<String> lines) {
         helper.previousLine = PreviousLine.notSet;
       }
     }
+    // A discount line:
+    else if (item.contains('alennus')) {
+      var items = item.split(RegExp(r'\s{12,33}'));
+      var price = items[1].replaceAll(RegExp(r'\-'), '');
+
+      price = price.replaceAll(RegExp(r','), '.');
+      var priceAsDouble = double.parse(price);
+
+      var lastProduct = products.last;
+      var normalPrice = lastProduct.totalPrice;
+
+      normalPrice = normalPrice.replaceAll(RegExp(r','), '.');
+      var normalPriceAsDouble = double.parse(normalPrice);
+      var discount = normalPriceAsDouble - priceAsDouble;
+
+      var discountAsString = discount.toStringAsFixed(2);
+      discountAsString = discountAsString.replaceAll(RegExp(r'\.'), ',');
+      lastProduct.totalPrice = discountAsString;
+      lastProduct.discountCounted = 'yes';
+    }
     // If a line starts with a digit, it is a quantity and price per unit row:
     else if (item.contains(RegExp(r'^\d'))) {
       var items = item.split(RegExp(r'\s{6,7}'));
