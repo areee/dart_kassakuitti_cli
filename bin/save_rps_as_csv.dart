@@ -6,11 +6,11 @@ import 'receipt_product.dart';
 void receiptProducts2CSV(List<ReceiptProduct> products) {
   var csv = StringBuffer();
 
-  csv.write('name;quantity;pricePerUnit;totalPrice\n');
+  csv.write('Name;Quantity;Price per unit;Total price;Discount counted\n');
 
   for (var product in products) {
     csv.write(
-        '${product.name};${product.quantity};${product.pricePerUnit};${product.totalPrice}\n');
+        '${product.name};${product.quantity};${product.pricePerUnit};${product.totalPrice};${product.discountCounted}\n');
   }
 
   var date = formattedDateTime();
