@@ -4,7 +4,7 @@ import 'shop_selector_helper.dart';
 
 void main(List<String> arguments) {
   const shopSelector =
-      ShopSelector.kRuoka; // TODO: make this a command line argument
+      ShopSelector.sKaupat; // TODO: make this a command line argument
 
   if (shopSelector == ShopSelector.sKaupat) {
     readReceiptAndSaveAsCSV('assets/files/_cashReceipt.txt');
