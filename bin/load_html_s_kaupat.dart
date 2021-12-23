@@ -40,7 +40,8 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
         EANProduct(
           ean: eanCode,
           name: productName,
-          quantity: int.parse(productQuantity),
+          quantity: double.parse(productQuantity)
+              .ceil(), // e.g. 0.2 -> 1 (round up) or 0.5 -> 1 (round up)
           price: productPrice,
         ),
       );
