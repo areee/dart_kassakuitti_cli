@@ -19,14 +19,12 @@ void main(List<String> arguments) {
       abbr: 't',
       help: 'Text file (cash receipt) to read',
       defaultsTo: 'assets/files/_cashReceipt.txt',
-      callback: (text) => print('- Path to the cash receipt:\t\t$text'),
     )
     ..addOption(
       htmlFile,
       abbr: 'h',
       help: 'HTML (EAN products) file to read',
       defaultsTo: 'assets/files/_orderedProducts_S-kaupat.html',
-      callback: (html) => print('- Path to the EAN products file:\t$html'),
     )
     ..addOption(
       foodOnlineStore,
@@ -35,38 +33,35 @@ void main(List<String> arguments) {
           'Food online store. Allowed values: ${ShopSelector.values.join(', ')}',
       defaultsTo: 'S-kaupat',
       allowed: ['S-kaupat', 'K-ruoka'],
-      callback: (store) => print('- Selected store:\t\t\t$store'),
     )
     ..addCommand(helpCommand);
-  print('Selected values:');
 
   var argResults = parser.parse(arguments);
 
   if (argResults.command?.name == helpCommand) {
-    print('\nHelp:');
+    print('Help:');
     print(parser.usage);
     return;
   } else {
+    var selectedTextFile = argResults[textFile] as String;
+    var selectedHtmlFile = argResults[htmlFile] as String;
     var selectedStore = argResults[foodOnlineStore] as String;
 
-    print(selectedStore);
-    print(selectedStore.runtimeType);
+    print('''Selected values:
+    - Path to the cash receipt:\t\t$selectedTextFile
+    - Path to the EAN products file:\t$selectedHtmlFile
+    - Selected store:\t\t\t$selectedStore''');
 
-    // const shopSelector =
-    //     ShopSelector.sKaupat; // TODO: make this a command line argument
+    if (ShopSelector.sKaupat.isEqual(selectedStore)) {
+      readReceiptAndSaveAsCSV(selectedTextFile);
+      readHtmlAndSaveAsCSV(selectedHtmlFile, ShopSelector.sKaupat);
+    } else if (ShopSelector.kRuoka.isEqual(selectedStore)) {
+      readHtmlAndSaveAsCSV(selectedHtmlFile, ShopSelector.kRuoka);
+    } else {
+      print('Unknown store: $selectedStore');
+      exitCode = 1;
+    }
 
-    // switch (shopSelector) {
-    //   case ShopSelector.sKaupat:
-    //     readReceiptAndSaveAsCSV(argResults[textFile] as String);
-    //     readHtmlAndSaveAsCSV(argResults[htmlFile] as String, shopSelector);
-    //     break;
-    //   case ShopSelector.kRuoka:
-    //     readHtmlAndSaveAsCSV(argResults[htmlFile] as String, shopSelector);
-    //     break;
-    //   default:
-    //     throw 'Unknown shop selector: $shopSelector';
-    // }
-
-    // print('Done!');
+    print('Done!');
   }
 }
