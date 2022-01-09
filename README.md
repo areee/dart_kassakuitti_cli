@@ -42,7 +42,7 @@ If you don't define any options, these are default options:
 
 ### Help
 
-If you want to get all available commands, you can just type:
+If you want to get all the available commands, you can just type:
 
 ```
 dart run bin/dart_kassakuitti_cli.dart help
@@ -56,7 +56,7 @@ kassakuitti help
 
 ## Alias
 
-If you want to get an easier command, you can create an alias into Zsh or Bash profile file (e.g. `~/.zshrc` when using Zsh). This line adds alias `kassakuitti` into the profile file (let's assume that this project locates under your Documents folder):
+If you want to get an easier command, you can create an alias into Zsh or Bash profile file (e.g. `~/.zshrc` when using Zsh and `~/.bashrc` when using Bash). This line adds an alias `kassakuitti` into the profile file (let's assume that this `dart_kassakuitti_cli` project locates under your Documents folder):
 
 ```
 alias kassakuitti='dart run $HOME/Documents/bin/dart_kassakuitti_cli.dart'
