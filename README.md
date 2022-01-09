@@ -13,7 +13,7 @@ Basic usage with defaults looks like this (assumption is that we're in the proje
 dart run bin/dart_kassakuitti_cli.dart
 ```
 
-Or, by using the alias:
+Or, by using the [alias](#alias) (works anywhere in your local environment):
 
 ```
 kassakuitti
@@ -27,7 +27,7 @@ You can define a cash receipt (t = text file), an EAN products file (h = html fi
 dart run bin/dart_kassakuitti_cli.dart -t assets/files/_cashReceipt.txt -h assets/files/_orderedProducts_S-kaupat.html -s S-kaupat
 ```
 
-Or, by using the alias:
+Or, by using the [alias](#alias):
 
 ```
 kassakuitti -t assets/files/_cashReceipt.txt -h assets/files/_orderedProducts_S-kaupat.html -s S-kaupat
@@ -48,7 +48,7 @@ If you want to get all available commands, you can just type:
 dart run bin/dart_kassakuitti_cli.dart help
 ```
 
-Or, by using the alias:
+Or, by using the [alias](#alias):
 
 ```
 kassakuitti help
