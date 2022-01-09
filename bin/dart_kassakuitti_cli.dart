@@ -30,8 +30,7 @@ void main(List<String> arguments) {
     ..addOption(
       foodOnlineStore,
       abbr: 's',
-      help:
-          'Food online store. Allowed values: ${ShopSelector.values.join(', ')}',
+      help: 'Food online store',
       defaultsTo: 'S-kaupat',
       allowed: ['S-kaupat', 'K-ruoka'],
     )
