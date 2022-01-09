@@ -5,37 +5,68 @@ import 'read_html_and_save_as_csv.dart';
 import 'read_receipt_and_save_as_csv.dart';
 import 'shop_selector_helper.dart';
 
-const textFile = 'text-file';
-const htmlFile = 'html-file';
-const foodOnlineStore = 'food-online-store';
+const textFile = 'text';
+const htmlFile = 'html';
+const foodOnlineStore = 'store';
+const helpCommand = 'help';
 
 void main(List<String> arguments) {
   exitCode = 0; // presume success
+
   final parser = ArgParser()
-    ..addFlag(textFile, negatable: false, abbr: 't')
-    ..addFlag(htmlFile, negatable: false, abbr: 'h')
-    ..addFlag(foodOnlineStore, negatable: false, abbr: 's');
+    ..addOption(
+      textFile,
+      abbr: 't',
+      help: 'Text file (cash receipt) to read',
+      defaultsTo: 'assets/files/_cashReceipt.txt',
+      callback: (text) => print('- Path to the cash receipt:\t\t$text'),
+    )
+    ..addOption(
+      htmlFile,
+      abbr: 'h',
+      help: 'HTML (EAN products) file to read',
+      defaultsTo: 'assets/files/_orderedProducts_S-kaupat.html',
+      callback: (html) => print('- Path to the EAN products file:\t$html'),
+    )
+    ..addOption(
+      foodOnlineStore,
+      abbr: 's',
+      help:
+          'Food online store. Allowed values: ${ShopSelector.values.join(', ')}',
+      defaultsTo: 'S-kaupat',
+      allowed: ['S-kaupat', 'K-ruoka'],
+      callback: (store) => print('- Selected store:\t\t\t$store'),
+    )
+    ..addCommand(helpCommand);
+  print('Selected values:');
 
   var argResults = parser.parse(arguments);
-  final paths = argResults.rest;
 
-  print(argResults[textFile]);
-  print(argResults[htmlFile]);
-  print(argResults[foodOnlineStore]);
-  print(paths);
+  if (argResults.command?.name == helpCommand) {
+    print('\nHelp:');
+    print(parser.usage);
+    return;
+  } else {
+    var selectedStore = argResults[foodOnlineStore] as String;
 
-  // const shopSelector =
-  //     ShopSelector.sKaupat; // TODO: make this a command line argument
+    print(selectedStore);
+    print(selectedStore.runtimeType);
 
-  // if (shopSelector == ShopSelector.sKaupat) {
-  //   readReceiptAndSaveAsCSV('assets/files/_cashReceipt.txt');
-  //   readHtmlAndSaveAsCSV(
-  //       'assets/files/_orderedProducts_S-kaupat.html', shopSelector);
-  // } else {
-  //   // K-ruoka
-  //   readHtmlAndSaveAsCSV(
-  //       'assets/files/_orderedProducts_K-ruoka.html', shopSelector);
-  // }
+    // const shopSelector =
+    //     ShopSelector.sKaupat; // TODO: make this a command line argument
 
-  // print('Done!');
+    // switch (shopSelector) {
+    //   case ShopSelector.sKaupat:
+    //     readReceiptAndSaveAsCSV(argResults[textFile] as String);
+    //     readHtmlAndSaveAsCSV(argResults[htmlFile] as String, shopSelector);
+    //     break;
+    //   case ShopSelector.kRuoka:
+    //     readHtmlAndSaveAsCSV(argResults[htmlFile] as String, shopSelector);
+    //     break;
+    //   default:
+    //     throw 'Unknown shop selector: $shopSelector';
+    // }
+
+    // print('Done!');
+  }
 }
