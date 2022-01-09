@@ -3,7 +3,7 @@ import 'helper.dart';
 import 'receipt_product.dart';
 
 /// Saves receipt products as a CSV file.
-void receiptProducts2CSV(List<ReceiptProduct> products) {
+void receiptProducts2CSV(List<ReceiptProduct> products, String csvFilePath) {
   var csv = StringBuffer();
 
   csv.write('Name;Quantity;Price per unit;Total price;Discount counted\n');
@@ -15,6 +15,6 @@ void receiptProducts2CSV(List<ReceiptProduct> products) {
 
   var date = formattedDateTime();
 
-  var file = File('assets/files/receipt_products_$date.csv');
+  var file = File('$csvFilePath/receipt_products_$date.csv');
   file.writeAsString(csv.toString());
 }
