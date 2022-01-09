@@ -7,7 +7,7 @@ A simple Dart CLI app to handle a cash receipt coming from S-kaupat or K-ruoka (
 
 ### Default usage
 
-Basic usage with defaults looks like this:
+Basic usage with defaults looks like this (assumption is that we're in the project folder):
 
 ```
 dart run bin/dart_kassakuitti_cli.dart
