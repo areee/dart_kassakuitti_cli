@@ -35,7 +35,7 @@ kassakuitti -t assets/files/_cashReceipt.txt -h assets/files/_orderedProducts_S-
 
 ### Default options:
 
-If you don't define any options (`dart run bin/dart_kassakuitti_cli.dart`), these are default options:
+If you don't define any options, these are default options:
 - Path to the cash receipt: `assets/files/_cashReceipt.txt`
 - Path to the EAN products file: `assets/files/_orderedProducts_S-kaupat.html`
 - Selected store: `S-kaupat`
