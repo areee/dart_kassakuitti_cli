@@ -65,7 +65,7 @@ List<ReceiptProduct> strings2Products(List<String> lines) {
 
     // A "normal" line:
     else {
-      var items = item.split(RegExp(r'\s{12,33}'));
+      var items = item.split(RegExp(r'\s{11,33}'));
 
       var name = items[0];
       var price = items[1];
