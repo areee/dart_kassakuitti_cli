@@ -11,8 +11,7 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
   var html = await file.readAsString();
   var document = parse(html);
 
-  var responseString = document.getElementsByClassName(
-      'styled-order-page__StyledOrderItemContainer-sc-qzridm-1')[0];
+  var responseString = document.getElementsByClassName('sc-qzridm-1 hxbyQZ')[0];
 
   var children = responseString.children;
 
