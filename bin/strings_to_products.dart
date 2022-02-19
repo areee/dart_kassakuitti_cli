@@ -55,11 +55,13 @@ List<ReceiptProduct> strings2Products(List<String> lines) {
     // If a line starts with a digit, it is a quantity and price per unit row:
     else if (item.contains(RegExp(r'^\d'))) {
       var items = item.split(RegExp(r'\s{6,7}'));
-      var quantity = items[0].substring(0, 2).trim();
+      var quantity =
+          items[0].substring(0, 2).trim().replaceAll(RegExp(r','), '.');
       var pricePerUnit = items[1].substring(0, 5).trim();
 
       var lastProduct = products.last;
-      lastProduct.quantity = int.parse(quantity);
+      lastProduct.quantity = double.parse(quantity)
+          .ceil(); // e.g. 0.2 -> 1 (round up) or 0.5 -> 1 (round up)
       lastProduct.pricePerUnit = pricePerUnit;
     }
 
