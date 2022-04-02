@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:html/parser.dart';
 
 import '../../models/ean_product.dart';
+import '../../utils/price_helper.dart';
 
 /// Loads the HTML file from assets and parses it. Then, it returns a list of EANProduct objects.
 Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
@@ -40,7 +41,8 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
       }
     }
     var productPrice = finalPrice.toString();
-    var quantity = double.parse(productQuantity).round();
+    var quantity = double.parse(productQuantity)
+        .ceil(); // e.g. 0.2 -> 1 (round up) or 0.5 -> 1 (round up)
 
     eanProducts.add(EANProduct(
       ean: productEan,
@@ -60,8 +62,7 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
     for (var productRow in itemListing.children) {
       var productItem = productRow.children[0];
 
-      var productEan =
-          productItem.id.replaceAll('department-product-item-', '');
+      var eanCode = productItem.id.replaceAll('department-product-item-', '');
 
       var productName = productItem
           .children[0].children[1].children[0].children[0].text
@@ -85,10 +86,11 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
         }
       }
       var productPrice = finalPrice.toString();
-      var quantity = double.parse(productQuantity).round();
+      var quantity = double.parse(productQuantity)
+          .ceil(); // e.g. 0.2 -> 1 (round up) or 0.5 -> 1 (round up)
 
       eanProducts.add(EANProduct(
-        ean: productEan,
+        ean: eanCode,
         name: productName,
         quantity: quantity,
         totalPrice: productPrice,
@@ -99,12 +101,4 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
 
   // TODO: Add an own section for home delivery price
   return eanProducts;
-}
-
-String countPricePerUnit(String productPrice, int quantity) {
-  var productPriceAsDouble =
-      double.parse(productPrice.replaceAll(RegExp(r','), '.'));
-  var pricePerUnit = productPriceAsDouble / quantity;
-
-  return pricePerUnit.toStringAsFixed(2).replaceAll(RegExp(r'\.'), ',');
 }
