@@ -15,6 +15,6 @@ void eanProductListToCSV(List<EANProduct> eanProductList, String csvFilePath,
   }
 
   var file = File(
-      '$csvFilePath/${shopSelector}_ean_products_${formattedDateTime()}.csv');
+      '$csvFilePath/${shopSelector.name}_ean_products_${formattedDateTime()}.csv');
   file.writeAsString(csv.toString());
 }
