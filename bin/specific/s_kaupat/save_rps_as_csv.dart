@@ -5,22 +5,24 @@ import '../../models/receipt_product.dart';
 /// Saves receipt products as a CSV file.
 void receiptProducts2CSV(List<ReceiptProduct> products, String csvFilePath) {
   var csv = StringBuffer();
+  var header = '';
+  var discountCounted = false;
 
   // If there aren't any discountCounted products, don't add it to the CSV file.
-  if (products.any((element) => element.discountCounted.isEmpty)) {
-    csv.write('Name;Quantity;Price per unit;Total price\n');
-
-    for (var product in products) {
-      csv.write(
-          '${product.name};${product.quantity};${product.pricePerUnit};${product.totalPrice}\n');
-    }
+  if (products.any((product) => product.discountCounted.isEmpty)) {
+    header = 'Name;Quantity;Price per unit;Total price;\n';
   } else {
-    csv.write('Name;Quantity;Price per unit;Total price;Discount counted\n');
+    discountCounted = true;
+    header = 'Name;Quantity;Price per unit;Total price;Discount counted\n';
+  }
 
-    for (var product in products) {
-      csv.write(
-          '${product.name};${product.quantity};${product.pricePerUnit};${product.totalPrice};${product.discountCounted}\n');
-    }
+  // Write the header
+  csv.write(header);
+
+  // Write the products
+  for (var product in products) {
+    csv.write(
+        '${product.name};${product.quantity};${product.pricePerUnit};${product.totalPrice}${discountCounted ? ';${product.discountCounted}' : ''}\n');
   }
 
   var file = File('$csvFilePath/receipt_products_${formattedDateTime()}.csv');
