@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'ean_product.dart';
+import 'model/ean_product.dart';
 import 'helper.dart';
 
 void eanProductListToCSV(List<EANProduct> eanProductList, String csvFilePath) {

@@ -1,4 +1,4 @@
-import 'ean_product.dart';
+import 'model/ean_product.dart';
 import 'load_html_s_kaupat.dart' as s_kaupat;
 import 'load_html_k_ruoka.dart' as k_ruoka;
 import 'save_eps_as_csv.dart';
