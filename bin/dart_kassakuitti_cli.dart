@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:args/args.dart';
 
 import 'read_html_and_save_as_csv.dart';
-import 'read_receipt_and_save_as_csv.dart';
-import 'shop_selector_helper.dart';
+import 'specific/s_kaupat/read_receipt_and_save_as_csv.dart';
+import 'utils/shop_selector_helper.dart';
 
 const textFile = 'text';
 const htmlFile = 'html';

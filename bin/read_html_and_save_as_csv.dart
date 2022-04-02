@@ -1,8 +1,8 @@
-import 'model/ean_product.dart';
-import 'load_html_s_kaupat.dart' as s_kaupat;
-import 'load_html_k_ruoka.dart' as k_ruoka;
+import 'models/ean_product.dart';
+import 'specific/s_kaupat/load_html_s_kaupat.dart' as s_kaupat;
+import 'specific/k_ruoka/load_html_k_ruoka.dart' as k_ruoka;
 import 'save_eps_as_csv.dart';
-import 'shop_selector_helper.dart';
+import 'utils/shop_selector_helper.dart';
 
 void readHtmlAndSaveAsCSV(
     String filePath, ShopSelector shopSelector, String csvFilePath) async {

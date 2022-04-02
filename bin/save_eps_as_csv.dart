@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'model/ean_product.dart';
-import 'helper.dart';
+import 'models/ean_product.dart';
+import 'utils/helper.dart';
 
 void eanProductListToCSV(List<EANProduct> eanProductList, String csvFilePath) {
   var csv = StringBuffer();
@@ -11,8 +11,6 @@ void eanProductListToCSV(List<EANProduct> eanProductList, String csvFilePath) {
     csv.write('${item.ean};${item.name};${item.quantity};${item.price}\n');
   }
 
-  var date = formattedDateTime();
-
-  var file = File('$csvFilePath/ean_products_$date.csv');
+  var file = File('$csvFilePath/ean_products_${formattedDateTime()}.csv');
   file.writeAsString(csv.toString());
 }

@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:html/parser.dart';
 
-import 'model/ean_product.dart';
+import '../../models/ean_product.dart';
 
 /// Loads the HTML file from assets and parses it. Then, it returns a list of EANProduct objects.
 Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
