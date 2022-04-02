@@ -10,10 +10,12 @@ void receiptProducts2CSV(List<ReceiptProduct> products, String csvFilePath) {
 
   // If there aren't any discountCounted products, don't add it to the CSV file.
   if (products.any((product) => product.discountCounted.isEmpty)) {
-    header = 'Name;Quantity;Price per unit;Total price;\n';
+    header =
+        'Name;Quantity;Price per unit;Total price;EAN code (add manually)\n';
   } else {
     discountCounted = true;
-    header = 'Name;Quantity;Price per unit;Total price;Discount counted\n';
+    header =
+        'Name;Quantity;Price per unit;Total price;EAN code (add manually);Discount counted\n';
   }
 
   // Write the header
@@ -22,7 +24,7 @@ void receiptProducts2CSV(List<ReceiptProduct> products, String csvFilePath) {
   // Write the products
   for (var product in products) {
     csv.write(
-        '${product.name};${product.quantity};${product.pricePerUnit};${product.totalPrice}${discountCounted ? ';${product.discountCounted}' : ''}\n');
+        '${product.name};${product.quantity};${product.pricePerUnit};${product.totalPrice};${product.eanCode}${discountCounted ? ';${product.discountCounted}' : ''}\n');
   }
 
   var file = File('$csvFilePath/receipt_products_${formattedDateTime()}.csv');
