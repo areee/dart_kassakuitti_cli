@@ -59,14 +59,20 @@ void main(List<String> arguments) {
     - Selected store:\t\t\t$selectedStore
     - Path where to save CSV files:\t$csvFilesPath''');
 
-    if (ShopSelector.sKaupat.isEqual(selectedStore)) {
-      readReceiptAndSaveAsCSV(selectedTextFile, csvFilesPath);
-      readHtmlAndSaveAsCSV(
-          selectedHtmlFile, ShopSelector.sKaupat, csvFilesPath);
-    } else if (ShopSelector.kRuoka.isEqual(selectedStore)) {
-      readHtmlAndSaveAsCSV(selectedHtmlFile, ShopSelector.kRuoka, csvFilesPath);
-    } else {
-      print('Unknown store: $selectedStore');
+    try {
+      if (ShopSelector.sKaupat.isEqual(selectedStore)) {
+        readReceiptAndSaveAsCSV(selectedTextFile, csvFilesPath);
+        readHtmlAndSaveAsCSV(
+            selectedHtmlFile, ShopSelector.sKaupat, csvFilesPath);
+      } else if (ShopSelector.kRuoka.isEqual(selectedStore)) {
+        readHtmlAndSaveAsCSV(
+            selectedHtmlFile, ShopSelector.kRuoka, csvFilesPath);
+      } else {
+        print('Unknown store: $selectedStore');
+        exitCode = 1;
+      }
+    } on Exception catch (e) {
+      print('Error: $e');
       exitCode = 1;
     }
 

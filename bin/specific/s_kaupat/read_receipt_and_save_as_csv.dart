@@ -14,8 +14,7 @@ List<String>? readReceiptFile(String filePath) {
   File file = File(filePath);
   try {
     return file.readAsLinesSync();
-  } on FileSystemException catch (e) {
-    print("File not found: $e");
+  } on FileSystemException {
+    rethrow;
   }
-  return null;
 }
