@@ -60,5 +60,5 @@ kassakuitti help
 If you want to get an easier command, you can create an alias into Zsh or Bash profile file (e.g. `~/.zshrc` when using Zsh and `~/.bashrc` when using Bash). This line adds an alias `kassakuitti` into the profile file (let's assume that this `dart_kassakuitti_cli` project locates under your Documents folder):
 
 ```
-alias kassakuitti='dart run $HOME/Documents/bin/dart_kassakuitti_cli.dart'
+alias kassakuitti='dart run $HOME/Documents/dart_kassakuitti_cli/bin/dart_kassakuitti_cli.dart'
 ```
