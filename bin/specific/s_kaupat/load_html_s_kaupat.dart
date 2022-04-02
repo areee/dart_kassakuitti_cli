@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:html/parser.dart';
 
-import 'ean_product.dart';
+import '../../models/ean_product.dart';
+import '../../utils/price_helper.dart';
 
 /// Loads the HTML file from assets and parses it. Then, it returns a list of EANProduct objects.
 Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
@@ -35,13 +36,16 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
           .trim();
       productPrice = productPrice.replaceAll(' €', '');
 
+      var quantity = double.parse(productQuantity)
+          .ceil(); // e.g. 0.2 -> 1 (round up) or 0.5 -> 1 (round up)
+
       eanProducts.add(
         EANProduct(
           ean: eanCode,
           name: productName,
-          quantity: double.parse(productQuantity)
-              .ceil(), // e.g. 0.2 -> 1 (round up) or 0.5 -> 1 (round up)
-          price: productPrice,
+          quantity: quantity,
+          totalPrice: productPrice,
+          pricePerUnit: countPricePerUnit(productPrice, quantity),
         ),
       );
     }

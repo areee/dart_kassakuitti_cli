@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:html/parser.dart';
 
-import 'ean_product.dart';
+import '../../models/ean_product.dart';
+import '../../utils/price_helper.dart';
 
 /// Loads the HTML file from assets and parses it. Then, it returns a list of EANProduct objects.
 Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
@@ -40,12 +41,16 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
       }
     }
     var productPrice = finalPrice.toString();
+    var quantity = double.parse(productQuantity)
+        .ceil(); // e.g. 0.2 -> 1 (round up) or 0.5 -> 1 (round up)
 
     eanProducts.add(EANProduct(
-        ean: productEan,
-        name: productName,
-        quantity: int.parse(productQuantity),
-        price: productPrice));
+      ean: productEan,
+      name: productName,
+      quantity: quantity,
+      totalPrice: productPrice,
+      pricePerUnit: countPricePerUnit(productPrice, quantity),
+    ));
   }
 
   var pickedProducts =
@@ -57,8 +62,7 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
     for (var productRow in itemListing.children) {
       var productItem = productRow.children[0];
 
-      var productEan =
-          productItem.id.replaceAll('department-product-item-', '');
+      var eanCode = productItem.id.replaceAll('department-product-item-', '');
 
       var productName = productItem
           .children[0].children[1].children[0].children[0].text
@@ -82,12 +86,16 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
         }
       }
       var productPrice = finalPrice.toString();
+      var quantity = double.parse(productQuantity)
+          .ceil(); // e.g. 0.2 -> 1 (round up) or 0.5 -> 1 (round up)
 
       eanProducts.add(EANProduct(
-          ean: productEan,
-          name: productName,
-          quantity: double.parse(productQuantity).round(),
-          price: productPrice));
+        ean: eanCode,
+        name: productName,
+        quantity: quantity,
+        totalPrice: productPrice,
+        pricePerUnit: countPricePerUnit(productPrice, quantity),
+      ));
     }
   }
 
