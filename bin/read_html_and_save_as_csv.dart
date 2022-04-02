@@ -17,5 +17,5 @@ void readHtmlAndSaveAsCSV(
       break;
   }
 
-  eanProductListToCSV(awaitedEANProductList, csvFilePath);
+  eanProductListToCSV(awaitedEANProductList, csvFilePath, shopSelector);
 }
