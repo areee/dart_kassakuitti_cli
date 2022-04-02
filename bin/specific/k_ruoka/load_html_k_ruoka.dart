@@ -40,12 +40,15 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
       }
     }
     var productPrice = finalPrice.toString();
+    var quantity = double.parse(productQuantity).round();
 
     eanProducts.add(EANProduct(
-        ean: productEan,
-        name: productName,
-        quantity: int.parse(productQuantity),
-        price: productPrice));
+      ean: productEan,
+      name: productName,
+      quantity: quantity,
+      totalPrice: productPrice,
+      pricePerUnit: countPricePerUnit(productPrice, quantity),
+    ));
   }
 
   var pickedProducts =
@@ -82,15 +85,26 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
         }
       }
       var productPrice = finalPrice.toString();
+      var quantity = double.parse(productQuantity).round();
 
       eanProducts.add(EANProduct(
-          ean: productEan,
-          name: productName,
-          quantity: double.parse(productQuantity).round(),
-          price: productPrice));
+        ean: productEan,
+        name: productName,
+        quantity: quantity,
+        totalPrice: productPrice,
+        pricePerUnit: countPricePerUnit(productPrice, quantity),
+      ));
     }
   }
 
   // TODO: Add an own section for home delivery price
   return eanProducts;
+}
+
+String countPricePerUnit(String productPrice, int quantity) {
+  var productPriceAsDouble =
+      double.parse(productPrice.replaceAll(RegExp(r','), '.'));
+  var pricePerUnit = productPriceAsDouble / quantity;
+
+  return pricePerUnit.toStringAsFixed(2).replaceAll(RegExp(r'\.'), ',');
 }
