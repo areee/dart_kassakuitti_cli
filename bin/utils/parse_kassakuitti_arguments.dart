@@ -5,6 +5,7 @@ import 'shop_selector_helper.dart';
 
 ArgParser getParser() {
   final parser = ArgParser()
+    ..addCommand(ArgSelector.run.value!)
     ..addOption(
       ArgSelector.textFile.value!,
       abbr: ArgSelector.textFile.value!.substring(0, 1),

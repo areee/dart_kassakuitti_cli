@@ -5,6 +5,7 @@ enum ArgSelector {
   foodOnlineStore,
   csvPath,
   help,
+  run,
 }
 
 extension ArgSelectorExtension on ArgSelector {
@@ -14,6 +15,7 @@ extension ArgSelectorExtension on ArgSelector {
     ArgSelector.foodOnlineStore: 'store',
     ArgSelector.csvPath: 'csv',
     ArgSelector.help: 'help',
+    ArgSelector.run: 'run',
   };
 
   String? get value => values[this];

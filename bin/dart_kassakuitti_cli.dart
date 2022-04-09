@@ -6,17 +6,20 @@ import 'utils/arg_selector_helper.dart';
 import 'utils/parse_kassakuitti_arguments.dart';
 import 'utils/shop_selector_helper.dart';
 
+const String versionNumber = '0.10.0';
+
 void main(List<String> arguments) {
   exitCode = 0; // presume success
 
   var parser = getParser();
-
   var argResults = parser.parse(arguments);
 
   if (argResults.command?.name == ArgSelector.help.value!) {
     print('Help:\n${parser.usage}');
     return;
-  } else {
+  } else if (argResults.command?.name == ArgSelector.run.value!) {
+    print('Running...');
+
     var selectedTextFile = argResults[ArgSelector.textFile.value!] as String;
     var selectedHtmlFile = argResults[ArgSelector.htmlFile.value!] as String;
     var selectedStore =
@@ -44,6 +47,9 @@ void main(List<String> arguments) {
     }
 
     print('Done!');
+  } else {
+    print('''dart_kassakuitti_cli
+Version: $versionNumber''');
   }
 }
 
