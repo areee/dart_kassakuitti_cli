@@ -12,11 +12,11 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
   var html = await file.readAsString();
   var document = parse(html);
 
-  var responseString = document.getElementsByClassName('sc-qzridm-1 hxbyQZ')[0];
+  var responseString = document.getElementsByClassName('sc-yrpx7m-1 gQHMwf')[0];
 
   var children = responseString.children;
 
-  for (var i = 0; i < responseString.children.length; i++) {
+  for (var i = 0; i < children.length; i++) {
     if (i > 0) {
       var product = children[i];
 
