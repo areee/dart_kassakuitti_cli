@@ -23,11 +23,8 @@ void main(List<String> arguments) {
         argResults[ArgSelector.foodOnlineStore.value!] as String;
     var csvFilesPath = argResults[ArgSelector.csvPath.value!] as String;
 
-    print('''Selected values:
-    - Path to the cash receipt:\t\t$selectedTextFile
-    - Path to the EAN products file:\t$selectedHtmlFile
-    - Selected store:\t\t\t$selectedStore
-    - Path where to save CSV files:\t$csvFilesPath''');
+    printSelectedValues(
+        selectedTextFile, selectedHtmlFile, selectedStore, csvFilesPath);
 
     try {
       if (ShopSelector.sKaupat.isEqual(selectedStore)) {
@@ -48,4 +45,13 @@ void main(List<String> arguments) {
 
     print('Done!');
   }
+}
+
+void printSelectedValues(String selectedTextFile, String selectedHtmlFile,
+    String selectedStore, String csvFilesPath) {
+  print('''Selected values:
+    - Path to the cash receipt:\t\t$selectedTextFile
+    - Path to the EAN products file:\t$selectedHtmlFile
+    - Selected store:\t\t\t$selectedStore
+    - Path where to save CSV files:\t$csvFilesPath''');
 }
