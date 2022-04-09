@@ -12,13 +12,12 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
   var html = await file.readAsString();
   var document = parse(html);
 
-  var responseString = document.getElementsByClassName('sc-qzridm-1 hxbyQZ')[0];
+  var allProductsDiv = document.body!.children[1].children[1].children[1]
+      .children[0].children[0].children[0].children[5];
 
-  var children = responseString.children;
-
-  for (var i = 0; i < responseString.children.length; i++) {
+  for (var i = 0; i < allProductsDiv.children.length; i++) {
     if (i > 0) {
-      var product = children[i];
+      var product = allProductsDiv.children[i];
 
       var eanCode = product.attributes['data-product-id'] ?? '';
 
