@@ -39,7 +39,8 @@ List<ReceiptProduct> strings2ReceiptProducts(List<String> lines) {
       var origTotalPrice = lastProduct.totalPrice.replaceAll(RegExp(r','), '.');
       var origTotalPriceAsDouble = double.parse(origTotalPrice);
 
-      var discountedPrice = origTotalPriceAsDouble - discountPriceAsDouble;
+      var discountedPrice =
+          (origTotalPriceAsDouble - discountPriceAsDouble).toPrecision(2);
       var discountedPriceAsString =
           discountedPrice.toStringAsFixed(2).replaceAll(RegExp(r'\.'), ',');
 
