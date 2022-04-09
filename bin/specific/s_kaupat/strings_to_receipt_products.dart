@@ -1,3 +1,4 @@
+import '../../utils/extensions/double_extension.dart';
 import '../../utils/line_helper.dart';
 import '../../models/receipt_product.dart';
 
@@ -44,7 +45,8 @@ List<ReceiptProduct> strings2ReceiptProducts(List<String> lines) {
 
       if (lastProduct.quantity > 1) {
         var discountedPricePerUnit = (discountedPrice / lastProduct.quantity)
-            .toStringAsFixed(2)
+            .toPrecision(2)
+            .toString()
             .replaceAll(RegExp(r'\.'), ',');
 
         lastProduct.pricePerUnit = discountedPricePerUnit;
