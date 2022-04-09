@@ -2,7 +2,7 @@ import '../../utils/line_helper.dart';
 import '../../models/receipt_product.dart';
 
 /// Goes through the list of lines and returns a list of products.
-List<ReceiptProduct> strings2Products(List<String> lines) {
+List<ReceiptProduct> strings2ReceiptProducts(List<String> lines) {
   var helper = LineHelper();
   List<ReceiptProduct> products = [];
 

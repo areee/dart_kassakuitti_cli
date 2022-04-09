@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'save_rps_as_csv.dart';
-import 'strings_to_products.dart';
+import 'strings_to_receipt_products.dart';
 
 void readReceiptAndSaveAsCSV(String filePath, String csvFilePath) async {
   var lines = await readReceiptFile(filePath);
-  var products = strings2Products(lines ?? []);
+  var products = strings2ReceiptProducts(lines ?? []);
   receiptProducts2CSV(products, csvFilePath);
 }
 
