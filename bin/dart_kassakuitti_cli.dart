@@ -1,14 +1,15 @@
 import 'dart:io';
 
+import 'package:path/path.dart';
+import 'package:yaml/yaml.dart';
+
 import 'read_html_and_save_as_csv.dart';
 import 'specific/s_kaupat/read_receipt_and_save_as_csv.dart';
 import 'utils/arg_selector_helper.dart';
 import 'utils/parse_kassakuitti_arguments.dart';
 import 'utils/shop_selector_helper.dart';
 
-const String versionNumber = '0.10.0';
-
-void main(List<String> arguments) {
+void main(List<String> arguments) async {
   exitCode = 0; // presume success
 
   var parser = getParser();
@@ -48,8 +49,16 @@ void main(List<String> arguments) {
 
     print('Done!');
   } else {
-    print('''dart_kassakuitti_cli
-Version: $versionNumber''');
+    String pathToYaml =
+        join(dirname(Platform.script.toFilePath()), '../pubspec.yaml');
+    var file = File(pathToYaml);
+    var fileAsString = await file.readAsString();
+
+    Map yaml = loadYaml(fileAsString);
+    print(yaml['name']);
+    print(yaml['description']);
+    print('Version: ${yaml['version']}');
+    print('Homepage: ${yaml['homepage']}');
   }
 }
 
