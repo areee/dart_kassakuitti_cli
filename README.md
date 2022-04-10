@@ -29,7 +29,7 @@
 
 ### Default usage
 
-Basic usage with defaults looks like this (an assumption is that we're in the project folder):
+The basic usage looks like this (an assumption is that we're in the project folder):
 
 ```
 dart run bin/dart_kassakuitti_cli.dart run -t [a path to the cash receipt file] -h [a path to the EAN file] -c [a path to generated CSV files]
@@ -41,7 +41,13 @@ Or, by using the [alias](#alias) (works anywhere in your local environment):
 kassakuitti run -t [a path to the cash receipt file] -h [a path to the EAN file] -c [a path to generated CSV files]
 ```
 
-You can define a cash receipt (t = text file), an EAN products file (h = html file), which food online store to use (s = store) and where to save the output files (c = CSV file). S-kaupat is a default choice for the food online store selection.
+You can define
+- a cash receipt (-t = text file),
+- an EAN products file (-h = html file),
+- which food online store to use (-s = store) and
+- where to save the output files (-c = CSV file).
+
+S-kaupat is a default choice for the food online store selection (s).
 
 ### Help
 
