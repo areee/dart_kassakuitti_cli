@@ -1,8 +1,9 @@
+import '../../utils/extensions/double_extension.dart';
 import '../../utils/line_helper.dart';
 import '../../models/receipt_product.dart';
 
 /// Goes through the list of lines and returns a list of products.
-List<ReceiptProduct> strings2Products(List<String> lines) {
+List<ReceiptProduct> strings2ReceiptProducts(List<String> lines) {
   var helper = LineHelper();
   List<ReceiptProduct> products = [];
 
@@ -38,13 +39,15 @@ List<ReceiptProduct> strings2Products(List<String> lines) {
       var origTotalPrice = lastProduct.totalPrice.replaceAll(RegExp(r','), '.');
       var origTotalPriceAsDouble = double.parse(origTotalPrice);
 
-      var discountedPrice = origTotalPriceAsDouble - discountPriceAsDouble;
+      var discountedPrice =
+          (origTotalPriceAsDouble - discountPriceAsDouble).toPrecision(2);
       var discountedPriceAsString =
           discountedPrice.toStringAsFixed(2).replaceAll(RegExp(r'\.'), ',');
 
       if (lastProduct.quantity > 1) {
         var discountedPricePerUnit = (discountedPrice / lastProduct.quantity)
-            .toStringAsFixed(2)
+            .toPrecision(2)
+            .toString()
             .replaceAll(RegExp(r'\.'), ',');
 
         lastProduct.pricePerUnit = discountedPricePerUnit;
