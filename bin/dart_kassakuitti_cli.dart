@@ -59,6 +59,14 @@ void main(List<String> arguments) async {
     print(yaml['description']);
     print('Version: ${yaml['version']}');
     print('Homepage: ${yaml['homepage']}');
+
+    print('''\nTo get help, run:
+
+  dart run bin/dart_kassakuitti_cli.dart help
+  
+or when using alias:
+  
+  kassakuitti help\n''');
   }
 }
 
