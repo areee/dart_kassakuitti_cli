@@ -1,3 +1,6 @@
+<a href="https://github.com/areee/dart_kassakuitti_cli/releases"><img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/areee/dart_kassakuitti_cli"></a>
+<a href="https://github.com/areee/dart_kassakuitti_cli/blob/main/LICENSE.md"><img alt="GitHub" src="https://img.shields.io/github/license/areee/dart_kassakuitti_cli"></a>
+
 # dart_kassakuitti_cli
 
 > A simple Dart CLI app to handle a cash receipt coming from S-kaupat or K-ruoka (two Finnish food online stores).
