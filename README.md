@@ -42,12 +42,12 @@ kassakuitti run -t [a path to the cash receipt file] -h [a path to the EAN file]
 ```
 
 You can define
-- a cash receipt (-t = text file),
-- an EAN products file (-h = html file),
-- (optional: which food online store to use (-s = store)) and
-- where to save the output files (-c = CSV file).
+- a cash receipt (`-t` = text file),
+- an EAN products file (`-h` = html file),
+- (optional: which food online store to use (`-s` = store)) and
+- where to save the output files (`-c` = CSV file).
 
-S-kaupat is a default choice for the food online store selection (s).
+S-kaupat is a default choice for the food online store selection (`-s`).
 
 #### An example
 
