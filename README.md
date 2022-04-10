@@ -32,13 +32,13 @@
 The basic usage looks like this (an assumption is that we're in the project folder):
 
 ```
-dart run bin/dart_kassakuitti_cli.dart run -t [a path to the cash receipt file] -h [a path to the EAN file] -c [a path to generated CSV files]
+dart run bin/dart_kassakuitti_cli.dart run -t [a path to the cash receipt file] -h [a path to the EAN file] -s [S-kaupat or K-ruoka] -c [a path to generated CSV files]
 ```
 
 Or, by using the [alias](#alias) (works anywhere in your local environment):
 
 ```
-kassakuitti run -t [a path to the cash receipt file] -h [a path to the EAN file] -c [a path to generated CSV files]
+kassakuitti run -t [a path to the cash receipt file] -h [a path to the EAN file] -s [S-kaupat or K-ruoka] -c [a path to generated CSV files]
 ```
 
 You can define
@@ -48,6 +48,12 @@ You can define
 - where to save the output files (-c = CSV file).
 
 S-kaupat is a default choice for the food online store selection (s).
+
+#### An example
+
+```
+kassakuitti run -t /Users/username/Downloads/cash_receipt.txt -h /Users/username/Downloads/https___www.s-kaupat.fi_tilaus_product_id-generating_time.html -s S-kaupat -c /Users/username/Downloads
+```
 
 ### Help
 
@@ -65,7 +71,7 @@ kassakuitti help
 
 ### Basic information
 
-If you want some basic information about this program, just type:
+If you want some basic information about this program (e.g. the description, the version number or the project homepage), just type:
 
 ```
 dart run bin/dart_kassakuitti_cli.dart
