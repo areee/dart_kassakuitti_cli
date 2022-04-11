@@ -27,7 +27,7 @@ void main(List<String> arguments) async {
         argResults[ArgSelector.foodOnlineStore.value!] as String;
     var csvFilesPath = argResults[ArgSelector.csvPath.value!] as String;
 
-    printSelectedValues(
+    _printSelectedValues(
         selectedTextFile, selectedHtmlFile, selectedStore, csvFilesPath);
 
     try {
@@ -49,11 +49,11 @@ void main(List<String> arguments) async {
 
     print('Done!');
   } else {
-    await printBasicInfo();
+    await _printBasicInfo();
   }
 }
 
-Future<void> printBasicInfo() async {
+Future<void> _printBasicInfo() async {
   String pathToYaml =
       join(dirname(Platform.script.toFilePath()), '../pubspec.yaml');
   var file = File(pathToYaml);
@@ -74,7 +74,7 @@ Future<void> printBasicInfo() async {
     kassakuitti help\n''');
 }
 
-void printSelectedValues(String selectedTextFile, String selectedHtmlFile,
+void _printSelectedValues(String selectedTextFile, String selectedHtmlFile,
     String selectedStore, String csvFilesPath) {
   print('''Selected values:
     - Path to the cash receipt:\t\t$selectedTextFile
