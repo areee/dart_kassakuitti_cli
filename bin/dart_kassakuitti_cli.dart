@@ -4,7 +4,8 @@ import 'package:path/path.dart';
 import 'package:yaml/yaml.dart';
 
 import 'read_html_and_save_as_csv.dart';
-import 'specific/s_kaupat/read_receipt_and_save_as_csv.dart';
+import 'specific/s_kaupat/read_receipt_products.dart';
+import 'specific/s_kaupat/save_rps_as_csv.dart';
 import 'utils/arg_selector_helper.dart';
 import 'utils/parse_kassakuitti_arguments.dart';
 import 'utils/shop_selector_helper.dart';
@@ -32,7 +33,11 @@ void main(List<String> arguments) async {
 
     try {
       if (ShopSelector.sKaupat.isEqual(selectedStore)) {
-        readReceiptAndSaveAsCSV(selectedTextFile, csvFilesPath);
+        var receiptProducts =
+            await readReceiptProducts(selectedTextFile, csvFilesPath);
+
+        receiptProducts2CSV(receiptProducts, csvFilesPath);
+
         await readHtmlAndSaveAsCSV(
             selectedHtmlFile, ShopSelector.sKaupat, csvFilesPath);
       } else if (ShopSelector.kRuoka.isEqual(selectedStore)) {
