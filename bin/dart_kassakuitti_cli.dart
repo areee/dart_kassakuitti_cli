@@ -6,7 +6,7 @@ import 'package:yaml/yaml.dart';
 import 'read_ean_products.dart';
 import 'ean_products_2_csv.dart';
 import 'specific/s_kaupat/read_receipt_products.dart';
-import 'specific/s_kaupat/save_rps_as_csv.dart';
+import 'specific/s_kaupat/receipt_products_2_csv.dart';
 import 'utils/arg_selector_helper.dart';
 import 'utils/parse_kassakuitti_arguments.dart';
 import 'utils/shop_selector_helper.dart';
