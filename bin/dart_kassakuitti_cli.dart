@@ -3,7 +3,8 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:yaml/yaml.dart';
 
-import 'read_html_and_save_as_csv.dart';
+import 'read_ean_products.dart';
+import 'ean_products_2_csv.dart';
 import 'specific/s_kaupat/read_receipt_products.dart';
 import 'specific/s_kaupat/save_rps_as_csv.dart';
 import 'utils/arg_selector_helper.dart';
@@ -38,11 +39,15 @@ void main(List<String> arguments) async {
 
         receiptProducts2CSV(receiptProducts, csvFilesPath);
 
-        await readHtmlAndSaveAsCSV(
+        var eanProducts = await readEANProducts(
             selectedHtmlFile, ShopSelector.sKaupat, csvFilesPath);
+
+        eanProducts2CSV(eanProducts, csvFilesPath, selectedStore);
       } else if (ShopSelector.kRuoka.isEqual(selectedStore)) {
-        await readHtmlAndSaveAsCSV(
+        var eanProducts = await readEANProducts(
             selectedHtmlFile, ShopSelector.kRuoka, csvFilesPath);
+
+        eanProducts2CSV(eanProducts, csvFilesPath, selectedStore);
       } else {
         print('Unknown store: $selectedStore');
         exitCode = 1;
