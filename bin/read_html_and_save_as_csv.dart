@@ -4,7 +4,7 @@ import 'specific/k_ruoka/load_html_k_ruoka.dart' as k_ruoka;
 import 'save_eps_as_csv.dart';
 import 'utils/shop_selector_helper.dart';
 
-void readHtmlAndSaveAsCSV(
+Future<void> readHtmlAndSaveAsCSV(
     String filePath, ShopSelector shopSelector, String csvFilePath) async {
   List<EANProduct> awaitedEANProductList = [];
 

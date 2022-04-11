@@ -33,10 +33,10 @@ void main(List<String> arguments) async {
     try {
       if (ShopSelector.sKaupat.isEqual(selectedStore)) {
         readReceiptAndSaveAsCSV(selectedTextFile, csvFilesPath);
-        readHtmlAndSaveAsCSV(
+        await readHtmlAndSaveAsCSV(
             selectedHtmlFile, ShopSelector.sKaupat, csvFilesPath);
       } else if (ShopSelector.kRuoka.isEqual(selectedStore)) {
-        readHtmlAndSaveAsCSV(
+        await readHtmlAndSaveAsCSV(
             selectedHtmlFile, ShopSelector.kRuoka, csvFilesPath);
       } else {
         print('Unknown store: $selectedStore');
@@ -49,25 +49,29 @@ void main(List<String> arguments) async {
 
     print('Done!');
   } else {
-    String pathToYaml =
-        join(dirname(Platform.script.toFilePath()), '../pubspec.yaml');
-    var file = File(pathToYaml);
-    var fileAsString = await file.readAsString();
-
-    Map yaml = loadYaml(fileAsString);
-    print(yaml['name']);
-    print(yaml['description']);
-    print('Version: ${yaml['version']}');
-    print('Homepage: ${yaml['homepage']}');
-
-    print('''\nTo get help, run:
-
-  dart run bin/dart_kassakuitti_cli.dart help
-  
-or when using alias:
-  
-  kassakuitti help\n''');
+    await printBasicInfo();
   }
+}
+
+Future<void> printBasicInfo() async {
+  String pathToYaml =
+      join(dirname(Platform.script.toFilePath()), '../pubspec.yaml');
+  var file = File(pathToYaml);
+  var fileAsString = await file.readAsString();
+
+  Map yaml = loadYaml(fileAsString);
+  print(yaml['name']);
+  print(yaml['description']);
+  print('Version: ${yaml['version']}');
+  print('Homepage: ${yaml['homepage']}');
+
+  print('''\nTo get help, run:
+  
+    dart run bin/dart_kassakuitti_cli.dart help
+    
+  or when using alias:
+    
+    kassakuitti help\n''');
 }
 
 void printSelectedValues(String selectedTextFile, String selectedHtmlFile,
