@@ -42,12 +42,12 @@ void main(List<String> arguments) async {
         var eanProducts = await readEANProducts(
             selectedHtmlFile, ShopSelector.sKaupat, csvFilesPath);
 
-        eanProducts2CSV(eanProducts, csvFilesPath, selectedStore);
+        eanProducts2CSV(eanProducts, csvFilesPath, ShopSelector.sKaupat.name);
       } else if (ShopSelector.kRuoka.isEqual(selectedStore)) {
         var eanProducts = await readEANProducts(
             selectedHtmlFile, ShopSelector.kRuoka, csvFilesPath);
 
-        eanProducts2CSV(eanProducts, csvFilesPath, selectedStore);
+        eanProducts2CSV(eanProducts, csvFilesPath, ShopSelector.kRuoka.name);
       } else {
         print('Unknown store: $selectedStore');
         exitCode = 1;
