@@ -19,7 +19,7 @@ void main(List<String> arguments) async {
     print('Help:\n${parser.usage}');
     return;
   } else if (argResults.command?.name == ArgSelector.run.value!) {
-    print('Running...');
+    print('\nRunning...\n');
 
     var selectedTextFile = argResults[ArgSelector.textFile.value!] as String;
     var selectedHtmlFile = argResults[ArgSelector.htmlFile.value!] as String;
@@ -37,6 +37,16 @@ void main(List<String> arguments) async {
         var eanProducts = await readEANProducts(
             selectedHtmlFile, ShopSelector.sKaupat, csvFilesPath);
 
+        print('\nWould you like to go through receipt products? (y/n)');
+        var answer = stdin.readLineSync();
+
+        if (answer?.toLowerCase() == 'y') {
+          for (var receiptProduct in receiptProducts) {
+            print(receiptProduct);
+            // TODO: Go through receipt products and compare with EAN products
+          }
+        }
+
         receiptProducts2CSV(receiptProducts, csvFilesPath);
         eanProducts2CSV(eanProducts, csvFilesPath, ShopSelector.sKaupat.name);
       } else if (ShopSelector.kRuoka.isEqual(selectedStore)) {
@@ -53,7 +63,7 @@ void main(List<String> arguments) async {
       exitCode = 1;
     }
 
-    print('Done!');
+    print('\nDone!');
   } else {
     await printBasicInfo();
   }
