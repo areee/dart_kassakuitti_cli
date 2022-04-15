@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'read_ean_products.dart';
 import 'ean_products_2_csv.dart';
+import 'specific/s_kaupat/ean_handler.dart';
 import 'specific/s_kaupat/read_receipt_products.dart';
 import 'specific/s_kaupat/receipt_products_2_csv.dart';
 import 'utils/arg_selector_helper.dart';
@@ -39,80 +40,8 @@ void main(List<String> arguments) async {
 
         // print('\nWould you like to go through receipt products? (y/n)');
         // var answer = stdin.readLineSync();
-
         // if (answer?.toLowerCase() == 'y') {
-        for (var receiptProduct in receiptProducts) {
-          print(receiptProduct);
-
-          var receiptProcuctName = receiptProduct.name;
-          var filteredEanProducts = eanProducts
-              .where(
-                  (eanProduct) => eanProduct.name.contains(receiptProcuctName))
-              .toList();
-
-          if (filteredEanProducts.length == 1) {
-            print('\tFound one product:');
-
-            var filteredEanProduct = filteredEanProducts[0];
-            receiptProduct.eanCode = filteredEanProduct.ean;
-            print('\t\t$filteredEanProduct');
-
-            print('\tLength of ean products 1: ${eanProducts.length}');
-            eanProducts.remove(filteredEanProduct);
-            print('\tLength of ean products 2: ${eanProducts.length}');
-          } else if (filteredEanProducts.length > 1) {
-            print('\tFound multiple products:');
-
-            for (var filteredReceiptProduct in filteredEanProducts) {
-              print('\t\t$filteredReceiptProduct');
-              print('Did you mean this? (y/n)');
-              var answer = stdin.readLineSync();
-              if (answer?.toLowerCase() == 'y') {
-                receiptProduct.eanCode = filteredReceiptProduct.ean;
-                print('\tLength of ean products 1: ${eanProducts.length}');
-                eanProducts.remove(filteredReceiptProduct);
-                print('\tLength of ean products 2: ${eanProducts.length}');
-                break;
-              }
-            }
-          } else {
-            print('\tNo product found for the 1st round.');
-            var splittedReceiptProcuctNames = receiptProcuctName.split(' ');
-            var filteredEanProducts2 = eanProducts
-                .where((eanProduct) =>
-                    eanProduct.name.contains(splittedReceiptProcuctNames[0]))
-                .toList();
-
-            if (filteredEanProducts2.length == 1) {
-              print('\tFound one product:');
-
-              var filteredEanProduct = filteredEanProducts2[0];
-              receiptProduct.eanCode = filteredEanProduct.ean;
-              print('\t\t$filteredEanProduct');
-
-              print('\tLength of ean products 1: ${eanProducts.length}');
-              eanProducts.remove(filteredEanProduct);
-              print('\tLength of ean products 2: ${eanProducts.length}');
-            } else if (filteredEanProducts2.length > 1) {
-              print('\tFound multiple products:');
-
-              for (var filteredReceiptProduct in filteredEanProducts2) {
-                print('\t\t$filteredReceiptProduct');
-                print('Did you mean this? (y/n)');
-                var answer = stdin.readLineSync();
-                if (answer?.toLowerCase() == 'y') {
-                  receiptProduct.eanCode = filteredReceiptProduct.ean;
-                  print('\tLength of ean products 1: ${eanProducts.length}');
-                  eanProducts.remove(filteredReceiptProduct);
-                  print('\tLength of ean products 2: ${eanProducts.length}');
-                  break;
-                }
-              }
-            } else {
-              print('\tNo product found for the 2nd round.');
-            }
-          }
-        }
+        eanHandler(receiptProducts, eanProducts);
         // }
 
         receiptProducts2CSV(receiptProducts, csvFilesPath);
