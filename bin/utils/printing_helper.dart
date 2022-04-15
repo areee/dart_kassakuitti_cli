@@ -9,7 +9,7 @@ void printSelectedValues(String selectedTextFile, String selectedHtmlFile,
     - Path to the cash receipt:\t\t$selectedTextFile
     - Path to the EAN products file:\t$selectedHtmlFile
     - Selected store:\t\t\t$selectedStore
-    - Path where to save CSV files:\t$csvFilesPath''');
+    - Path where to save CSV files:\t$csvFilesPath\n''');
 }
 
 Future<void> printBasicInfo() async {
