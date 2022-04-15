@@ -37,28 +37,36 @@ void main(List<String> arguments) async {
         var eanProducts = await readEANProducts(
             selectedHtmlFile, ShopSelector.sKaupat, csvFilesPath);
 
-        print('\nWould you like to go through receipt products? (y/n)');
-        var answer = stdin.readLineSync();
+        // print('\nWould you like to go through receipt products? (y/n)');
+        // var answer = stdin.readLineSync();
 
-        if (answer?.toLowerCase() == 'y') {
-          for (var receiptProduct in receiptProducts) {
-            print(receiptProduct);
+        // if (answer?.toLowerCase() == 'y') {
+        for (var receiptProduct in receiptProducts) {
+          print(receiptProduct);
 
-            var receiptProcuctName = receiptProduct.name;
-            var filteredReceiptProducts = eanProducts
-                .where((eanProduct) =>
-                    eanProduct.name.contains(receiptProcuctName))
-                .toList();
+          var receiptProcuctName = receiptProduct.name;
+          var filteredReceiptProducts = eanProducts
+              .where(
+                  (eanProduct) => eanProduct.name.contains(receiptProcuctName))
+              .toList();
 
-            // TODO: Continue here
+          if (filteredReceiptProducts.length == 1) {
+            print('\tFound one product:');
 
-            print('\tfilteredReceiptProducts contains:');
+            var filteredReceiptProduct = filteredReceiptProducts[0];
+            receiptProduct.eanCode = filteredReceiptProduct.ean;
 
+            print('\t\t$filteredReceiptProduct');
+          } else if (filteredReceiptProducts.length > 1) {
+            print('\tFound multiple products:');
             for (var filteredReceiptProduct in filteredReceiptProducts) {
               print('\t\t$filteredReceiptProduct');
             }
+          } else {
+            print('\tNo product found.');
           }
         }
+        // }
 
         receiptProducts2CSV(receiptProducts, csvFilesPath);
         eanProducts2CSV(eanProducts, csvFilesPath, ShopSelector.sKaupat.name);
