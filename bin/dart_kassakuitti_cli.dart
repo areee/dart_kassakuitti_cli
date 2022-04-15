@@ -43,7 +43,20 @@ void main(List<String> arguments) async {
         if (answer?.toLowerCase() == 'y') {
           for (var receiptProduct in receiptProducts) {
             print(receiptProduct);
-            // TODO: Go through receipt products and compare with EAN products
+
+            var receiptProcuctName = receiptProduct.name;
+            var filteredReceiptProducts = eanProducts
+                .where((eanProduct) =>
+                    eanProduct.name.contains(receiptProcuctName))
+                .toList();
+
+            // TODO: Continue here
+
+            print('\tfilteredReceiptProducts contains:');
+
+            for (var filteredReceiptProduct in filteredReceiptProducts) {
+              print('\t\t$filteredReceiptProduct');
+            }
           }
         }
 
