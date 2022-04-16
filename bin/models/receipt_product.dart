@@ -3,7 +3,6 @@ class ReceiptProduct {
   String totalPrice;
   int quantity;
   String pricePerUnit;
-  // TODO: In the future, this should include an EAN code for a receipt product.
   String eanCode;
   String discountCounted;
 
@@ -18,6 +17,6 @@ class ReceiptProduct {
 
   @override
   String toString() {
-    return 'Product{name: $name, totalPrice: $totalPrice, quantity: $quantity, pricePerUnit: $pricePerUnit, eanCode: $eanCode, discountCounted: $discountCounted}';
+    return '$quantity x $name${quantity > 1 ? ' ($pricePerUnit e / pcs)' : ''} = $totalPrice e';
   }
 }
