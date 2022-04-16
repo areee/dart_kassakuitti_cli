@@ -38,11 +38,7 @@ void main(List<String> arguments) async {
         var eanProducts = await readEANProducts(
             selectedHtmlFile, ShopSelector.sKaupat, csvFilesPath);
 
-        // print('\nWould you like to go through receipt products? (y/n)');
-        // var answer = stdin.readLineSync();
-        // if (answer?.toLowerCase() == 'y') {
-        eanHandler(receiptProducts, eanProducts);
-        // }
+        eanHandler(receiptProducts, eanProducts.toList());
 
         receiptProducts2CSV(receiptProducts, csvFilesPath);
         eanProducts2CSV(eanProducts, csvFilesPath, ShopSelector.sKaupat.name);
