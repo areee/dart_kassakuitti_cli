@@ -8,21 +8,16 @@ void eanHandler(
   for (var receiptProduct in receiptProducts) {
     print(receiptProduct);
 
-    var receiptProcuctName = receiptProduct.name;
     var filteredEanProducts = eanProducts
         .where((eanProduct) =>
-            eanProduct.name.toLowerCase().contains(receiptProcuctName))
+            eanProduct.name.toLowerCase().contains(receiptProduct.name))
         .toList();
 
     if (filteredEanProducts.length == 1) {
       print('\tFound one product:');
-
-      receiptProduct.eanCode = filteredEanProducts[0].ean;
       print('\t\t${filteredEanProducts[0]}');
 
-      // print('\tLength of ean products 1: ${eanProducts.length}');
-      // eanProducts.remove(filteredEanProduct);
-      // print('\tLength of ean products 2: ${eanProducts.length}');
+      receiptProduct.eanCode = filteredEanProducts[0].ean;
     } else if (filteredEanProducts.length > 1) {
       print('\tFound multiple products:');
 
@@ -32,9 +27,6 @@ void eanHandler(
         var answer = stdin.readLineSync();
         if (answer?.toLowerCase() == 'y') {
           receiptProduct.eanCode = filteredReceiptProduct.ean;
-          // print('\tLength of ean products 1: ${eanProducts.length}');
-          // eanProducts.remove(filteredReceiptProduct);
-          // print('\tLength of ean products 2: ${eanProducts.length}');
           break;
         }
       }
