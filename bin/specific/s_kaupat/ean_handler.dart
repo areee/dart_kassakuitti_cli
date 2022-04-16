@@ -10,7 +10,8 @@ void eanHandler(
 
     var receiptProcuctName = receiptProduct.name;
     var filteredEanProducts = eanProducts
-        .where((eanProduct) => eanProduct.name.contains(receiptProcuctName))
+        .where((eanProduct) =>
+            eanProduct.name.toLowerCase().contains(receiptProcuctName))
         .toList();
 
     if (filteredEanProducts.length == 1) {
