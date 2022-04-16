@@ -36,6 +36,11 @@ void eanHandler(
 
     var splittedReceiptProcuctNames = nonFoundReceiptProduct.name.split(' ');
 
+    if (splittedReceiptProcuctNames.isEmpty) {
+      print('\tNo product found for the 2nd round.');
+      continue;
+    }
+
     var filteredEanProducts =
         filterEANProducts(splittedReceiptProcuctNames[0], eanProducts);
 
