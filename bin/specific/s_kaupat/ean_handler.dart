@@ -42,6 +42,12 @@ void eanHandler(
     var filteredEanProducts =
         filterEANProducts(splittedReceiptProcuctNames[0], eanProducts);
 
+    if (filteredEanProducts.length > 2 &&
+        splittedReceiptProcuctNames.length > 1) {
+      filteredEanProducts =
+          filterEANProducts(splittedReceiptProcuctNames[1], eanProducts);
+    }
+
     handleFoundCases(nonFoundReceiptProduct, filteredEanProducts, eanProducts);
 
     if (filteredEanProducts.isEmpty) {
