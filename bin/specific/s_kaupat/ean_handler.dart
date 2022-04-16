@@ -14,9 +14,9 @@ void eanHandler(
     print(receiptProduct);
 
     var filteredEanProducts =
-        filterEANProducts(receiptProduct.name, eanProducts);
+        _filterEANProducts(receiptProduct.name, eanProducts);
 
-    handleFoundCases(receiptProduct, filteredEanProducts, eanProducts);
+    _handleFoundCases(receiptProduct, filteredEanProducts, eanProducts);
 
     if (filteredEanProducts.isEmpty) {
       print('\tNo product found for the 1st round.');
@@ -40,15 +40,15 @@ void eanHandler(
     }
 
     var filteredEanProducts =
-        filterEANProducts(splittedReceiptProcuctNames[0], eanProducts);
+        _filterEANProducts(splittedReceiptProcuctNames[0], eanProducts);
 
     if (filteredEanProducts.length > 2 &&
         splittedReceiptProcuctNames.length > 1) {
       filteredEanProducts =
-          filterEANProducts(splittedReceiptProcuctNames[1], eanProducts);
+          _filterEANProducts(splittedReceiptProcuctNames[1], eanProducts);
     }
 
-    handleFoundCases(nonFoundReceiptProduct, filteredEanProducts, eanProducts);
+    _handleFoundCases(nonFoundReceiptProduct, filteredEanProducts, eanProducts);
 
     if (filteredEanProducts.isEmpty) {
       print('\tNo product found for the 2nd round.');
@@ -59,7 +59,7 @@ void eanHandler(
   print('Only ${eanProducts.length} unknown eanProducts left.');
 }
 
-List<EANProduct> filterEANProducts(
+List<EANProduct> _filterEANProducts(
     String receiptProductName, List<EANProduct> eanProducts) {
   return eanProducts
       .where((eanProduct) =>
@@ -67,7 +67,7 @@ List<EANProduct> filterEANProducts(
       .toList();
 }
 
-void handleFoundCases(ReceiptProduct receiptProduct,
+void _handleFoundCases(ReceiptProduct receiptProduct,
     List<EANProduct> filteredEanProducts, List<EANProduct> origEanProducts) {
   if (filteredEanProducts.length == 1) {
     print('\tFound one product:');
