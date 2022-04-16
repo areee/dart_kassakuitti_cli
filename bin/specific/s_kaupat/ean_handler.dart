@@ -5,28 +5,49 @@ import '../../models/receipt_product.dart';
 
 void eanHandler(
     List<ReceiptProduct> receiptProducts, List<EANProduct> eanProducts) {
+  List<ReceiptProduct> nonFoundReceiptProducts = [];
+
+  print('\nThe first round begins!');
+  print('Statistics: ${receiptProducts.length} receiptProducts, '
+      '${eanProducts.length} eanProducts\n');
+
   for (var receiptProduct in receiptProducts) {
     print(receiptProduct);
 
     var filteredEanProducts =
         filterEANProducts(receiptProduct.name, eanProducts);
 
-    handleFoundCases(receiptProduct, filteredEanProducts);
+    handleFoundCases(receiptProduct, filteredEanProducts, eanProducts);
 
     if (filteredEanProducts.isEmpty) {
       print('\tNo product found for the 1st round.');
-      var splittedReceiptProcuctNames = receiptProduct.name.split(' ');
 
-      var filteredEanProducts =
-          filterEANProducts(splittedReceiptProcuctNames[0], eanProducts);
-
-      handleFoundCases(receiptProduct, filteredEanProducts);
-
-      if (filteredEanProducts.isEmpty) {
-        print('\tNo product found for the 2nd round.');
-      }
+      nonFoundReceiptProducts.add(receiptProduct);
     }
   }
+
+  print('\nThe second round begins!');
+  print(
+      'Statistics: ${nonFoundReceiptProducts.length} nonFoundReceiptProducts, '
+      '${eanProducts.length} eanProducts\n');
+
+  for (var nonFoundReceiptProduct in nonFoundReceiptProducts) {
+    print(nonFoundReceiptProduct);
+
+    var splittedReceiptProcuctNames = nonFoundReceiptProduct.name.split(' ');
+
+    var filteredEanProducts =
+        filterEANProducts(splittedReceiptProcuctNames[0], eanProducts);
+
+    handleFoundCases(nonFoundReceiptProduct, filteredEanProducts, eanProducts);
+
+    if (filteredEanProducts.isEmpty) {
+      print('\tNo product found for the 2nd round.');
+    }
+  }
+
+  print('\nFinished!');
+  print('Only ${eanProducts.length} eanProducts left.');
 }
 
 List<EANProduct> filterEANProducts(
@@ -37,15 +58,17 @@ List<EANProduct> filterEANProducts(
       .toList();
 }
 
-void handleFoundCases(
-    ReceiptProduct receiptProduct, List<EANProduct> filteredEanProducts) {
+void handleFoundCases(ReceiptProduct receiptProduct,
+    List<EANProduct> filteredEanProducts, List<EANProduct> origEanProducts) {
   if (filteredEanProducts.length == 1) {
     print('\tFound one product:');
     print('\t\t${filteredEanProducts[0]}');
 
     receiptProduct.eanCode = filteredEanProducts[0].ean;
+    origEanProducts.remove(filteredEanProducts[0]);
   } else if (filteredEanProducts.length > 1) {
-    print('\tFound multiple products:');
+    print(
+        '\tFound multiple products (${filteredEanProducts.length} possible choices):');
 
     for (var filteredReceiptProduct in filteredEanProducts) {
       print('\t\t$filteredReceiptProduct');
@@ -53,6 +76,7 @@ void handleFoundCases(
       var answer = stdin.readLineSync();
       if (answer?.toLowerCase() == 'y') {
         receiptProduct.eanCode = filteredReceiptProduct.ean;
+        origEanProducts.remove(filteredReceiptProduct);
         break;
       }
     }
