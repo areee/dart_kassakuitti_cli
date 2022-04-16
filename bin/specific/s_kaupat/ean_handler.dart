@@ -5,11 +5,10 @@ import '../../models/receipt_product.dart';
 
 void eanHandler(
     List<ReceiptProduct> receiptProducts, List<EANProduct> eanProducts) {
-  List<ReceiptProduct> nonFoundReceiptProducts = [];
-
   print('\nThe first round begins!');
   print('Statistics: ${receiptProducts.length} receiptProducts, '
       '${eanProducts.length} eanProducts\n');
+  List<ReceiptProduct> nonFoundReceiptProducts = [];
 
   for (var receiptProduct in receiptProducts) {
     print(receiptProduct);
@@ -21,7 +20,6 @@ void eanHandler(
 
     if (filteredEanProducts.isEmpty) {
       print('\tNo product found for the 1st round.');
-
       nonFoundReceiptProducts.add(receiptProduct);
     }
   }
@@ -52,7 +50,7 @@ void eanHandler(
   }
 
   print('\nFinished!');
-  print('Only ${eanProducts.length} eanProducts left.');
+  print('Only ${eanProducts.length} unknown eanProducts left.');
 }
 
 List<EANProduct> filterEANProducts(
