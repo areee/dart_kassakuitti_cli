@@ -10,12 +10,11 @@ void receiptProducts2CSV(List<ReceiptProduct> products, String csvFilePath) {
 
   // If there aren't any discountCounted products, don't add it to the CSV file.
   if (products.every((product) => product.discountCounted.isEmpty)) {
-    header =
-        'Name;Quantity;Price per unit;Total price;EAN code (add manually)\n';
+    header = 'Name;Quantity;Price per unit;Total price;EAN code\n';
   } else {
     discountCounted = true;
     header =
-        'Name;Quantity;Price per unit;Total price;Discount counted;EAN code (add manually)\n';
+        'Name;Quantity;Price per unit;Total price;Discount counted;EAN code\n';
   }
 
   // Write the header
