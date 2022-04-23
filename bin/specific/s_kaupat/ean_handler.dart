@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:ansicolor/ansicolor.dart';
+
 import '../../models/ean_product.dart';
 import '../../models/receipt_product.dart';
 
@@ -70,14 +72,20 @@ List<EANProduct> _filterEANProducts(
 void _handleFoundCases(ReceiptProduct receiptProduct,
     List<EANProduct> filteredEanProducts, List<EANProduct> origEanProducts) {
   if (filteredEanProducts.length == 1) {
-    print('\tFound one product:');
+    AnsiPen pen = AnsiPen()
+      ..black(bold: true)
+      ..green(bold: true);
+    print(pen('\tFound one product:'));
     print('\t\t${filteredEanProducts[0]}');
 
     receiptProduct.eanCode = filteredEanProducts[0].ean;
     origEanProducts.remove(filteredEanProducts[0]);
   } else if (filteredEanProducts.length > 1) {
-    print(
-        '\tFound multiple products (${filteredEanProducts.length} possible choices):');
+    AnsiPen pen = AnsiPen()
+      ..black(bold: true)
+      ..red(bold: true);
+    print(pen('\tFound multiple products (${filteredEanProducts.length}'
+        ' possible choices):'));
 
     for (var filteredReceiptProduct in filteredEanProducts) {
       print('\t\t$filteredReceiptProduct');

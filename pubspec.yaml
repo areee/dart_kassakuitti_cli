@@ -13,6 +13,7 @@ environment:
 dev_dependencies:
   lints: ^1.0.1
 dependencies: 
+  ansicolor: ^2.0.1
   args: ^2.3.0
   html: ^0.15.0
   intl: ^0.17.0
