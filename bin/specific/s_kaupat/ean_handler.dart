@@ -44,11 +44,11 @@ void eanHandler(
     var filteredEanProducts =
         _filterEANProducts(splittedReceiptProcuctNames[0], eanProducts);
 
-    if (filteredEanProducts.length > 2 &&
-        splittedReceiptProcuctNames.length > 1) {
-      filteredEanProducts =
-          _filterEANProducts(splittedReceiptProcuctNames[1], eanProducts);
-    }
+    // if (filteredEanProducts.length > 2 &&
+    //     splittedReceiptProcuctNames.length > 1) {
+    //   filteredEanProducts =
+    //       _filterEANProducts(splittedReceiptProcuctNames[1], eanProducts);
+    // }
 
     _handleFoundCases(nonFoundReceiptProduct, filteredEanProducts, eanProducts);
 
@@ -80,7 +80,7 @@ void _handleFoundCases(ReceiptProduct receiptProduct,
     print('\t\t${filteredEanProducts[0]}');
 
     receiptProduct.eanCode = filteredEanProducts[0].ean;
-    origEanProducts.remove(filteredEanProducts[0]);
+    // origEanProducts.remove(filteredEanProducts[0]);
   } else if (filteredEanProducts.length > 1) {
     AnsiPen pen = AnsiPen()
       ..black(bold: true)
@@ -106,7 +106,7 @@ void _handleFoundCases(ReceiptProduct receiptProduct,
           pen('\tYou selected: ${filteredEanProducts[int.parse(answer) - 1]}'));
 
       receiptProduct.eanCode = filteredEanProducts[int.parse(answer) - 1].ean;
-      origEanProducts.remove(filteredEanProducts[int.parse(answer) - 1]);
+      // origEanProducts.remove(filteredEanProducts[int.parse(answer) - 1]);
     } else {
       print('\tNo product selected.');
     }
