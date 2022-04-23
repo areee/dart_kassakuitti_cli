@@ -15,6 +15,7 @@ dev_dependencies:
 dependencies: 
   ansicolor: ^2.0.1
   args: ^2.3.0
+  hive: ^2.1.0
   html: ^0.15.0
   intl: ^0.17.0
   path: ^1.8.1
