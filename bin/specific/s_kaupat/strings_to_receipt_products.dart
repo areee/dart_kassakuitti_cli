@@ -2,12 +2,12 @@ import '../../utils/extensions/double_extension.dart';
 import '../../utils/line_helper.dart';
 import '../../models/receipt_product.dart';
 
-/// Goes through the list of lines and returns a list of products.
-List<ReceiptProduct> strings2ReceiptProducts(List<String> lines) {
+/// Goes through the list of rows and returns a list of products.
+List<ReceiptProduct> strings2ReceiptProducts(List<String> rows) {
   var helper = LineHelper();
   List<ReceiptProduct> products = [];
 
-  for (var item in lines) {
+  for (var item in rows) {
     item = item.trim();
     item = item.toLowerCase();
 
@@ -15,11 +15,11 @@ List<ReceiptProduct> strings2ReceiptProducts(List<String> lines) {
     if (item.contains('----------')) {
       break;
     }
-    // Refund line:
+    // Refund row:
     else if (item.contains('palautus')) {
       helper.previousLine = PreviousLine.refund;
     }
-    // When previous line was a refund line, skip next two lines:
+    // When the previous row was a refund row, skip next two rows:
     else if (helper.previousLine == PreviousLine.refund) {
       if (helper.calcLines != 1) {
         helper.calcLines++;
@@ -28,7 +28,7 @@ List<ReceiptProduct> strings2ReceiptProducts(List<String> lines) {
         helper.previousLine = PreviousLine.notSet;
       }
     }
-    // A discount line:
+    // A discount row:
     else if (item.contains('alennus')) {
       var items = item.split(RegExp(r'\s{12,33}'));
       var discountPrice =
@@ -42,7 +42,7 @@ List<ReceiptProduct> strings2ReceiptProducts(List<String> lines) {
       var discountedPrice =
           (origTotalPriceAsDouble - discountPriceAsDouble).toPrecision(2);
       var discountedPriceAsString =
-          discountedPrice.toStringAsFixed(2).replaceAll(RegExp(r'\.'), ',');
+          discountedPrice.toString().replaceAll(RegExp(r'\.'), ',');
 
       if (lastProduct.quantity > 1) {
         var discountedPricePerUnit = (discountedPrice / lastProduct.quantity)
@@ -55,7 +55,37 @@ List<ReceiptProduct> strings2ReceiptProducts(List<String> lines) {
       lastProduct.totalPrice = discountedPriceAsString;
       lastProduct.discountCounted = 'yes';
     }
-    // If a line starts with a digit, it is a quantity and price per unit row:
+    /*
+    A campaign row
+    (i.e. usually means that there's a mistake in the previous line):
+    */
+    else if (item.contains('kampanja')) {
+      var items = item.split(RegExp(r'\s{12,33}'));
+      var campaignPrice =
+          items[1].replaceAll(RegExp(r'\-'), '').replaceAll(RegExp(r','), '.');
+      var campaignPriceAsDouble = double.parse(campaignPrice);
+
+      var lastProduct = products.last;
+      var origTotalPrice = lastProduct.totalPrice.replaceAll(RegExp(r','), '.');
+      var origTotalPriceAsDouble = double.parse(origTotalPrice);
+
+      var fixedPrice =
+          (origTotalPriceAsDouble - campaignPriceAsDouble).toPrecision(2);
+      var fixedPriceAsString =
+          fixedPrice.toString().replaceAll(RegExp(r'\.'), ',');
+
+      if (lastProduct.quantity > 1) {
+        var fixedPricePerUnit = (fixedPrice / lastProduct.quantity)
+            .toPrecision(2)
+            .toString()
+            .replaceAll(RegExp(r'\.'), ',');
+
+        lastProduct.pricePerUnit = fixedPricePerUnit;
+      }
+
+      lastProduct.totalPrice = fixedPriceAsString;
+    }
+    // If a row starts with a digit, it is a quantity and price per unit row:
     else if (item.contains(RegExp(r'^\d'))) {
       var items = item.split(RegExp(r'\s{6,7}'));
       var quantity =
@@ -68,7 +98,7 @@ List<ReceiptProduct> strings2ReceiptProducts(List<String> lines) {
       lastProduct.pricePerUnit = pricePerUnit;
     }
 
-    // A "normal" line:
+    // A "normal" row:
     else {
       var items = item.split(RegExp(r'\s{11,33}'));
 
