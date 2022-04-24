@@ -1,37 +1,42 @@
 import 'dart:io';
 
-import 'package:ansicolor/ansicolor.dart';
 import 'package:hive/hive.dart';
 
 import '../../models/ean_product.dart';
 import '../../models/hive_product.dart';
 import '../../models/receipt_product.dart';
+import '../../utils/ansipen_helper.dart';
 
 const _kHiveBoxName = 'hiveProducts';
 
 /// Handles the EAN products.
 Future<void> eanHandler(
     List<ReceiptProduct> receiptProducts, List<EANProduct> eanProducts) async {
-  Hive.init(Directory.current.path);
-  Hive.registerAdapter(HiveProductAdapter());
+  List<ReceiptProduct> nonFoundReceiptProducts = [];
+  List<ReceiptProduct> nonFoundReceiptProducts2 = [];
 
-  var hiveProducts = await Hive.openBox<HiveProduct>(_kHiveBoxName);
+  Box<HiveProduct> hiveProducts = await _initializeHiveProducts();
 
   print('\nThe first round begins!');
   print('Statistics:');
-  print('Amount of hive products: ${hiveProducts.length}');
+  print(peachPen().write('Amount of hive products: ${hiveProducts.length}'));
   print('${receiptProducts.length} receiptProducts, '
       '${eanProducts.length} eanProducts\n');
-  List<ReceiptProduct> nonFoundReceiptProducts = [];
 
   for (var receiptProduct in receiptProducts) {
     print(receiptProduct);
 
+    String? eanProductName =
+        _filterHiveProducts(hiveProducts.values, receiptProduct.name);
+    print(peachPen().write('EAN product name: $eanProductName'));
+
     var filteredEanProducts =
-        _filterEANProducts(receiptProduct.name, eanProducts);
+        _filterEANProducts(receiptProduct.name, eanProducts, eanProductName);
 
     _handleFoundCases(
         receiptProduct, filteredEanProducts, eanProducts, hiveProducts);
+
+    print(peachPen().write('Amount of hive products: ${hiveProducts.length}'));
 
     if (filteredEanProducts.isEmpty) {
       print('\tNo product found for the 1st round.');
@@ -54,8 +59,12 @@ Future<void> eanHandler(
       continue;
     }
 
-    var filteredEanProducts =
-        _filterEANProducts(splittedReceiptProcuctNames[0], eanProducts);
+    String? eanProductName =
+        _filterHiveProducts(hiveProducts.values, nonFoundReceiptProduct.name);
+    print(peachPen().write('EAN product name: $eanProductName'));
+
+    var filteredEanProducts = _filterEANProducts(
+        splittedReceiptProcuctNames[0], eanProducts, eanProductName);
 
     // if (filteredEanProducts.length > 2 &&
     //     splittedReceiptProcuctNames.length > 1) {
@@ -68,21 +77,61 @@ Future<void> eanHandler(
 
     if (filteredEanProducts.isEmpty) {
       print('\tNo product found for the 2nd round.');
+      nonFoundReceiptProducts2.add(nonFoundReceiptProduct);
     }
   }
 
   print('\nFinished!');
-  // print('Only ${eanProducts.length} unknown eanProducts left.');
-  print('Amount of hive products: ${hiveProducts.length}');
+  print('${nonFoundReceiptProducts2.length < 10 ? 'Only ' : ''}'
+      '${nonFoundReceiptProducts2.length} unknown receipt '
+      '${nonFoundReceiptProducts2.length == 1 ? 'product' : 'products'} '
+      'left.');
+  print(peachPen().write('Amount of hive products: ${hiveProducts.length}'));
 
   hiveProducts.close();
 }
 
-List<EANProduct> _filterEANProducts(
-    String receiptProductName, List<EANProduct> eanProducts) {
+String? _filterHiveProducts(
+    Iterable<HiveProduct> hiveProductsValues, String receiptProductName) {
+  String? eanProductName;
+
+  var filteredHiveProducts = hiveProductsValues
+      .where((hiveProduct) => hiveProduct.receiptName == receiptProductName);
+  /*
+  If the receipt product is already in the hive products,
+  get the ean product name from the hive product.
+  */
+  if (filteredHiveProducts.isNotEmpty) {
+    print(greenPen().write(
+        '\tFound ${filteredHiveProducts.length} pcs in the hive products!'));
+    eanProductName = filteredHiveProducts.first.eanName;
+    print('\teanProductName in Hive: $eanProductName');
+  }
+  return eanProductName;
+}
+
+Future<Box<HiveProduct>> _initializeHiveProducts() async {
+  Hive.init(Directory.current.path);
+  Hive.registerAdapter(HiveProductAdapter());
+  return await Hive.openBox<HiveProduct>(_kHiveBoxName);
+}
+
+List<EANProduct> _filterEANProducts(String receiptProductName,
+    List<EANProduct> eanProducts, String? eanProductName) {
+  /*
+  If eanProductName is not null,
+  filter the ean products by the ean product name.
+  */
+  if (eanProductName != null) {
+    return eanProducts
+        .where((eanProduct) =>
+            eanProduct.name.toLowerCase() == eanProductName.toLowerCase())
+        .toList();
+  }
   return eanProducts
-      .where((eanProduct) =>
-          eanProduct.name.toLowerCase().contains(receiptProductName))
+      .where((eanProduct) => eanProduct.name
+          .toLowerCase()
+          .contains(receiptProductName.toLowerCase()))
       .toList();
 }
 
@@ -92,17 +141,15 @@ void _handleFoundCases(
     List<EANProduct> origEanProducts,
     Box<HiveProduct> hiveProducts) {
   if (filteredEanProducts.length == 1) {
-    AnsiPen pen = _greenPen();
+    print(greenPen().write('\tFound one product:'));
+    print('\t\t${filteredEanProducts.first}');
 
-    print(pen('\tFound one product:'));
-    print('\t\t${filteredEanProducts[0]}');
-
-    receiptProduct.eanCode = filteredEanProducts[0].ean;
-    // origEanProducts.remove(filteredEanProducts[0]);
+    receiptProduct.eanCode = filteredEanProducts.first.ean;
+    // origEanProducts.remove(filteredEanProducts.first);
   } else if (filteredEanProducts.length > 1) {
-    AnsiPen pen = _redPen();
-    print(pen('\tFound multiple products (${filteredEanProducts.length}'
-        ' possible choices):'));
+    print(redPen()
+        .write('\tFound multiple products (${filteredEanProducts.length}'
+            ' possible choices):'));
 
     for (var i = 0; i < filteredEanProducts.length; i++) {
       print('\t\t${i + 1}. ${filteredEanProducts[i]}');
@@ -115,28 +162,17 @@ void _handleFoundCases(
         int.parse(answer) > 0) {
       var selectedEanProduct = filteredEanProducts[int.parse(answer) - 1];
 
-      AnsiPen pen = _greenPen();
-      print(pen('\tYou selected: $selectedEanProduct'));
+      print(greenPen().write('\tYou selected: $selectedEanProduct'));
 
       receiptProduct.eanCode = selectedEanProduct.ean;
 
       hiveProducts.add(HiveProduct(
           receiptName: receiptProduct.name, eanName: selectedEanProduct.name));
+      print(
+          peachPen().write('Amount of hive products: ${hiveProducts.length}'));
       // origEanProducts.remove(selectedEanProduct);
     } else {
       print('\tNo product selected.');
     }
   }
-}
-
-AnsiPen _greenPen() {
-  return AnsiPen()
-    ..black(bold: true)
-    ..green(bold: true);
-}
-
-AnsiPen _redPen() {
-  return AnsiPen()
-    ..black(bold: true)
-    ..red(bold: true);
 }
