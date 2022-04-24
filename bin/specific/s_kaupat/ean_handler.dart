@@ -1,12 +1,20 @@
 import 'dart:io';
 
 import 'package:ansicolor/ansicolor.dart';
+import 'package:hive/hive.dart';
 
 import '../../models/ean_product.dart';
+import '../../models/hive_product.dart';
 import '../../models/receipt_product.dart';
 
-void eanHandler(
-    List<ReceiptProduct> receiptProducts, List<EANProduct> eanProducts) {
+const _kHiveBoxName = 'hiveProducts';
+
+/// Handles the EAN products.
+Future<void> eanHandler(
+    List<ReceiptProduct> receiptProducts, List<EANProduct> eanProducts) async {
+  Hive.init(Directory.current.path);
+  var hiveProducts = await Hive.openBox<HiveProduct>(_kHiveBoxName);
+
   print('\nThe first round begins!');
   print('Statistics: ${receiptProducts.length} receiptProducts, '
       '${eanProducts.length} eanProducts\n');

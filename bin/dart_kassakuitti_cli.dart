@@ -38,7 +38,7 @@ void main(List<String> arguments) async {
         var eanProducts = await readEANProducts(
             selectedHtmlFile, ShopSelector.sKaupat, csvFilesPath);
 
-        eanHandler(receiptProducts, eanProducts.toList());
+        await eanHandler(receiptProducts, eanProducts.toList());
 
         receiptProducts2CSV(receiptProducts, csvFilesPath);
         eanProducts2CSV(eanProducts, csvFilesPath, ShopSelector.sKaupat.name);
