@@ -66,12 +66,6 @@ Future<void> eanHandler(
     var filteredEanProducts = _filterEANProducts(
         splittedReceiptProcuctNames[0], eanProducts, eanProductName);
 
-    // if (filteredEanProducts.length > 2 &&
-    //     splittedReceiptProcuctNames.length > 1) {
-    //   filteredEanProducts =
-    //       _filterEANProducts(splittedReceiptProcuctNames[1], eanProducts);
-    // }
-
     _handleFoundCases(
         nonFoundReceiptProduct, filteredEanProducts, eanProducts, hiveProducts);
 
@@ -145,7 +139,6 @@ void _handleFoundCases(
     print('\t\t${filteredEanProducts.first}');
 
     receiptProduct.eanCode = filteredEanProducts.first.ean;
-    // origEanProducts.remove(filteredEanProducts.first);
   } else if (filteredEanProducts.length > 1) {
     print(redPen()
         .write('\tFound multiple products (${filteredEanProducts.length}'
@@ -170,7 +163,6 @@ void _handleFoundCases(
           receiptName: receiptProduct.name, eanName: selectedEanProduct.name));
       print(
           peachPen().write('Amount of hive products: ${hiveProducts.length}'));
-      // origEanProducts.remove(selectedEanProduct);
     } else {
       print('\tNo product selected.');
     }
