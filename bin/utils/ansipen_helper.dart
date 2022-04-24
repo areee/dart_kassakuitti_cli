@@ -11,3 +11,9 @@ AnsiPen redPen() {
     ..black(bold: true)
     ..red(bold: true);
 }
+
+AnsiPen peachPen() {
+  return AnsiPen()
+    ..black(bold: true)
+    ..rgb(r: 1.0, g: 0.8, b: 0.2);
+}
