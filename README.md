@@ -93,3 +93,11 @@ If you want to get an easier command, you can create an alias into Zsh or Bash p
 ```
 alias kassakuitti='dart run $HOME/Documents/dart_kassakuitti_cli/bin/dart_kassakuitti_cli.dart'
 ```
+
+## Generate `hive_product.g.dart` file
+
+You can generate `hive_product.g.dart` file by running:
+
+```
+dart run build_runner build
+```
