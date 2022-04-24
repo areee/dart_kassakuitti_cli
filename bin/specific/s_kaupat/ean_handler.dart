@@ -13,10 +13,14 @@ const _kHiveBoxName = 'hiveProducts';
 Future<void> eanHandler(
     List<ReceiptProduct> receiptProducts, List<EANProduct> eanProducts) async {
   Hive.init(Directory.current.path);
+  Hive.registerAdapter(HiveProductAdapter());
+
   var hiveProducts = await Hive.openBox<HiveProduct>(_kHiveBoxName);
 
   print('\nThe first round begins!');
-  print('Statistics: ${receiptProducts.length} receiptProducts, '
+  print('Statistics:');
+  print('Amount of hive products: ${hiveProducts.length}');
+  print('${receiptProducts.length} receiptProducts, '
       '${eanProducts.length} eanProducts\n');
   List<ReceiptProduct> nonFoundReceiptProducts = [];
 
@@ -26,7 +30,8 @@ Future<void> eanHandler(
     var filteredEanProducts =
         _filterEANProducts(receiptProduct.name, eanProducts);
 
-    _handleFoundCases(receiptProduct, filteredEanProducts, eanProducts);
+    _handleFoundCases(
+        receiptProduct, filteredEanProducts, eanProducts, hiveProducts);
 
     if (filteredEanProducts.isEmpty) {
       print('\tNo product found for the 1st round.');
@@ -58,7 +63,8 @@ Future<void> eanHandler(
     //       _filterEANProducts(splittedReceiptProcuctNames[1], eanProducts);
     // }
 
-    _handleFoundCases(nonFoundReceiptProduct, filteredEanProducts, eanProducts);
+    _handleFoundCases(
+        nonFoundReceiptProduct, filteredEanProducts, eanProducts, hiveProducts);
 
     if (filteredEanProducts.isEmpty) {
       print('\tNo product found for the 2nd round.');
@@ -66,7 +72,10 @@ Future<void> eanHandler(
   }
 
   print('\nFinished!');
-  print('Only ${eanProducts.length} unknown eanProducts left.');
+  // print('Only ${eanProducts.length} unknown eanProducts left.');
+  print('Amount of hive products: ${hiveProducts.length}');
+
+  hiveProducts.close();
 }
 
 List<EANProduct> _filterEANProducts(
@@ -77,12 +86,13 @@ List<EANProduct> _filterEANProducts(
       .toList();
 }
 
-void _handleFoundCases(ReceiptProduct receiptProduct,
-    List<EANProduct> filteredEanProducts, List<EANProduct> origEanProducts) {
+void _handleFoundCases(
+    ReceiptProduct receiptProduct,
+    List<EANProduct> filteredEanProducts,
+    List<EANProduct> origEanProducts,
+    Box<HiveProduct> hiveProducts) {
   if (filteredEanProducts.length == 1) {
-    AnsiPen pen = AnsiPen()
-      ..black(bold: true)
-      ..green(bold: true);
+    AnsiPen pen = _greenPen();
 
     print(pen('\tFound one product:'));
     print('\t\t${filteredEanProducts[0]}');
@@ -90,10 +100,7 @@ void _handleFoundCases(ReceiptProduct receiptProduct,
     receiptProduct.eanCode = filteredEanProducts[0].ean;
     // origEanProducts.remove(filteredEanProducts[0]);
   } else if (filteredEanProducts.length > 1) {
-    AnsiPen pen = AnsiPen()
-      ..black(bold: true)
-      ..red(bold: true);
-
+    AnsiPen pen = _redPen();
     print(pen('\tFound multiple products (${filteredEanProducts.length}'
         ' possible choices):'));
 
@@ -106,17 +113,30 @@ void _handleFoundCases(ReceiptProduct receiptProduct,
     if (answer!.isNotEmpty &&
         int.parse(answer) <= filteredEanProducts.length &&
         int.parse(answer) > 0) {
-      AnsiPen pen = AnsiPen()
-        ..black(bold: true)
-        ..green(bold: true);
+      var selectedEanProduct = filteredEanProducts[int.parse(answer) - 1];
 
-      print(
-          pen('\tYou selected: ${filteredEanProducts[int.parse(answer) - 1]}'));
+      AnsiPen pen = _greenPen();
+      print(pen('\tYou selected: $selectedEanProduct'));
 
-      receiptProduct.eanCode = filteredEanProducts[int.parse(answer) - 1].ean;
-      // origEanProducts.remove(filteredEanProducts[int.parse(answer) - 1]);
+      receiptProduct.eanCode = selectedEanProduct.ean;
+
+      hiveProducts.add(HiveProduct(
+          receiptName: receiptProduct.name, eanName: selectedEanProduct.name));
+      // origEanProducts.remove(selectedEanProduct);
     } else {
       print('\tNo product selected.');
     }
   }
+}
+
+AnsiPen _greenPen() {
+  return AnsiPen()
+    ..black(bold: true)
+    ..green(bold: true);
+}
+
+AnsiPen _redPen() {
+  return AnsiPen()
+    ..black(bold: true)
+    ..red(bold: true);
 }
