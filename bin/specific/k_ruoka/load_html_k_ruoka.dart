@@ -12,45 +12,51 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
   var html = await file.readAsString();
   var document = parse(html);
 
-  var substitutedProducts =
-      document.getElementsByClassName('old-order-substituted-products-list')[0];
+  var listOfSubstitutedElements =
+      document.getElementsByClassName('old-order-substituted-products-list');
 
-  for (var product in substitutedProducts.children) {
-    var productInfo = product.children[1].children[0];
+  // If list of substituted elements is empty, skip this section.
+  if (listOfSubstitutedElements.isNotEmpty) {
+    var substitutedProducts = listOfSubstitutedElements.first;
 
-    var productEan = productInfo.id.replaceAll('department-product-item-', '');
+    for (var product in substitutedProducts.children) {
+      var productInfo = product.children[1].children[0];
 
-    var productName = productInfo
-        .children[0].children[2].children[0].children[0].text
-        .trim()
-        .replaceAll('\n', '')
-        .replaceAll(RegExp(r'\s{40,50}'), ' ');
+      var productEan =
+          productInfo.id.replaceAll('department-product-item-', '');
 
-    var productQuantity = productInfo.children[0].children[3].children[0].text
-        .replaceAll('kpl', '')
-        .replaceAll('kg', '');
+      var productName = productInfo
+          .children[0].children[2].children[0].children[0].text
+          .trim()
+          .replaceAll('\n', '')
+          .replaceAll(RegExp(r'\s{40,50}'), ' ');
 
-    var priceElement =
-        productInfo.children[0].children[3].children[1].children[0];
+      var productQuantity = productInfo.children[0].children[3].children[0].text
+          .replaceAll('kpl', '')
+          .replaceAll('kg', '');
 
-    var finalPrice = StringBuffer();
+      var priceElement =
+          productInfo.children[0].children[3].children[1].children[0];
 
-    for (var i = 0; i < priceElement.children.length; i++) {
-      if (i != 3) {
-        finalPrice.write(priceElement.children[i].text);
+      var finalPrice = StringBuffer();
+
+      for (var i = 0; i < priceElement.children.length; i++) {
+        if (i != 3) {
+          finalPrice.write(priceElement.children[i].text);
+        }
       }
-    }
-    var productPrice = finalPrice.toString();
-    var quantity = double.parse(productQuantity)
-        .ceil(); // e.g. 0.2 -> 1 (round up) or 0.5 -> 1 (round up)
+      var productPrice = finalPrice.toString();
+      var quantity = double.parse(productQuantity)
+          .ceil(); // e.g. 0.2 -> 1 (round up) or 0.5 -> 1 (round up)
 
-    eanProducts.add(EANProduct(
-      ean: productEan,
-      name: productName,
-      quantity: quantity,
-      totalPrice: productPrice,
-      pricePerUnit: countPricePerUnit(productPrice, quantity),
-    ));
+      eanProducts.add(EANProduct(
+        ean: productEan,
+        name: productName,
+        quantity: quantity,
+        totalPrice: productPrice,
+        pricePerUnit: countPricePerUnit(productPrice, quantity),
+      ));
+    }
   }
 
   var pickedProducts =
@@ -99,6 +105,49 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
     }
   }
 
-  // TODO: Add an own section for home delivery price
+  // Get home delivery details
+
+  var orderDetailsSection =
+      document.getElementsByClassName('old-order-details')[0];
+
+  var homeDeliveryPriceSection = orderDetailsSection.children[0];
+  var homeDeliveryText = homeDeliveryPriceSection.children[0].text;
+  var homeDeliveryPrice = homeDeliveryPriceSection.children[1].text;
+
+  eanProducts.add(EANProduct(
+    ean: '',
+    name: homeDeliveryText,
+    quantity: 1,
+    totalPrice: homeDeliveryPrice,
+    pricePerUnit: '',
+  ));
+
+  // Get packaging material costs
+
+  var packagingMaterialTexts = orderDetailsSection.children[1].children[0].text;
+
+  // Get packaging material term:
+  var packagingMaterialTerm = packagingMaterialTexts
+      .substring(0, packagingMaterialTexts.indexOf(':'))
+      .trim();
+
+  /**
+   * Get packaging material price.
+   * - Start where the price starts, e.g. 0,75
+   * - End before unit (euros per box)
+   */
+  var packagingMaterialPrice = packagingMaterialTexts
+      .substring(packagingMaterialTexts.indexOf(RegExp(r'\d+\,\d+')),
+          packagingMaterialTexts.indexOf('€/ltk'))
+      .trim();
+
+  eanProducts.add(EANProduct(
+    ean: '',
+    name: packagingMaterialTerm,
+    quantity: -1,
+    totalPrice: '',
+    pricePerUnit: packagingMaterialPrice,
+  ));
+
   return eanProducts;
 }
