@@ -107,8 +107,10 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
 
   // Get home delivery details
 
-  var homeDeliveryPriceSection =
-      document.getElementsByClassName('old-order-details')[0].children[0];
+  var orderDetailsSection =
+      document.getElementsByClassName('old-order-details')[0];
+
+  var homeDeliveryPriceSection = orderDetailsSection.children[0];
   var homeDeliveryText = homeDeliveryPriceSection.children[0].text;
   var homeDeliveryPrice = homeDeliveryPriceSection.children[1].text;
 
@@ -118,6 +120,31 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
     quantity: 1,
     totalPrice: homeDeliveryPrice,
     pricePerUnit: '',
+  ));
+
+  // Get packaging material costs
+
+  var packakingMaterialTexts = orderDetailsSection.children[1].children[0].text;
+  var packakingMaterialTextsSplit = packakingMaterialTexts.split(':');
+
+  // Get packaging material term:
+  var packakingMaterialTerm = packakingMaterialTextsSplit[0].trim();
+
+  // Get price:
+  var textAfterColon = packakingMaterialTextsSplit[1];
+  var packakingMaterialPrice = textAfterColon
+      .substring(
+          textAfterColon.indexOf(
+              RegExp(r'\d+\,\d+')), // Start where the price starts, e.g. 0,75
+          textAfterColon.indexOf('€/ltk'))
+      .trim(); // End before unit (euros per box)
+
+  eanProducts.add(EANProduct(
+    ean: '',
+    name: packakingMaterialTerm,
+    quantity: -1,
+    totalPrice: '',
+    pricePerUnit: packakingMaterialPrice,
   ));
 
   return eanProducts;
