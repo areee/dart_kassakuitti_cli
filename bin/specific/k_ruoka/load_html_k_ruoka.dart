@@ -124,27 +124,29 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
 
   // Get packaging material costs
 
-  var packakingMaterialTexts = orderDetailsSection.children[1].children[0].text;
-  var packakingMaterialTextsSplit = packakingMaterialTexts.split(':');
+  var packagingMaterialTexts = orderDetailsSection.children[1].children[0].text;
 
   // Get packaging material term:
-  var packakingMaterialTerm = packakingMaterialTextsSplit[0].trim();
+  var packagingMaterialTerm = packagingMaterialTexts
+      .substring(0, packagingMaterialTexts.indexOf(':'))
+      .trim();
 
-  // Get price:
-  var textAfterColon = packakingMaterialTextsSplit[1];
-  var packakingMaterialPrice = textAfterColon
-      .substring(
-          textAfterColon.indexOf(
-              RegExp(r'\d+\,\d+')), // Start where the price starts, e.g. 0,75
-          textAfterColon.indexOf('€/ltk')) // End before unit (euros per box)
+  /**
+   * Get packaging material price.
+   * - Start where the price starts, e.g. 0,75
+   * - End before unit (euros per box)
+   */
+  var packagingMaterialPrice = packagingMaterialTexts
+      .substring(packagingMaterialTexts.indexOf(RegExp(r'\d+\,\d+')),
+          packagingMaterialTexts.indexOf('€/ltk'))
       .trim();
 
   eanProducts.add(EANProduct(
     ean: '',
-    name: packakingMaterialTerm,
+    name: packagingMaterialTerm,
     quantity: -1,
     totalPrice: '',
-    pricePerUnit: packakingMaterialPrice,
+    pricePerUnit: packagingMaterialPrice,
   ));
 
   return eanProducts;
