@@ -105,6 +105,20 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
     }
   }
 
-  // TODO: Add an own section for home delivery price
+  // Get home delivery details
+
+  var homeDeliveryPriceSection =
+      document.getElementsByClassName('old-order-details')[0].children[0];
+  var homeDeliveryText = homeDeliveryPriceSection.children[0].text;
+  var homeDeliveryPrice = homeDeliveryPriceSection.children[1].text;
+
+  eanProducts.add(EANProduct(
+    ean: '',
+    name: homeDeliveryText,
+    quantity: 1,
+    totalPrice: homeDeliveryPrice,
+    pricePerUnit: '',
+  ));
+
   return eanProducts;
 }
