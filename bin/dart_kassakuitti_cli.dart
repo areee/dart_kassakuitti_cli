@@ -22,7 +22,7 @@ void main(List<String> arguments) async {
   } else if (argResults.command?.name == ArgSelector.run.value!) {
     print('\nRunning...\n');
 
-    var selectedTextFile = argResults[ArgSelector.textFile.value!] as String?;
+    var selectedTextFile = argResults[ArgSelector.textFile.value!] as String;
     var selectedHtmlFile = argResults[ArgSelector.htmlFile.value!] as String;
     var selectedStore =
         argResults[ArgSelector.foodOnlineStore.value!] as String;
@@ -34,7 +34,7 @@ void main(List<String> arguments) async {
     try {
       if (ShopSelector.sKaupat.isEqual(selectedStore)) {
         var receiptProducts =
-            await readReceiptProducts(selectedTextFile!, csvFilesPath);
+            await readReceiptProducts(selectedTextFile, csvFilesPath);
         var eanProducts = await readEANProducts(
             selectedHtmlFile, ShopSelector.sKaupat, csvFilesPath);
 

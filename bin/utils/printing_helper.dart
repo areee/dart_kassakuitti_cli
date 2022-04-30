@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:yaml/yaml.dart';
 
-void printSelectedValues(String? selectedTextFile, String selectedHtmlFile,
+void printSelectedValues(String selectedTextFile, String selectedHtmlFile,
     String selectedStore, String csvFilesPath) {
-  print('Selected values:'
-      '${selectedTextFile != null ? '\n- Path to the cash receipt:\t\t$selectedTextFile' : ''}'
-      '\n- Path to the EAN products file:\t$selectedHtmlFile'
-      '\n- Selected store:\t\t\t$selectedStore'
-      '\n- Path where to save CSV files:\t\t$csvFilesPath\n');
+  print('''Selected values:
+    - Path to the cash receipt:\t\t$selectedTextFile
+    - Path to the EAN products file:\t$selectedHtmlFile
+    - Selected store:\t\t\t$selectedStore
+    - Path where to save CSV files:\t$csvFilesPath\n''');
 }
 
 Future<void> printBasicInfo() async {
