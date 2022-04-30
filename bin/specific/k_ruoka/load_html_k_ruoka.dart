@@ -136,8 +136,8 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
       .substring(
           textAfterColon.indexOf(
               RegExp(r'\d+\,\d+')), // Start where the price starts, e.g. 0,75
-          textAfterColon.indexOf('€/ltk'))
-      .trim(); // End before unit (euros per box)
+          textAfterColon.indexOf('€/ltk')) // End before unit (euros per box)
+      .trim();
 
   eanProducts.add(EANProduct(
     ean: '',
