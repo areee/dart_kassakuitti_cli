@@ -57,7 +57,8 @@ List<ReceiptProduct> strings2ReceiptProducts(List<String> rows) {
     }
     /*
     A campaign row
-    (i.e. usually means that there's a mistake in the previous line):
+    (i.e. usually means that there's a mistake in the previous line
+    BUT not always):
     */
     else if (item.contains('kampanja')) {
       var items = item.split(RegExp(r'\s{12,33}'));
@@ -81,6 +82,7 @@ List<ReceiptProduct> strings2ReceiptProducts(List<String> rows) {
             .replaceAll(RegExp(r'\.'), ',');
 
         lastProduct.pricePerUnit = fixedPricePerUnit;
+        lastProduct.discountCounted = 'yes';
       }
 
       lastProduct.totalPrice = fixedPriceAsString;
