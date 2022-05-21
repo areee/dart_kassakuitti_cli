@@ -23,18 +23,17 @@ void main(List<String> arguments) async {
 /// Handles the commands in the arguments.
 Future<void> handleArgCommands(ArgResults argResults, ArgParser parser) async {
   // Help command
-  if (argResults.command?.name == ArgSelector.help.value!) {
+  if (argResults.command?.name == ArgSelector.help.value) {
     print('Help:\n${parser.usage}');
   }
   // Run command
-  else if (argResults.command?.name == ArgSelector.run.value!) {
+  else if (argResults.command?.name == ArgSelector.run.value) {
     print('\nRunning...\n');
 
-    var selectedTextFile = argResults[ArgSelector.textFile.value!] as String?;
-    var selectedHtmlFile = argResults[ArgSelector.htmlFile.value!] as String;
-    var selectedStore =
-        argResults[ArgSelector.foodOnlineStore.value!] as String;
-    var csvFilesPath = argResults[ArgSelector.csvPath.value!] as String;
+    var selectedTextFile = argResults[ArgSelector.textFile.value] as String?;
+    var selectedHtmlFile = argResults[ArgSelector.htmlFile.value] as String;
+    var selectedStore = argResults[ArgSelector.foodOnlineStore.value] as String;
+    var csvFilesPath = argResults[ArgSelector.csvPath.value] as String;
 
     printSelectedValues(
         selectedTextFile, selectedHtmlFile, selectedStore, csvFilesPath);
