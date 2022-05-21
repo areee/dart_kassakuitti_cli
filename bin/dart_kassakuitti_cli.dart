@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:args/src/arg_results.dart';
+import 'package:args/src/arg_parser.dart';
 import 'read_ean_products.dart';
 import 'ean_products_2_csv.dart';
 import 'specific/s_kaupat/ean_handler.dart';
@@ -16,10 +18,17 @@ void main(List<String> arguments) async {
   var parser = getParser();
   var argResults = parser.parse(arguments);
 
+  await handleArgCommands(argResults, parser);
+}
+
+/// Handles the commands in the arguments.
+Future<void> handleArgCommands(ArgResults argResults, ArgParser parser) async {
+  // Help command
   if (argResults.command?.name == ArgSelector.help.value!) {
     print('Help:\n${parser.usage}');
-    return;
-  } else if (argResults.command?.name == ArgSelector.run.value!) {
+  }
+  // Run command
+  else if (argResults.command?.name == ArgSelector.run.value!) {
     print('\nRunning...\n');
 
     var selectedTextFile = argResults[ArgSelector.textFile.value!] as String?;
@@ -57,7 +66,9 @@ void main(List<String> arguments) async {
     }
 
     print('\nDone!');
-  } else {
+  }
+  // Empty command (or other commands, e.g. 'moro' / 'hello')
+  else {
     await printBasicInfo();
   }
 }
