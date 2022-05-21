@@ -1,7 +1,6 @@
 import 'dart:io';
 
-import 'package:args/src/arg_results.dart';
-import 'package:args/src/arg_parser.dart';
+import 'package:args/args.dart';
 import 'read_ean_products.dart';
 import 'ean_products_2_csv.dart';
 import 'specific/s_kaupat/ean_handler.dart';
@@ -69,6 +68,6 @@ Future<void> handleArgCommands(ArgResults argResults, ArgParser parser) async {
   }
   // Empty command (or other commands, e.g. 'moro' / 'hello')
   else {
-    await printBasicInfo();
+    await printBasicInfo(parser);
   }
 }
