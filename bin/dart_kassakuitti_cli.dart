@@ -39,7 +39,7 @@ Future<void> handleArgCommands(ArgResults argResults, ArgParser parser) async {
         selectedTextFile, selectedHtmlFile, selectedStore, csvFilesPath);
 
     try {
-      if (ShopSelector.sKaupat.isEqual(selectedStore)) {
+      if (ShopSelector.sKaupat.value == selectedStore) {
         var receiptProducts =
             await readReceiptProducts(selectedTextFile!, csvFilesPath);
         var eanProducts = await readEANProducts(
@@ -49,7 +49,7 @@ Future<void> handleArgCommands(ArgResults argResults, ArgParser parser) async {
 
         receiptProducts2CSV(receiptProducts, csvFilesPath);
         eanProducts2CSV(eanProducts, csvFilesPath, ShopSelector.sKaupat.name);
-      } else if (ShopSelector.kRuoka.isEqual(selectedStore)) {
+      } else if (ShopSelector.kRuoka.value == selectedStore) {
         var eanProducts = await readEANProducts(
             selectedHtmlFile, ShopSelector.kRuoka, csvFilesPath);
 

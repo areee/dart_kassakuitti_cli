@@ -21,7 +21,7 @@ ArgParser getParser() {
       abbr: ArgSelector.foodOnlineStore.value.substring(0, 1),
       help: 'Food online store',
       defaultsTo: ShopSelector.sKaupat.value,
-      allowed: [ShopSelector.sKaupat.value!, ShopSelector.kRuoka.value!],
+      allowed: [ShopSelector.sKaupat.value, ShopSelector.kRuoka.value],
     )
     ..addOption(
       ArgSelector.csvPath.value,
