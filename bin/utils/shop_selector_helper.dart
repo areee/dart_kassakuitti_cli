@@ -1,22 +1,10 @@
 /// Shop selector (sKaupat, kRuoka)
 enum ShopSelector {
-  sKaupat,
-  kRuoka,
-}
+  sKaupat('S-kaupat'),
+  kRuoka('K-ruoka');
 
-extension ShopSelectorExtension on ShopSelector {
-  static const values = {
-    ShopSelector.sKaupat: 'S-kaupat',
-    ShopSelector.kRuoka: 'K-ruoka',
-  };
+  final String term;
+  const ShopSelector(this.term);
 
-  String? get value => values[this];
-
-  bool isEqual(dynamic value) {
-    if (value is String) {
-      return toString() == value || this.value == value;
-    } else {
-      return false;
-    }
-  }
+  String get value => term;
 }

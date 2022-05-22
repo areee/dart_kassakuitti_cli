@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:args/args.dart';
 import 'package:path/path.dart';
 import 'package:yaml/yaml.dart';
 
@@ -12,7 +13,7 @@ void printSelectedValues(String? selectedTextFile, String selectedHtmlFile,
       '\n- Path where to save CSV files:\t\t$csvFilesPath\n');
 }
 
-Future<void> printBasicInfo() async {
+Future<void> printBasicInfo(ArgParser parser) async {
   String pathToYaml =
       join(dirname(Platform.script.toFilePath()), '../pubspec.yaml');
   var file = File(pathToYaml);
@@ -24,11 +25,5 @@ Future<void> printBasicInfo() async {
   print('Version: ${yaml['version']}');
   print('Homepage: ${yaml['homepage']}');
 
-  print('''\nTo get help, run:
-  
-    dart run bin/dart_kassakuitti_cli.dart help
-    
-  or when using alias:
-    
-    kassakuitti help\n''');
+  print('\nHelp:\n${parser.usage}');
 }

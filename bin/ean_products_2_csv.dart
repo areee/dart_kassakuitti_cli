@@ -6,11 +6,11 @@ void eanProducts2CSV(
     List<EANProduct> eanProductList, String csvFilePath, String shopSelector) {
   var csv = StringBuffer();
 
-  csv.write('EAN code;Name;Quantity;Total price;Price per unit;More details\n');
+  csv.write('Name;Quantity;Price per unit;Total price;EAN code;More details\n');
 
   for (var item in eanProductList) {
     csv.write(
-        '${item.ean};${item.name};${item.quantity};${item.totalPrice};${item.pricePerUnit};${item.moreDetails}\n');
+        '${item.name};${item.quantity};${item.pricePerUnit};${item.totalPrice};${item.ean};${item.moreDetails}\n');
   }
 
   var file = File(
