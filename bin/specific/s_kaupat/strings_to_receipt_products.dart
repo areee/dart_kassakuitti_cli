@@ -57,8 +57,8 @@ List<ReceiptProduct> strings2ReceiptProducts(List<String> rows) {
     }
     /*
     A campaign row
-    (i.e. usually means that there's a mistake in the previous line
-    BUT not always):
+    (i.e. usually means that there's a mistake in the previous row
+    BUT not always -> let's assume that it's a discount row):
     */
     else if (item.contains('kampanja')) {
       var items = item.split(RegExp(r'\s{12,33}'));
