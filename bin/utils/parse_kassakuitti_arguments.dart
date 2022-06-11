@@ -5,6 +5,8 @@ import 'shop_selector_helper.dart';
 
 ArgParser getParser() {
   final parser = ArgParser()
+    ..addCommand(ArgSelector.help.value)
+    ..addCommand(ArgSelector.hive.value)
     ..addCommand(ArgSelector.run.value)
     ..addOption(
       ArgSelector.textFile.value,
@@ -27,8 +29,7 @@ ArgParser getParser() {
       ArgSelector.csvPath.value,
       abbr: ArgSelector.csvPath.value.substring(0, 1),
       help: 'Path for output CSV files',
-    )
-    ..addCommand(ArgSelector.help.value);
+    );
 
   return parser;
 }
