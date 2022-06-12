@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
+import 'package:hive/hive.dart';
 
 import 'ean_products_2_csv.dart';
+import 'models/hive_product.dart';
 import 'read_ean_products.dart';
 import 'specific/s_kaupat/ean_handler.dart';
 import 'specific/s_kaupat/read_receipt_products.dart';
@@ -11,7 +13,8 @@ import 'utils/arg_selector_helper.dart';
 import 'utils/printing_helper.dart';
 import 'utils/shop_selector_helper.dart';
 
-Future<void> runMainProgram(ArgResults argResults) async {
+Future<void> runMainProgram(
+    ArgResults argResults, Box<HiveProduct> hiveProducts) async {
   print('\nRunning...\n');
 
   var selectedTextFile = argResults[ArgSelector.textFile.value] as String?;
@@ -29,7 +32,7 @@ Future<void> runMainProgram(ArgResults argResults) async {
       var eanProducts = await readEANProducts(
           selectedHtmlFile, ShopSelector.sKaupat, csvFilesPath);
 
-      await eanHandler(receiptProducts, eanProducts.toList());
+      await eanHandler(receiptProducts, eanProducts.toList(), hiveProducts);
 
       receiptProducts2CSV(receiptProducts, csvFilesPath);
       eanProducts2CSV(eanProducts, csvFilesPath, ShopSelector.sKaupat.name);

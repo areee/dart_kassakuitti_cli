@@ -1,0 +1,1 @@
+const kHiveBoxName = 'hiveProducts';

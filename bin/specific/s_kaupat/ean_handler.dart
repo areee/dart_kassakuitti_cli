@@ -7,15 +7,11 @@ import '../../models/hive_product.dart';
 import '../../models/receipt_product.dart';
 import '../../utils/ansipen_helper.dart';
 
-const _kHiveBoxName = 'hiveProducts';
-
-/// Handles the EAN products.
-Future<void> eanHandler(
-    List<ReceiptProduct> receiptProducts, List<EANProduct> eanProducts) async {
+/// Handles the EAN products using Hive storage.
+Future<void> eanHandler(List<ReceiptProduct> receiptProducts,
+    List<EANProduct> eanProducts, Box<HiveProduct> hiveProducts) async {
   List<ReceiptProduct> nonFoundReceiptProducts = [];
   List<ReceiptProduct> nonFoundReceiptProducts2 = [];
-
-  Box<HiveProduct> hiveProducts = await _initializeHiveProducts();
 
   print('\nThe first round begins!');
   print('Statistics:');
@@ -81,8 +77,6 @@ Future<void> eanHandler(
       '${nonFoundReceiptProducts2.length == 1 ? 'product' : 'products'} '
       'left.');
   print(peachPen().write('Amount of hive products: ${hiveProducts.length}'));
-
-  hiveProducts.close();
 }
 
 String? _filterHiveProducts(
@@ -102,12 +96,6 @@ String? _filterHiveProducts(
     print('\teanProductName in Hive: $eanProductName');
   }
   return eanProductName;
-}
-
-Future<Box<HiveProduct>> _initializeHiveProducts() async {
-  Hive.init(Directory.current.path);
-  Hive.registerAdapter(HiveProductAdapter());
-  return await Hive.openBox<HiveProduct>(_kHiveBoxName);
 }
 
 List<EANProduct> _filterEANProducts(String receiptProductName,
