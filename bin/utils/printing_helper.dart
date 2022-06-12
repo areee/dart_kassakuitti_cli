@@ -4,6 +4,7 @@ import 'package:args/args.dart';
 import 'package:path/path.dart';
 import 'package:yaml/yaml.dart';
 
+/// Prints selected values.
 void printSelectedValues(String? selectedTextFile, String selectedHtmlFile,
     String selectedStore, String csvFilesPath) {
   print('Selected values:'
@@ -13,6 +14,7 @@ void printSelectedValues(String? selectedTextFile, String selectedHtmlFile,
       '\n- Path where to save CSV files:\t\t$csvFilesPath\n');
 }
 
+/// Prints some basic info.
 Future<void> printBasicInfo(ArgParser parser) async {
   String pathToYaml =
       join(dirname(Platform.script.toFilePath()), '../pubspec.yaml');
@@ -23,7 +25,19 @@ Future<void> printBasicInfo(ArgParser parser) async {
   print(yaml['name']);
   print(yaml['description']);
   print('Version: ${yaml['version']}');
-  print('Homepage: ${yaml['homepage']}');
+  print('Homepage: ${yaml['homepage']}\n');
 
-  print('\nHelp:\n${parser.usage}');
+  printHelpers(parser);
+}
+
+/// Prints helpers.
+void printHelpers(ArgParser parser) {
+  print('Available commands:');
+  parser.commands.forEach((name, command) {
+    print('  $name');
+  });
+
+  print('\n----\n');
+
+  print('Run usages:\n${parser.usage}');
 }
