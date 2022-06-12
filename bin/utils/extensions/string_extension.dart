@@ -4,4 +4,9 @@ extension StringExtension on String? {
   bool isNullOrEmpty() {
     return this == null || this!.isEmpty;
   }
+
+  /// Checks if the string is not null or empty.
+  bool isNotNullOrEmpty() {
+    return this != null && this!.isNotEmpty;
+  }
 }

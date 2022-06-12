@@ -13,7 +13,7 @@ void hiveHandling(Box<HiveProduct> hiveProducts) {
     *** Hive handling ***
     1. Create
     2. Read all
-    3. Read one
+    3. Search by keyword
     4. Update
     5. Delete
     6. Count
@@ -30,7 +30,7 @@ void hiveHandling(Box<HiveProduct> hiveProducts) {
         _readAllProducts(hiveProducts);
         break;
       case '3':
-        _readOneProduct(hiveProducts);
+        _searchByKeyword(hiveProducts);
         break;
       case '4':
         _updateProduct(hiveProducts);
@@ -42,14 +42,9 @@ void hiveHandling(Box<HiveProduct> hiveProducts) {
         _countProducts(hiveProducts);
         break;
       default:
-        _exit();
+        _exit(hiveProducts);
     }
   }
-}
-
-/// Counts the products in the storage.
-void _countProducts(Box<HiveProduct> hiveProducts) {
-  print('Amount of products: ${hiveProducts.length}');
 }
 
 /// Adds a product to the storage.
@@ -60,7 +55,7 @@ void _addProduct(Box<HiveProduct> hiveProducts) {
   print('Enter the EAN name of the product:');
   var eanName = stdin.readLineSync();
 
-  if (!name.isNullOrEmpty() && !eanName.isNullOrEmpty()) {
+  if (name.isNotNullOrEmpty() && eanName.isNotNullOrEmpty()) {
     print('You entered: $name, $eanName');
     print('Do you want to add this product? (y/n)');
     var input = stdin.readLineSync();
@@ -68,6 +63,7 @@ void _addProduct(Box<HiveProduct> hiveProducts) {
     if (input == 'y') {
       hiveProducts.add(HiveProduct(receiptName: name!, eanName: eanName!));
       print('Product added!');
+      _countProducts(hiveProducts);
     } else {
       print('Product not added!');
     }
@@ -76,35 +72,40 @@ void _addProduct(Box<HiveProduct> hiveProducts) {
 
 /// Reads all products from the storage.
 void _readAllProducts(Box<HiveProduct> hiveProducts) {
+  _countProducts(hiveProducts);
   print('All products:');
   for (var product in hiveProducts.values) {
     print('\t$product');
   }
 }
 
-/// Read a product from the storage.
-void _readOneProduct(Box<HiveProduct> hiveProducts) {
-  print('Enter the receipt name of the product:');
-  var name = stdin.readLineSync();
+/// Search by keyword in the storage.
+void _searchByKeyword(Box<HiveProduct> hiveProducts) {
+  print('Enter a keyword:');
+  var keyword = stdin.readLineSync();
 
-  if (!name.isNullOrEmpty()) {
-    print('You entered: $name');
+  if (keyword.isNotNullOrEmpty()) {
+    print('You entered: $keyword');
 
-    var product = hiveProducts.get(name!);
-    if (product != null) {
-      print('Product: $product');
-    } else {
-      print('Product not found!');
+    var filteredProducts = hiveProducts.values
+        .where((product) => product.receiptName.contains(keyword!));
+
+    var amount = filteredProducts.length;
+
+    print('Found $amount ${amount == 1 ? 'product' : 'products'}:');
+
+    for (var product in filteredProducts) {
+      print('\t$product');
     }
   }
 }
 
-/// Updates a product in the storage.
+/// Updates a product in the storage. FIX ME: This is not working yet correctly.
 void _updateProduct(Box<HiveProduct> hiveProducts) {
   print('Enter the receipt name of the product:');
   var name = stdin.readLineSync();
 
-  if (!name.isNullOrEmpty()) {
+  if (name.isNotNullOrEmpty()) {
     print('You entered: $name');
 
     var product = hiveProducts.get(name!);
@@ -117,7 +118,7 @@ void _updateProduct(Box<HiveProduct> hiveProducts) {
       print('Enter the new EAN name of the product:');
       var newEanName = stdin.readLineSync();
 
-      if (!newName.isNullOrEmpty() && !newEanName.isNullOrEmpty()) {
+      if (newName.isNotNullOrEmpty() && newEanName.isNotNullOrEmpty()) {
         print('You entered: $newName, $newEanName');
         print('Do you want to update this product? (y/n)');
         var input = stdin.readLineSync();
@@ -136,12 +137,12 @@ void _updateProduct(Box<HiveProduct> hiveProducts) {
   }
 }
 
-/// Delete a product from the storage.
+/// Delete a product from the storage. FIX ME: This is not working yet correctly.
 void _deleteProduct(Box<HiveProduct> hiveProducts) {
   print('Enter the receipt name of the product:');
   var name = stdin.readLineSync();
 
-  if (!name.isNullOrEmpty()) {
+  if (name.isNotNullOrEmpty()) {
     print('You entered: $name');
 
     var product = hiveProducts.get(name!);
@@ -163,8 +164,14 @@ void _deleteProduct(Box<HiveProduct> hiveProducts) {
   }
 }
 
+/// Counts the products in the storage.
+void _countProducts(Box<HiveProduct> hiveProducts) {
+  print('Amount of products: ${hiveProducts.length}');
+}
+
 /// Exits the program.
-void _exit() {
+void _exit(Box<HiveProduct> hiveProducts) {
   print('Bye!');
+  hiveProducts.close();
   exit(0);
 }

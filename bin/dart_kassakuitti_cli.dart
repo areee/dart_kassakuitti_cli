@@ -19,8 +19,6 @@ void main(List<String> arguments) async {
   var argResults = parser.parse(arguments);
 
   await _handleArgCommands(argResults, parser, hiveProducts);
-
-  hiveProducts.close();
 }
 
 /// Handles the commands in the arguments.

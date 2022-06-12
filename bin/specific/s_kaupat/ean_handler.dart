@@ -77,6 +77,7 @@ Future<void> eanHandler(List<ReceiptProduct> receiptProducts,
       '${nonFoundReceiptProducts2.length == 1 ? 'product' : 'products'} '
       'left.');
   print(peachPen().write('Amount of hive products: ${hiveProducts.length}'));
+  hiveProducts.close();
 }
 
 String? _filterHiveProducts(
