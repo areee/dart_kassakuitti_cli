@@ -6,7 +6,7 @@ import 'models/hive_product.dart';
 import 'utils/extensions/string_extension.dart';
 
 /// Hive handling (CRUD for storage handling).
-void hiveHandling(Box<HiveProduct> hiveProducts) {
+Future<void> hiveHandling(Box<HiveProduct> hiveProducts) async {
   while (true) {
     print('''
 
@@ -24,7 +24,7 @@ void hiveHandling(Box<HiveProduct> hiveProducts) {
 
     switch (input) {
       case '1':
-        _addProduct(hiveProducts);
+        await _addProduct(hiveProducts);
         break;
       case '2':
         _readAllProducts(hiveProducts);
@@ -33,22 +33,22 @@ void hiveHandling(Box<HiveProduct> hiveProducts) {
         _searchByKeyword(hiveProducts);
         break;
       case '4':
-        _updateProduct(hiveProducts);
+        await _updateProduct(hiveProducts);
         break;
       case '5':
-        _deleteProduct(hiveProducts);
+        await _deleteProduct(hiveProducts);
         break;
       case '6':
         _countProducts(hiveProducts);
         break;
       default:
-        _exit(hiveProducts);
+        await _exit(hiveProducts);
     }
   }
 }
 
 /// Adds a product to the storage.
-void _addProduct(Box<HiveProduct> hiveProducts) {
+Future<void> _addProduct(Box<HiveProduct> hiveProducts) async {
   print('Enter the receipt name of the product:');
   var name = stdin.readLineSync();
 
@@ -61,7 +61,8 @@ void _addProduct(Box<HiveProduct> hiveProducts) {
     var input = stdin.readLineSync();
 
     if (input == 'y') {
-      hiveProducts.add(HiveProduct(receiptName: name!, eanName: eanName!));
+      await hiveProducts
+          .add(HiveProduct(receiptName: name!, eanName: eanName!));
       print('Product added!');
       _countProducts(hiveProducts);
     } else {
@@ -101,7 +102,7 @@ void _searchByKeyword(Box<HiveProduct> hiveProducts) {
 }
 
 /// Updates a product in the storage. FIX ME: This is not working yet correctly.
-void _updateProduct(Box<HiveProduct> hiveProducts) {
+Future<void> _updateProduct(Box<HiveProduct> hiveProducts) async {
   print('Enter the receipt name of the product:');
   var name = stdin.readLineSync();
 
@@ -124,7 +125,7 @@ void _updateProduct(Box<HiveProduct> hiveProducts) {
         var input = stdin.readLineSync();
 
         if (input == 'y') {
-          hiveProducts.put(newName,
+          await hiveProducts.put(newName,
               HiveProduct(receiptName: newName!, eanName: newEanName!));
           print('Product updated!');
         } else {
@@ -138,7 +139,7 @@ void _updateProduct(Box<HiveProduct> hiveProducts) {
 }
 
 /// Delete a product from the storage. FIX ME: This is not working yet correctly.
-void _deleteProduct(Box<HiveProduct> hiveProducts) {
+Future<void> _deleteProduct(Box<HiveProduct> hiveProducts) async {
   print('Enter the receipt name of the product:');
   var name = stdin.readLineSync();
 
@@ -153,7 +154,7 @@ void _deleteProduct(Box<HiveProduct> hiveProducts) {
       var input = stdin.readLineSync();
 
       if (input == 'y') {
-        hiveProducts.delete(name);
+        await hiveProducts.delete(name);
         print('Product deleted!');
       } else {
         print('Product not deleted!');
@@ -170,8 +171,8 @@ void _countProducts(Box<HiveProduct> hiveProducts) {
 }
 
 /// Exits the program.
-void _exit(Box<HiveProduct> hiveProducts) {
+Future<void> _exit(Box<HiveProduct> hiveProducts) async {
   print('Bye!');
-  hiveProducts.close();
+  await hiveProducts.close();
   exit(0);
 }

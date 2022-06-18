@@ -34,7 +34,7 @@ Future<void> _handleArgCommands(ArgResults argResults, ArgParser parser,
   }
   // Hive (storage) command
   else if (argResults.command?.name == ArgSelector.hive.value) {
-    hiveHandling(hiveProducts);
+    await hiveHandling(hiveProducts);
   }
   // Empty command (or other commands, e.g. 'moro' / 'hello')
   else {
