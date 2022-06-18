@@ -142,15 +142,18 @@ Future<void> _updateProduct(Box<HiveProduct> hiveProducts) async {
   }
 }
 
-/// Delete a product from the storage. FIX ME: This is not working yet correctly.
+/// Delete a product from the storage.
 Future<void> _deleteProduct(Box<HiveProduct> hiveProducts) async {
-  print('Enter the receipt name of the product:');
-  var name = stdin.readLineSync();
+  print('Enter the order number of the product:');
 
-  if (name.isNotNullOrEmpty()) {
-    print('You entered: $name');
+  var orderNumber = stdin.readLineSync();
 
-    var product = hiveProducts.get(name!);
+  if (orderNumber.isNotNullOrEmpty()) {
+    print('You entered: $orderNumber');
+
+    var orderNumberAsInt = int.tryParse(orderNumber!);
+
+    var product = hiveProducts.get(orderNumberAsInt!);
     if (product != null) {
       print('Product: $product');
 
@@ -158,7 +161,7 @@ Future<void> _deleteProduct(Box<HiveProduct> hiveProducts) async {
       var input = stdin.readLineSync();
 
       if (input == 'y') {
-        await hiveProducts.delete(name);
+        await hiveProducts.delete(orderNumberAsInt);
         print('Product deleted!');
       } else {
         print('Product not deleted!');
