@@ -13,7 +13,7 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
   var document = parse(html);
 
   var allProductsDiv = document.body!.children[1].children[1].children[1]
-      .children[0].children[0].children[1].children[5];
+      .children[0].children[0].children[0].children[5];
 
   for (var i = 0; i < allProductsDiv.children.length; i++) {
     if (i > 0) {
