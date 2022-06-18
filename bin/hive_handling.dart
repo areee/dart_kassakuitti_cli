@@ -42,6 +42,7 @@ Future<Box<HiveProduct>> hiveHandling(Box<HiveProduct> hiveProducts) async {
         _countProducts(hiveProducts);
         break;
       default:
+        print('Exiting...');
         return hiveProducts;
     }
   }
@@ -105,33 +106,36 @@ void _searchByKeyword(Box<HiveProduct> hiveProducts) {
   }
 }
 
-/// Updates a product in the storage. FIX ME: This is not working yet correctly.
+/// Updates a product in the storage.
 Future<void> _updateProduct(Box<HiveProduct> hiveProducts) async {
-  print('Enter the receipt name of the product:');
-  var name = stdin.readLineSync();
+  print('Enter the order number of the product:');
 
-  if (name.isNotNullOrEmpty()) {
-    print('You entered: $name');
+  var orderNumber = stdin.readLineSync();
 
-    var product = hiveProducts.get(name!);
+  if (orderNumber.isNotNullOrEmpty()) {
+    var orderNumberAsInt = int.tryParse(orderNumber!);
+
+    var product = hiveProducts.get(orderNumberAsInt!);
+
     if (product != null) {
       print('Product: $product');
 
       print('Enter the new receipt name of the product:');
-      var newName = stdin.readLineSync();
+      var name = stdin.readLineSync();
 
       print('Enter the new EAN name of the product:');
-      var newEanName = stdin.readLineSync();
+      var eanName = stdin.readLineSync();
 
-      if (newName.isNotNullOrEmpty() && newEanName.isNotNullOrEmpty()) {
-        print('You entered: $newName, $newEanName');
+      if (name.isNotNullOrEmpty() && eanName.isNotNullOrEmpty()) {
+        print('You entered: $name, $eanName');
         print('Do you want to update this product? (y/n)');
         var input = stdin.readLineSync();
 
         if (input == 'y') {
-          await hiveProducts.put(newName,
-              HiveProduct(receiptName: newName!, eanName: newEanName!));
+          await hiveProducts.put(orderNumberAsInt,
+              HiveProduct(receiptName: name!, eanName: eanName!));
           print('Product updated!');
+          _countProducts(hiveProducts);
         } else {
           print('Product not updated!');
         }
@@ -149,8 +153,6 @@ Future<void> _deleteProduct(Box<HiveProduct> hiveProducts) async {
   var orderNumber = stdin.readLineSync();
 
   if (orderNumber.isNotNullOrEmpty()) {
-    print('You entered: $orderNumber');
-
     var orderNumberAsInt = int.tryParse(orderNumber!);
 
     var product = hiveProducts.get(orderNumberAsInt!);
@@ -163,6 +165,7 @@ Future<void> _deleteProduct(Box<HiveProduct> hiveProducts) async {
       if (input == 'y') {
         await hiveProducts.delete(orderNumberAsInt);
         print('Product deleted!');
+        _countProducts(hiveProducts);
       } else {
         print('Product not deleted!');
       }
