@@ -75,8 +75,9 @@ Future<void> _addProduct(Box<HiveProduct> hiveProducts) async {
 void _readAllProducts(Box<HiveProduct> hiveProducts) {
   _countProducts(hiveProducts);
   print('All products:');
-  for (var product in hiveProducts.values) {
-    print('\t$product');
+
+  for (var product in hiveProducts.keys) {
+    print('\t#$product: ${hiveProducts.get(product)}');
   }
 }
 
@@ -88,15 +89,18 @@ void _searchByKeyword(Box<HiveProduct> hiveProducts) {
   if (keyword.isNotNullOrEmpty()) {
     print('You entered: $keyword');
 
-    var filteredProducts = hiveProducts.values
-        .where((product) => product.receiptName.contains(keyword!));
+    var filteredProducts = hiveProducts.keys.where((key) => hiveProducts
+        .get(key)!
+        .receiptName
+        .toLowerCase()
+        .contains(keyword!.toLowerCase()));
 
     var amount = filteredProducts.length;
 
     print('Found $amount ${amount == 1 ? 'product' : 'products'}:');
 
     for (var product in filteredProducts) {
-      print('\t$product');
+      print('\t#$product: ${hiveProducts.get(product)}');
     }
   }
 }
