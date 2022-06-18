@@ -19,11 +19,13 @@ void main(List<String> arguments) async {
   var argResults = parser.parse(arguments);
 
   await _handleArgCommands(argResults, parser, hiveProducts);
+
+  hiveProducts.close();
 }
 
 /// Handles the commands in the arguments.
-Future<void> _handleArgCommands(ArgResults argResults, ArgParser parser,
-    Box<HiveProduct> hiveProducts) async {
+Future<Box<HiveProduct>> _handleArgCommands(ArgResults argResults,
+    ArgParser parser, Box<HiveProduct> hiveProducts) async {
   // Run command
   if (argResults.command?.name == ArgSelector.run.value) {
     await runMainProgram(argResults, hiveProducts);
@@ -40,6 +42,8 @@ Future<void> _handleArgCommands(ArgResults argResults, ArgParser parser,
   else {
     await printBasicInfo(parser);
   }
+
+  return hiveProducts;
 }
 
 /// Initializes the Hive products.

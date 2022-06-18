@@ -8,7 +8,7 @@ import '../../models/receipt_product.dart';
 import '../../utils/ansipen_helper.dart';
 
 /// Handles the EAN products using Hive storage.
-Future<void> eanHandler(List<ReceiptProduct> receiptProducts,
+Future<Box<HiveProduct>> eanHandler(List<ReceiptProduct> receiptProducts,
     List<EANProduct> eanProducts, Box<HiveProduct> hiveProducts) async {
   List<ReceiptProduct> nonFoundReceiptProducts = [];
   List<ReceiptProduct> nonFoundReceiptProducts2 = [];
@@ -29,7 +29,7 @@ Future<void> eanHandler(List<ReceiptProduct> receiptProducts,
     var filteredEanProducts =
         _filterEANProducts(receiptProduct.name, eanProducts, eanProductName);
 
-    _handleFoundCases(
+    await _handleFoundCases(
         receiptProduct, filteredEanProducts, eanProducts, hiveProducts);
 
     print(peachPen().write('Amount of hive products: ${hiveProducts.length}'));
@@ -62,7 +62,7 @@ Future<void> eanHandler(List<ReceiptProduct> receiptProducts,
     var filteredEanProducts = _filterEANProducts(
         splittedReceiptProcuctNames[0], eanProducts, eanProductName);
 
-    _handleFoundCases(
+    await _handleFoundCases(
         nonFoundReceiptProduct, filteredEanProducts, eanProducts, hiveProducts);
 
     if (filteredEanProducts.isEmpty) {
@@ -77,7 +77,8 @@ Future<void> eanHandler(List<ReceiptProduct> receiptProducts,
       '${nonFoundReceiptProducts2.length == 1 ? 'product' : 'products'} '
       'left.');
   print(peachPen().write('Amount of hive products: ${hiveProducts.length}'));
-  hiveProducts.close();
+
+  return hiveProducts;
 }
 
 String? _filterHiveProducts(
@@ -118,11 +119,11 @@ List<EANProduct> _filterEANProducts(String receiptProductName,
       .toList();
 }
 
-void _handleFoundCases(
+Future<void> _handleFoundCases(
     ReceiptProduct receiptProduct,
     List<EANProduct> filteredEanProducts,
     List<EANProduct> origEanProducts,
-    Box<HiveProduct> hiveProducts) {
+    Box<HiveProduct> hiveProducts) async {
   if (filteredEanProducts.length == 1) {
     print(greenPen().write('\tFound one product:'));
     print('\t\t${filteredEanProducts.first}');
@@ -148,7 +149,7 @@ void _handleFoundCases(
 
       receiptProduct.eanCode = selectedEanProduct.ean;
 
-      hiveProducts.add(HiveProduct(
+      await hiveProducts.add(HiveProduct(
           receiptName: receiptProduct.name, eanName: selectedEanProduct.name));
       print(
           peachPen().write('Amount of hive products: ${hiveProducts.length}'));

@@ -6,7 +6,7 @@ import 'models/hive_product.dart';
 import 'utils/extensions/string_extension.dart';
 
 /// Hive handling (CRUD for storage handling).
-Future<void> hiveHandling(Box<HiveProduct> hiveProducts) async {
+Future<Box<HiveProduct>> hiveHandling(Box<HiveProduct> hiveProducts) async {
   while (true) {
     print('''
 
@@ -42,7 +42,7 @@ Future<void> hiveHandling(Box<HiveProduct> hiveProducts) async {
         _countProducts(hiveProducts);
         break;
       default:
-        await _exit(hiveProducts);
+        return hiveProducts;
     }
   }
 }
@@ -168,11 +168,4 @@ Future<void> _deleteProduct(Box<HiveProduct> hiveProducts) async {
 /// Counts the products in the storage.
 void _countProducts(Box<HiveProduct> hiveProducts) {
   print('Amount of products: ${hiveProducts.length}');
-}
-
-/// Exits the program.
-Future<void> _exit(Box<HiveProduct> hiveProducts) async {
-  print('Bye!');
-  await hiveProducts.close();
-  exit(0);
 }

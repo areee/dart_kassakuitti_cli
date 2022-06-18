@@ -13,7 +13,7 @@ import 'utils/arg_selector_helper.dart';
 import 'utils/printing_helper.dart';
 import 'utils/shop_selector_helper.dart';
 
-Future<void> runMainProgram(
+Future<Box<HiveProduct>> runMainProgram(
     ArgResults argResults, Box<HiveProduct> hiveProducts) async {
   print('\nRunning...\n');
 
@@ -51,4 +51,6 @@ Future<void> runMainProgram(
   }
 
   print('\nDone!');
+
+  return hiveProducts;
 }
