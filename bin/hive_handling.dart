@@ -76,10 +76,27 @@ Future<void> _addProduct(Box<HiveProduct> hiveProducts) async {
 void _readAllProducts(Box<HiveProduct> hiveProducts) {
   _countProducts(hiveProducts);
   print('All products:');
+  _printProducts(products: hiveProducts);
+}
 
-  for (var product in hiveProducts.keys) {
-    print('\t#$product: ${hiveProducts.get(product)}');
+/// Prints Hive products.
+void _printProducts(
+    {required Box<HiveProduct> products, Iterable<dynamic>? filteredProducts}) {
+  if (filteredProducts == null) {
+    for (var product in products.keys) {
+      _printSingleProduct(products: products, product: product);
+    }
+  } else {
+    for (var product in filteredProducts) {
+      _printSingleProduct(products: products, product: product);
+    }
   }
+}
+
+/// Prints single Hive product.
+void _printSingleProduct(
+    {required Box<HiveProduct> products, required dynamic product}) {
+  print('\t#$product: ${products.get(product)}');
 }
 
 /// Search by keyword in the storage.
@@ -100,9 +117,7 @@ void _searchByKeyword(Box<HiveProduct> hiveProducts) {
 
     print('Found $amount ${amount == 1 ? 'product' : 'products'}:');
 
-    for (var product in filteredProducts) {
-      print('\t#$product: ${hiveProducts.get(product)}');
-    }
+    _printProducts(products: hiveProducts, filteredProducts: filteredProducts);
   }
 }
 
