@@ -123,70 +123,90 @@ void _searchByKeyword(Box<HiveProduct> hiveProducts) {
 
 /// Updates a product in the storage.
 Future<void> _updateProduct(Box<HiveProduct> hiveProducts) async {
-  print('Enter the order number of the product:');
+  var orderNumber = _handleOrderNumber();
+  if (orderNumber == -1) return;
 
-  var orderNumber = stdin.readLineSync();
+  var product = hiveProducts.get(orderNumber);
 
-  if (orderNumber.isNotNullOrEmpty()) {
-    var orderNumberAsInt = int.tryParse(orderNumber!);
+  if (product == null) {
+    print('Product not found!');
+    return;
+  }
 
-    var product = hiveProducts.get(orderNumberAsInt!);
+  print('Product: $product');
 
-    if (product != null) {
-      print('Product: $product');
+  print('Enter the new receipt name of the product:');
+  var name = stdin.readLineSync();
 
-      print('Enter the new receipt name of the product:');
-      var name = stdin.readLineSync();
+  print('Enter the new EAN name of the product:');
+  var eanName = stdin.readLineSync();
 
-      print('Enter the new EAN name of the product:');
-      var eanName = stdin.readLineSync();
+  if (name.isNotNullOrEmpty() && eanName.isNotNullOrEmpty()) {
+    print('You entered: $name, $eanName');
+    print('Do you want to update this product? (y/n)');
+    var input = stdin.readLineSync();
 
-      if (name.isNotNullOrEmpty() && eanName.isNotNullOrEmpty()) {
-        print('You entered: $name, $eanName');
-        print('Do you want to update this product? (y/n)');
-        var input = stdin.readLineSync();
-
-        if (input == 'y') {
-          await hiveProducts.put(orderNumberAsInt,
-              HiveProduct(receiptName: name!, eanName: eanName!));
-          print('Product updated!');
-        } else {
-          print('Product not updated!');
-        }
-      }
+    if (input == 'y') {
+      await hiveProducts.put(
+          orderNumber, HiveProduct(receiptName: name!, eanName: eanName!));
+      print('Product updated!');
     } else {
-      print('Product not found!');
+      print('Product not updated!');
     }
   }
 }
 
 /// Delete a product from the storage.
 Future<void> _deleteProduct(Box<HiveProduct> hiveProducts) async {
-  print('Enter the order number of the product:');
+  var orderNumber = _handleOrderNumber();
+  if (orderNumber == -1) return;
 
+  var product = hiveProducts.get(orderNumber);
+
+  if (product == null) {
+    print('Product not found!');
+    return;
+  }
+
+  print('Product: $product');
+
+  print('Do you want to delete this product? (y/n)');
+  var input = stdin.readLineSync();
+
+  if (input == 'y') {
+    await hiveProducts.delete(orderNumber);
+    print('Product deleted!');
+    _countProducts(hiveProducts);
+  } else {
+    print('Product not deleted!');
+  }
+}
+
+/// Asks the user to give an order number.
+int? _askUserToGiveOrderNumber() {
+  print('Enter the order number of the product:');
   var orderNumber = stdin.readLineSync();
 
   if (orderNumber.isNotNullOrEmpty()) {
-    var orderNumberAsInt = int.tryParse(orderNumber!);
-
-    var product = hiveProducts.get(orderNumberAsInt!);
-    if (product != null) {
-      print('Product: $product');
-
-      print('Do you want to delete this product? (y/n)');
-      var input = stdin.readLineSync();
-
-      if (input == 'y') {
-        await hiveProducts.delete(orderNumberAsInt);
-        print('Product deleted!');
-        _countProducts(hiveProducts);
-      } else {
-        print('Product not deleted!');
-      }
-    } else {
-      print('Product not found!');
-    }
+    return int.tryParse(orderNumber!);
   }
+  return null;
+}
+
+/// Checks if an order number is valid.
+bool _isValidOrderNumber(int? orderNumber) {
+  return orderNumber != null && orderNumber >= 0;
+}
+
+/// Handles an order number.
+int _handleOrderNumber() {
+  var orderNumber = _askUserToGiveOrderNumber();
+
+  if (!_isValidOrderNumber(orderNumber)) {
+    print('Invalid order number!');
+    return -1;
+  }
+  return orderNumber!;
 }
 
 /// Counts the products in the storage.
