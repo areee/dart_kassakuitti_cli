@@ -150,7 +150,6 @@ Future<void> _updateProduct(Box<HiveProduct> hiveProducts) async {
           await hiveProducts.put(orderNumberAsInt,
               HiveProduct(receiptName: name!, eanName: eanName!));
           print('Product updated!');
-          _countProducts(hiveProducts);
         } else {
           print('Product not updated!');
         }
