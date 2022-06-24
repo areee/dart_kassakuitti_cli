@@ -5,7 +5,8 @@ enum ArgSelector {
   foodOnlineStore('store'),
   csvPath('csv'),
   help('help'),
-  run('run');
+  run('run'),
+  hive('hive');
 
   final String term;
   const ArgSelector(this.term);

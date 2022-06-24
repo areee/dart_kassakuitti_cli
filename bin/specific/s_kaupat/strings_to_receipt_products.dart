@@ -88,7 +88,7 @@ List<ReceiptProduct> strings2ReceiptProducts(List<String> rows) {
       lastProduct.totalPrice = fixedPriceAsString;
     }
     // If a row starts with a digit, it is a quantity and price per unit row:
-    else if (item.contains(RegExp(r'^\d'))) {
+    else if (item.startsWith(RegExp(r'^\d+\s{1}kpl'))) {
       var items = item.split(RegExp(r'\s{6,7}'));
       var quantity =
           items[0].substring(0, 2).trim().replaceAll(RegExp(r','), '.');

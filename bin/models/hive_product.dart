@@ -14,6 +14,6 @@ class HiveProduct extends HiveObject {
 
   @override
   String toString() {
-    return 'ReceiptName: $receiptName, eanName: $eanName';
+    return 'receiptName: $receiptName, eanName: $eanName';
   }
 }

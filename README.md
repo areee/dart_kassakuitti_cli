@@ -7,18 +7,13 @@
 
 ## Installation
 
-1. Download a Chrome extension called "[snapshot-as-html](https://github.com/areee/snapshot-as-html)" (edited by the author of this project)
-    - In the [latest release page](https://github.com/areee/snapshot-as-html/releases/latest), go to the assets section and click the "Source code (zip)" link. It'll download the source code to your computer.
-    - Unzip the zip file.
-    - Open Google Chrome and go to the [Extensions page](chrome://extensions) (chrome://extensions).
-    - Enable the developer mode and click "Load unpacked". Browse to the unzipped folder (e.g. `snapshot-as-html-0.1.0`) and go to the subdirectory (`snapshot-as-html`). That folder should include all the extension files, e.g. `manifest.json`. Click "Select" in the open dialog and Google Chrome will load the extension.
-2. Git clone this project (or Code → Download ZIP). Add an [alias](#alias) to use it with `kassakuitti` command.
+See the installation in [its own page](https://github.com/areee/dart_kassakuitti_cli/blob/main/INSTALLATION.md).
 
 ## Usage
 
 ### Needed files
 - An EAN file = an HTML file (.html) → needed when using both S-kaupat and K-ruoka
-  - Generate an HTML file by using `snapshot-as-html` project (see the [installation](#installation)).
+  - Generate an HTML file by using `snapshot-as-html` project (see the [installation](https://github.com/areee/dart_kassakuitti_cli/blob/main/INSTALLATION.md)).
   - To generate that, go to an active order page of an online store:
     - [s-kaupat.fi](https://www.s-kaupat.fi) (profile image → "Tilaukset" → "Katso tilaustiedot") or
     - [k-ruoka.fi](https://www.k-ruoka.fi) (profile image → "Tilaukset" → expand the latest order).
@@ -30,15 +25,9 @@
     - Select a cash receipt you want to view. Select needed rows by painting from the first product row to the total row. Copy them.
     - Open a text editor (e.g. Notepad or TextEdit) and paste copied cash receipt rows. Save the file as a plain text file (.txt).
 
-### Default usage
+### Basic usage
 
-The basic usage looks like this (an assumption is that we're in the project folder):
-
-```
-dart run bin/dart_kassakuitti_cli.dart run -t [a path to the cash receipt file] -h [a path to the EAN file] -s [S-kaupat or K-ruoka] -c [a path to generated CSV files]
-```
-
-Or, by using the [alias](#alias) (works anywhere in your local environment):
+The basic usage looks like this:
 
 ```
 kassakuitti run -t [a path to the cash receipt file] -h [a path to the EAN file] -s [S-kaupat or K-ruoka] -c [a path to generated CSV files]
@@ -47,7 +36,7 @@ kassakuitti run -t [a path to the cash receipt file] -h [a path to the EAN file]
 You can define
 - a cash receipt (`-t` = text file),
 - an EAN products file (`-h` = html file),
-- (optional: which food online store to use (`-s` = store)) and
+- optionally: which food online store to use (`-s` = store) and
 - where to save the output files (`-c` = CSV file).
 
 S-kaupat is a default choice for the food online store selection (`-s`).
@@ -55,18 +44,12 @@ S-kaupat is a default choice for the food online store selection (`-s`).
 #### An example
 
 ```
-kassakuitti run -t /Users/username/Downloads/cash_receipt.txt -h /Users/username/Downloads/https___www.s-kaupat.fi_tilaus_product_id-generating_time.html -s S-kaupat -c /Users/username/Downloads
+kassakuitti run -t /Users/username/Downloads/cash_receipt.txt -h /Users/username/Downloads/https___www.s-kaupat.fi_tilaus_product_id-generating_time.html -s S-kaupat -c ~/Downloads
 ```
 
 ### Help
 
 If you want to get all the available commands, you can just type:
-
-```
-dart run bin/dart_kassakuitti_cli.dart help
-```
-
-Or, by using the [alias](#alias):
 
 ```
 kassakuitti help
@@ -77,27 +60,36 @@ kassakuitti help
 If you want some basic information about this program (e.g. the description, the version number or the project homepage), just type:
 
 ```
-dart run bin/dart_kassakuitti_cli.dart
-```
-
-Or, by using the [alias](#alias):
-
-```
 kassakuitti
 ```
 
-## Alias
-
-If you want to get an easier command, you can create an alias into Zsh or Bash profile file (e.g. `~/.zshrc` when using Zsh and `~/.bashrc` when using Bash). This line adds an alias `kassakuitti` into the profile file (let's assume that this `dart_kassakuitti_cli` project locates under your Documents folder):
+The CLI gives also the same result when typing anything that's not recognized by the program, e.g.:
 
 ```
-alias kassakuitti='dart run $HOME/Documents/dart_kassakuitti_cli/bin/dart_kassakuitti_cli.dart'
+kassakuitti moro
 ```
 
-## Generate `hive_product.g.dart` file
+(For non-Finnish speakers: "moro" means hello in Tampere, Finland.)
 
-You can generate `hive_product.g.dart` file by running:
+### Hive handling
+
+You can handle a local Hive database that the program is using by typing:
 
 ```
-dart run build_runner build
+kassakuitti hive
 ```
+
+This starts an own interface for handling the following alternatives:
+
+1. Create a receipt name – EAN name product.
+2. Read all products (gives index numbers for each product).
+3. Search a product by a keyword (gives index numbers for each product).
+4. Update a product by an index number.
+5. Delete a product by an index number.
+6. Count products.
+
+Each product in the Hive database has an own index number. If a product gets deleted, the next new product won't get the same index number that the previously deleted product had but a next unused index number.
+
+## Participate to developing
+
+See a brief instruction for developing is in [its own page](https://github.com/areee/dart_kassakuitti_cli/blob/main/DEVELOPING.md).
