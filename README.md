@@ -81,12 +81,14 @@ kassakuitti hive
 
 This starts an own interface for handling the following alternatives:
 
-1. Create a receipt name - EAN name product.
+1. Create a receipt name – EAN name product.
 2. Read all products (gives index numbers for each product).
 3. Search a product by a keyword.
 4. Update a product by an index number.
 5. Delete a product by an index number.
 6. Count products.
+
+Each product in the Hive database has an own index number. If a product gets deleted, the next new product won't get the same index number that the previously deleted product had but a next unused index number.
 
 ## Participate to developing
 
