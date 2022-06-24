@@ -123,17 +123,8 @@ void _searchByKeyword(Box<HiveProduct> hiveProducts) {
 
 /// Updates a product in the storage.
 Future<void> _updateProduct(Box<HiveProduct> hiveProducts) async {
-  var orderNumber = _handleOrderNumber();
+  var orderNumber = _getOrderNumberAndPrintProduct(hiveProducts);
   if (orderNumber == -1) return;
-
-  var product = hiveProducts.get(orderNumber);
-
-  if (product == null) {
-    print('Product not found!');
-    return;
-  }
-
-  print('Product: $product');
 
   print('Enter the new receipt name of the product:');
   var name = stdin.readLineSync();
@@ -158,17 +149,8 @@ Future<void> _updateProduct(Box<HiveProduct> hiveProducts) async {
 
 /// Delete a product from the storage.
 Future<void> _deleteProduct(Box<HiveProduct> hiveProducts) async {
-  var orderNumber = _handleOrderNumber();
+  var orderNumber = _getOrderNumberAndPrintProduct(hiveProducts);
   if (orderNumber == -1) return;
-
-  var product = hiveProducts.get(orderNumber);
-
-  if (product == null) {
-    print('Product not found!');
-    return;
-  }
-
-  print('Product: $product');
 
   print('Do you want to delete this product? (y/n)');
   var input = stdin.readLineSync();
@@ -207,6 +189,30 @@ int _handleOrderNumber() {
     return -1;
   }
   return orderNumber!;
+}
+
+/// Gets a product.
+HiveProduct? _getProduct(Box<HiveProduct> hiveProducts, int orderNumber) {
+  var product = hiveProducts.get(orderNumber);
+
+  if (product == null) {
+    print('Product not found!');
+    return null;
+  }
+
+  print('Product: $product');
+  return product;
+}
+
+/// Gets an order number (and gives a product information).
+int _getOrderNumberAndPrintProduct(Box<HiveProduct> hiveProducts) {
+  var orderNumber = _handleOrderNumber();
+  if (orderNumber == -1) return -1;
+
+  var product = _getProduct(hiveProducts, orderNumber);
+  if (product == null) return -1;
+
+  return orderNumber;
 }
 
 /// Counts the products in the storage.
