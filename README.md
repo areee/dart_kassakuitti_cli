@@ -13,7 +13,7 @@ See the installation in [its own page](https://github.com/areee/dart_kassakuitti
 
 ### Needed files
 - An EAN file = an HTML file (.html) → needed when using both S-kaupat and K-ruoka
-  - Generate an HTML file by using `snapshot-as-html` project (see the [installation](#installation)).
+  - Generate an HTML file by using `snapshot-as-html` project (see the [installation](https://github.com/areee/dart_kassakuitti_cli/blob/main/INSTALLATION.md)).
   - To generate that, go to an active order page of an online store:
     - [s-kaupat.fi](https://www.s-kaupat.fi) (profile image → "Tilaukset" → "Katso tilaustiedot") or
     - [k-ruoka.fi](https://www.k-ruoka.fi) (profile image → "Tilaukset" → expand the latest order).
@@ -44,7 +44,7 @@ S-kaupat is a default choice for the food online store selection (`-s`).
 #### An example
 
 ```
-kassakuitti run -t /Users/username/Downloads/cash_receipt.txt -h /Users/username/Downloads/https___www.s-kaupat.fi_tilaus_product_id-generating_time.html -s S-kaupat -c /Users/username/Downloads
+kassakuitti run -t /Users/username/Downloads/cash_receipt.txt -h /Users/username/Downloads/https___www.s-kaupat.fi_tilaus_product_id-generating_time.html -s S-kaupat -c ~/Downloads
 ```
 
 ### Help
@@ -83,7 +83,7 @@ This starts an own interface for handling the following alternatives:
 
 1. Create a receipt name – EAN name product.
 2. Read all products (gives index numbers for each product).
-3. Search a product by a keyword.
+3. Search a product by a keyword (gives index numbers for each product).
 4. Update a product by an index number.
 5. Delete a product by an index number.
 6. Count products.
