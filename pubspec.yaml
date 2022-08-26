@@ -17,6 +17,7 @@ dev_dependencies:
 dependencies: 
   ansicolor: ^2.0.1
   args: ^2.3.1
+  excel: ^2.0.0-null-safety-3
   hive: ^2.2.3
   html: ^0.15.0
   intl: ^0.17.0
