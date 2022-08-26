@@ -33,12 +33,15 @@ The basic usage looks like this:
 kassakuitti run -t [a path to the cash receipt file] -h [a path to the EAN file] -s [S-kaupat or K-ruoka] -p [a path to generated files] -f [csv or Excel = xlsx]
 ```
 
-You can define
-- a cash receipt (`-t` = text file),
-- an EAN products file (`-h` = html file),
-- _optionally_: which food online store to use (`-s` = store; S-kaupat is the default choice),
-- _optionally_: where to save the output files (`-p` = path for files; current user's Downloads folder is the default choice) and
-- _optionally_: in which file format the output files will be saved (`-f` = format for files; csv is the default choice).
+#### Choices (flags) for `kassakuitti run` command
+
+Mandatory | Abbreviation | Meaning | Default choice
+:---: | :---: | :---: | :---:
+✅ | `-t` | Text file (a cash receipt) | -
+✅ | `-h` | Html file (an EAN products file) | -
+| `-s` | Which food online store to use | S-kaupat
+| `-p` | Where to save the output files | User's Downloads folder (`~/Downloads`)
+| `-f` | In which file format the output files will be saved | csv
 
 #### An example
 
