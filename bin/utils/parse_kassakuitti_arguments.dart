@@ -30,6 +30,7 @@ ArgParser getParser() {
       ArgSelector.exportPath.value,
       abbr: ArgSelector.exportPath.value.substring(0, 1),
       help: 'Export path for output files',
+      defaultsTo: '~/Downloads',
     )
     ..addOption(
       ArgSelector.exportFormat.value,
