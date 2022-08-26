@@ -1,9 +1,11 @@
-/// ArgSelector (textFile, htmlFile, foodOnlineStore, csvPath, help, run)
+/// ArgSelector (textFile, htmlFile, foodOnlineStore, 
+/// exportPath, exportFormat, help, run, hive)
 enum ArgSelector {
   textFile('text'),
   htmlFile('html'),
   foodOnlineStore('store'),
-  csvPath('csv'),
+  exportPath('path'),
+  exportFormat('format'),
   help('help'),
   run('run'),
   hive('hive');

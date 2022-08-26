@@ -30,21 +30,22 @@ See the installation in [its own page](https://github.com/areee/dart_kassakuitti
 The basic usage looks like this:
 
 ```
-kassakuitti run -t [a path to the cash receipt file] -h [a path to the EAN file] -s [S-kaupat or K-ruoka] -c [a path to generated CSV files]
+kassakuitti run -t [a path to the cash receipt file] -h [a path to the EAN file] -s [S-kaupat (default) or K-ruoka] -p [a path to generated files] -f [csv (default) or Excel / xlsx]
 ```
 
 You can define
 - a cash receipt (`-t` = text file),
 - an EAN products file (`-h` = html file),
-- optionally: which food online store to use (`-s` = store) and
-- where to save the output files (`-c` = CSV file).
+- optionally: which food online store to use (`-s` = store),
+- where to save the output files (`-p` = path for files) and
+- in which file format the output files will be saved (`-f` = format for files).
 
 S-kaupat is a default choice for the food online store selection (`-s`).
 
 #### An example
 
 ```
-kassakuitti run -t /Users/username/Downloads/cash_receipt.txt -h /Users/username/Downloads/https___www.s-kaupat.fi_tilaus_product_id-generating_time.html -s S-kaupat -c ~/Downloads
+kassakuitti run -t /Users/username/Downloads/cash_receipt.txt -h /Users/username/Downloads/https___www.s-kaupat.fi_tilaus_product_id-generating_time.html -s S-kaupat -p ~/Downloads -f csv
 ```
 
 ### Help

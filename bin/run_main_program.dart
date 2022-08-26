@@ -20,27 +20,27 @@ Future<Box<HiveProduct>> runMainProgram(
   var selectedTextFile = argResults[ArgSelector.textFile.value] as String?;
   var selectedHtmlFile = argResults[ArgSelector.htmlFile.value] as String;
   var selectedStore = argResults[ArgSelector.foodOnlineStore.value] as String;
-  var csvFilesPath = argResults[ArgSelector.csvPath.value] as String;
+  var exportFilesPath = argResults[ArgSelector.exportPath.value] as String;
 
   printSelectedValues(
-      selectedTextFile, selectedHtmlFile, selectedStore, csvFilesPath);
+      selectedTextFile, selectedHtmlFile, selectedStore, exportFilesPath);
 
   try {
     if (ShopSelector.sKaupat.value == selectedStore) {
       var receiptProducts =
-          await readReceiptProducts(selectedTextFile!, csvFilesPath);
+          await readReceiptProducts(selectedTextFile!, exportFilesPath);
       var eanProducts = await readEANProducts(
-          selectedHtmlFile, ShopSelector.sKaupat, csvFilesPath);
+          selectedHtmlFile, ShopSelector.sKaupat, exportFilesPath);
 
       await eanHandler(receiptProducts, eanProducts.toList(), hiveProducts);
 
-      receiptProducts2CSV(receiptProducts, csvFilesPath);
-      eanProducts2CSV(eanProducts, csvFilesPath, ShopSelector.sKaupat.name);
+      receiptProducts2CSV(receiptProducts, exportFilesPath);
+      eanProducts2CSV(eanProducts, exportFilesPath, ShopSelector.sKaupat.name);
     } else if (ShopSelector.kRuoka.value == selectedStore) {
       var eanProducts = await readEANProducts(
-          selectedHtmlFile, ShopSelector.kRuoka, csvFilesPath);
+          selectedHtmlFile, ShopSelector.kRuoka, exportFilesPath);
 
-      eanProducts2CSV(eanProducts, csvFilesPath, ShopSelector.kRuoka.name);
+      eanProducts2CSV(eanProducts, exportFilesPath, ShopSelector.kRuoka.name);
     } else {
       print('Unknown store: $selectedStore');
       exitCode = 1;
