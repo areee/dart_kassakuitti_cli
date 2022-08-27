@@ -1,6 +1,10 @@
 import 'dart:io';
+
+import 'package:path/path.dart' as p;
+
 import '../../utils/date_helper.dart';
 import '../../models/receipt_product.dart';
+import '../../utils/home_directory_helper.dart';
 
 /// Saves receipt products as a CSV file.
 void receiptProducts2CSV(List<ReceiptProduct> products, String exportFilePath) {
@@ -26,7 +30,7 @@ void receiptProducts2CSV(List<ReceiptProduct> products, String exportFilePath) {
         '${product.name};${product.quantity};${product.pricePerUnit};${product.totalPrice}${discountCounted ? ';${product.discountCounted}' : ''};${product.eanCode}\n');
   }
 
-  var file =
-      File('$exportFilePath/receipt_products_${formattedDateTime()}.csv');
+  var file = File(p.join(replaceTildeWithHomeDirectory(exportFilePath),
+      'receipt_products_${formattedDateTime()}.csv'));
   file.writeAsString(csv.toString());
 }
