@@ -8,11 +8,11 @@ import 'package:yaml/yaml.dart';
 void printSelectedValues(String? selectedTextFile, String selectedHtmlFile,
     String selectedStore, String exportFilesPath, String exportFilesFormat) {
   print('Selected values:'
-      '${selectedTextFile != null ? '\n- Path to the cash receipt:\t\t$selectedTextFile' : ''}'
-      '\n- Path to the EAN products file:\t$selectedHtmlFile'
-      '\n- Selected store:\t\t\t$selectedStore'
-      '\n- Path where to save the output files:\t\t$exportFilesPath'
-      '\n- In which file format the output files will be saved:\t\t$exportFilesFormat\n');
+      '${selectedTextFile != null ? '\n- Path to the cash receipt:\t\t\t\t$selectedTextFile' : ''}'
+      '\n- Path to the EAN products file:\t\t\t$selectedHtmlFile'
+      '\n- Selected store:\t\t\t\t\t$selectedStore'
+      '\n- Path where to save the output files:\t\t\t$exportFilesPath'
+      '\n- In which file format the output files will be saved:\t$exportFilesFormat\n');
 }
 
 /// Prints some basic info.
