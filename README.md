@@ -40,7 +40,7 @@ Mandatory | Abbreviation | Meaning | Default choice
 ✅ | `-t` | Text file (a cash receipt) | -
 ✅ | `-h` | Html file (an EAN products file) | -
 &nbsp; | `-s` | Which food online store to use | S-kaupat
-&nbsp; | `-p` | Where to save the output files | User's Downloads folder (`~/Downloads`)
+&nbsp; | `-p` | Path where to save the output files | User's Downloads folder (`~/Downloads`)
 &nbsp; | `-f` | In which file format the output files will be saved | csv
 
 #### An example

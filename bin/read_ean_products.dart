@@ -4,7 +4,7 @@ import 'specific/k_ruoka/load_html_k_ruoka.dart' as k_ruoka;
 import 'utils/shop_selector_helper.dart';
 
 Future<List<EANProduct>> readEANProducts(
-    String filePath, ShopSelector shopSelector, String csvFilePath) async {
+    String filePath, ShopSelector shopSelector) async {
   switch (shopSelector) {
     case ShopSelector.sKaupat:
       return await s_kaupat.loadHtmlFromAssets(filePath);
