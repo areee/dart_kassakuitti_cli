@@ -25,18 +25,35 @@ void receiptProducts2Excel(
     "EAN code"
   ];
   var discountCounted = false;
+  CellStyle headerStyle = CellStyle(bold: true);
 
   if (products.every((product) => product.discountCounted.isEmpty)) {
     sheetObject?.insertRowIterables(dataList, 0);
+
+    var rowDatas = sheetObject?.row(0);
+
+    for (var rowData in rowDatas!) {
+      sheetObject?.updateCell(rowData!.cellIndex, rowData.value,
+          cellStyle: headerStyle);
+    }
   } else {
     discountCounted = true;
     dataList.add("Discount counted");
     sheetObject?.insertRowIterables(dataList, 0);
+
+    var rowDatas = sheetObject?.row(0);
+
+    for (var rowData in rowDatas!) {
+      sheetObject?.updateCell(rowData!.cellIndex, rowData.value,
+          cellStyle: headerStyle);
+    }
   }
 
   /*
     Write the products.
   */
+  CellStyle fruitVegetableStyle = CellStyle(backgroundColorHex: "#1AFF1A");
+
   for (var product in products) {
     List<dynamic> dataList = [
       product.name,
@@ -51,6 +68,15 @@ void receiptProducts2Excel(
     }
 
     sheetObject?.insertRowIterables(dataList, products.indexOf(product) + 1);
+
+    if (product.eanCode.startsWith("2") || product.eanCode.startsWith("02")) {
+      var rowDatas = sheetObject?.row(products.indexOf(product) + 1);
+
+      for (var rowData in rowDatas!) {
+        sheetObject?.updateCell(rowData!.cellIndex, rowData.value,
+            cellStyle: fruitVegetableStyle);
+      }
+    }
   }
 
   // Save to the Excel (xlsx) file:
