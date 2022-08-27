@@ -4,6 +4,7 @@ import 'package:args/args.dart';
 import 'package:hive/hive.dart';
 
 import 'ean_products_2_csv.dart';
+import 'ean_products_2_xlsx.dart';
 import 'models/hive_product.dart';
 import 'read_ean_products.dart';
 import 'specific/s_kaupat/ean_handler.dart';
@@ -42,10 +43,11 @@ Future<Box<HiveProduct>> runMainProgram(
         eanProducts2CSV(
             eanProducts, exportFilesPath, ShopSelector.sKaupat.name);
       }
-      // Export products to excel (xlsx) files
+      // Export products to Excel (xlsx) files
       else if (exportFilesFormat == ExportFormat.excel.name) {
         receiptProducts2Excel(receiptProducts, exportFilesPath);
-        // TODO: implement excel export
+        eanProducts2Excel(
+            eanProducts, exportFilesPath, ShopSelector.sKaupat.name);
       } else {
         print('Unknow export format');
         exitCode = 1;
@@ -58,9 +60,10 @@ Future<Box<HiveProduct>> runMainProgram(
       if (exportFilesFormat == ExportFormat.csv.name) {
         eanProducts2CSV(eanProducts, exportFilesPath, ShopSelector.kRuoka.name);
       }
-      // Export products to excel (xlsx) file
+      // Export products to Excel (xlsx) file
       else if (exportFilesFormat == ExportFormat.excel.name) {
-        // TODO: implement excel export
+        eanProducts2Excel(
+            eanProducts, exportFilesPath, ShopSelector.kRuoka.name);
       } else {
         print('Unknow export format');
         exitCode = 1;
