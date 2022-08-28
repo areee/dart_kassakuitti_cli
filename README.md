@@ -37,11 +37,11 @@ kassakuitti run -t [a path to the cash receipt file] -h [a path to the EAN file]
 
 Mandatory | Abbreviation | Meaning | Default choice
 :---: | :---: | :---: | :---:
-✅ | `-t` | Text file (a cash receipt) | -
-✅ | `-h` | Html file (an EAN products file) | -
-&nbsp; | `-s` | Which food online store to use | S-kaupat
-&nbsp; | `-p` | Path where to save the output files | User's Downloads folder (`~/Downloads`)
-&nbsp; | `-f` | In which file format the output files will be saved | csv
+✅ | `-t` | **Text** file (a cash receipt) | -
+✅ | `-h` | **Html** file (an EAN products file) | -
+&nbsp; | `-s` | Which food online **store** to use | S-kaupat
+&nbsp; | `-p` | **Path** where to save the output files | User's Downloads folder (`~/Downloads`)
+&nbsp; | `-f` | In which file **format** the output files will be saved | csv
 
 #### An example #1 (minimum choices)
 
