@@ -43,7 +43,13 @@ Mandatory | Abbreviation | Meaning | Default choice
 &nbsp; | `-p` | Path where to save the output files | User's Downloads folder (`~/Downloads`)
 &nbsp; | `-f` | In which file format the output files will be saved | csv
 
-#### An example
+#### An example #1 (minimum choices)
+
+```
+kassakuitti run -t /Users/username/Downloads/cash_receipt.txt -h /Users/username/Downloads/https___www.s-kaupat.fi_tilaus_product_id-generating_time.html
+```
+
+#### An example #2 (maximum choices)
 
 ```
 kassakuitti run -t /Users/username/Downloads/cash_receipt.txt -h /Users/username/Downloads/https___www.s-kaupat.fi_tilaus_product_id-generating_time.html -s S-kaupat -p ~/Downloads -f csv
