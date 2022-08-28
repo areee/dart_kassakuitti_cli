@@ -24,7 +24,7 @@ String getUserHomeDirectory() {
 
 /// Replaces tilde with user's home directory if it exists.
 String replaceTildeWithHomeDirectory(String path) {
-  if (path.startsWith('~')) {
+  if (path.startsWith('~/')) {
     return p.join(getUserHomeDirectory(), path.replaceFirst('~/', ''));
   } else {
     return path;
