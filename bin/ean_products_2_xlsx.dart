@@ -44,10 +44,17 @@ void eanProducts2Excel(
       sheetObject?.updateSelectedRowStyle(products.indexOf(product) + 1,
           CellStyle(backgroundColorHex: "#1AFF1A"));
     }
-    // If the product is a packaging material, change the font color to red.
-    if (product.quantity == -1) {
-      sheetObject?.updateSelectedRowStyle(
-          products.indexOf(product) + 1, CellStyle(fontColorHex: "#FF0000"));
+    // If the product is a packaging material,
+    // change the font color to red and the background color to green.
+    if (product.name == 'Pakkausmateriaalikustannukset') {
+      sheetObject?.updateSelectedRowStyle(products.indexOf(product) + 1,
+          CellStyle(fontColorHex: "#FF0000", backgroundColorHex: "#1AFF1A"));
+    }
+
+    // If the product is a home delivery, change the background color to green.
+    if (product.name == 'Kotiinkuljetus') {
+      sheetObject?.updateSelectedRowStyle(products.indexOf(product) + 1,
+          CellStyle(backgroundColorHex: "#1AFF1A"));
     }
   }
 
