@@ -128,7 +128,7 @@ Future<void> _handleFoundCases(
     print(greenPen().write('\tFound one product:'));
     print('\t\t${filteredEanProducts.first}');
 
-    receiptProduct.eanCode = filteredEanProducts.first.ean;
+    receiptProduct.eanCode = filteredEanProducts.first.eanCode;
   } else if (filteredEanProducts.length > 1) {
     print(redPen()
         .write('\tFound multiple products (${filteredEanProducts.length}'
@@ -147,7 +147,7 @@ Future<void> _handleFoundCases(
 
       print(greenPen().write('\tYou selected: $selectedEanProduct'));
 
-      receiptProduct.eanCode = selectedEanProduct.ean;
+      receiptProduct.eanCode = selectedEanProduct.eanCode;
 
       await hiveProducts.add(HiveProduct(
           receiptName: receiptProduct.name, eanName: selectedEanProduct.name));

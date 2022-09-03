@@ -40,7 +40,7 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
 
       eanProducts.add(
         EANProduct(
-          ean: eanCode,
+          eanCode: eanCode,
           name: productName,
           quantity: quantity,
           totalPrice: productPrice,

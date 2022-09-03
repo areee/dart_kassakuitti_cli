@@ -13,11 +13,8 @@ void receiptProducts2Excel(
   var excel = Excel.createExcel();
   var sheetObject = excel.sheets[excel.getDefaultSheet()];
 
-  /*
-    Write the header.
-    If there aren't any discountCounted products, don't add it to the Excel file.
-  */
-  List<String> dataList = [
+  // Write the header.
+  var headerDataList = [
     "Name",
     "Quantity",
     "Price per unit",
@@ -27,35 +24,34 @@ void receiptProducts2Excel(
   var discountCounted = false;
   CellStyle headerStyle = CellStyle(bold: true);
 
+  // If there aren't any discountCounted products, don't add it to the Excel file.
   if (products.every((product) => product.discountCounted.isEmpty)) {
-    sheetObject?.insertRowIterables(dataList, 0);
+    sheetObject?.insertRowIterables(headerDataList, 0);
 
+    // Change the header style to bold.
     var rowDatas = sheetObject?.row(0);
-
     for (var rowData in rowDatas!) {
       sheetObject?.updateCell(rowData!.cellIndex, rowData.value,
           cellStyle: headerStyle);
     }
   } else {
     discountCounted = true;
-    dataList.add("Discount counted");
-    sheetObject?.insertRowIterables(dataList, 0);
+    headerDataList.add("Discount counted");
+    sheetObject?.insertRowIterables(headerDataList, 0);
 
+    // Change the header style to bold.
     var rowDatas = sheetObject?.row(0);
-
     for (var rowData in rowDatas!) {
       sheetObject?.updateCell(rowData!.cellIndex, rowData.value,
           cellStyle: headerStyle);
     }
   }
 
-  /*
-    Write the products.
-  */
+  // Write the products.
   CellStyle fruitVegetableStyle = CellStyle(backgroundColorHex: "#1AFF1A");
 
   for (var product in products) {
-    List<dynamic> dataList = [
+    var productDataList = [
       product.name,
       product.quantity,
       product.pricePerUnit,
@@ -64,11 +60,13 @@ void receiptProducts2Excel(
     ];
 
     if (discountCounted) {
-      dataList.add(product.discountCounted);
+      productDataList.add(product.discountCounted);
     }
 
-    sheetObject?.insertRowIterables(dataList, products.indexOf(product) + 1);
+    sheetObject?.insertRowIterables(
+        productDataList, products.indexOf(product) + 1);
 
+    // If the product is a fruit or vegetable, change the background color to green.
     if (product.eanCode.startsWith("2") || product.eanCode.startsWith("02")) {
       var rowDatas = sheetObject?.row(products.indexOf(product) + 1);
 

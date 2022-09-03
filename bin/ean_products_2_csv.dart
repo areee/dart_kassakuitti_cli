@@ -14,7 +14,7 @@ void eanProducts2CSV(List<EANProduct> eanProductList, String exportFilePath,
 
   for (var item in eanProductList) {
     csv.write(
-        '${item.name};${item.quantity};${item.pricePerUnit};${item.totalPrice};${item.ean};${item.moreDetails}\n');
+        '${item.name};${item.quantity};${item.pricePerUnit};${item.totalPrice};${item.eanCode};${item.moreDetails}\n');
   }
 
   var file = File(p.join(replaceTildeWithHomeDirectory(exportFilePath),

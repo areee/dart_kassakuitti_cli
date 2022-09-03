@@ -7,11 +7,14 @@ import 'models/ean_product.dart';
 import 'utils/date_helper.dart';
 import 'utils/home_directory_helper.dart';
 
-void eanProducts2Excel(List<EANProduct> eanProductList, String exportFilePath,
-    String shopSelector) {
+/// Saves EAN products as an Excel (xlsx) file.
+void eanProducts2Excel(
+    List<EANProduct> products, String exportFilePath, String shopSelector) {
   var excel = Excel.createExcel();
   var sheetObject = excel.sheets[excel.getDefaultSheet()];
-  var header = [
+
+  // Write the header.
+  var headerDataList = [
     "Name",
     "Quantity",
     "Price per unit",
@@ -19,17 +22,51 @@ void eanProducts2Excel(List<EANProduct> eanProductList, String exportFilePath,
     "EAN code",
     "More details"
   ];
-  sheetObject?.insertRowIterables(header, 0);
-  for (var item in eanProductList) {
-    var dataList = [
-      item.name,
-      item.quantity,
-      item.pricePerUnit,
-      item.totalPrice,
-      item.ean,
-      item.moreDetails
+  CellStyle headerStyle = CellStyle(bold: true);
+  sheetObject?.insertRowIterables(headerDataList, 0);
+
+  // Change the header style to bold.
+  var rowDatas = sheetObject?.row(0);
+  for (var rowData in rowDatas!) {
+    sheetObject?.updateCell(rowData!.cellIndex, rowData.value,
+        cellStyle: headerStyle);
+  }
+
+  // Write the products.
+  CellStyle fruitVegetableStyle = CellStyle(backgroundColorHex: "#1AFF1A");
+  CellStyle packagingMaterialStyle = CellStyle(fontColorHex: "#FF0000");
+
+  for (var product in products) {
+    var productDataList = [
+      product.name,
+      product.quantity,
+      product.pricePerUnit,
+      product.totalPrice,
+      product.eanCode,
+      product.moreDetails
     ];
-    sheetObject?.insertRowIterables(dataList, eanProductList.indexOf(item) + 1);
+    sheetObject?.insertRowIterables(
+        productDataList, products.indexOf(product) + 1);
+
+    // If the product is a fruit or vegetable, change the background color to green.
+    if (product.eanCode.startsWith("2") || product.eanCode.startsWith("02")) {
+      var rowDatas = sheetObject?.row(products.indexOf(product) + 1);
+
+      for (var rowData in rowDatas!) {
+        sheetObject?.updateCell(rowData!.cellIndex, rowData.value,
+            cellStyle: fruitVegetableStyle);
+      }
+    }
+
+    // If the product is a packaging material, change the font color to red.
+    if (product.quantity == -1) {
+      var rowDatas = sheetObject?.row(products.indexOf(product) + 1);
+
+      for (var rowData in rowDatas!) {
+        sheetObject?.updateCell(rowData!.cellIndex, rowData.value,
+            cellStyle: packagingMaterialStyle);
+      }
+    }
   }
 
   // Save to the Excel (xlsx) file:
