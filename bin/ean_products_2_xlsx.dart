@@ -6,6 +6,7 @@ import 'package:path/path.dart' as p;
 import 'models/ean_product.dart';
 import 'utils/date_helper.dart';
 import 'utils/home_directory_helper.dart';
+import 'utils/extensions/sheet_extension.dart';
 
 /// Saves EAN products as an Excel (xlsx) file.
 void eanProducts2Excel(
@@ -22,20 +23,10 @@ void eanProducts2Excel(
     "EAN code",
     "More details"
   ];
-  CellStyle headerStyle = CellStyle(bold: true);
   sheetObject?.insertRowIterables(headerDataList, 0);
-
-  // Change the header style to bold.
-  var rowDatas = sheetObject?.row(0);
-  for (var rowData in rowDatas!) {
-    sheetObject?.updateCell(rowData!.cellIndex, rowData.value,
-        cellStyle: headerStyle);
-  }
+  sheetObject?.updateSelectedRowStyle(0, CellStyle(bold: true));
 
   // Write the products.
-  CellStyle fruitVegetableStyle = CellStyle(backgroundColorHex: "#1AFF1A");
-  CellStyle packagingMaterialStyle = CellStyle(fontColorHex: "#FF0000");
-
   for (var product in products) {
     var productDataList = [
       product.name,
@@ -50,22 +41,13 @@ void eanProducts2Excel(
 
     // If the product is a fruit or vegetable, change the background color to green.
     if (product.eanCode.startsWith("2") || product.eanCode.startsWith("02")) {
-      var rowDatas = sheetObject?.row(products.indexOf(product) + 1);
-
-      for (var rowData in rowDatas!) {
-        sheetObject?.updateCell(rowData!.cellIndex, rowData.value,
-            cellStyle: fruitVegetableStyle);
-      }
+      sheetObject?.updateSelectedRowStyle(products.indexOf(product) + 1,
+          CellStyle(backgroundColorHex: "#1AFF1A"));
     }
-
     // If the product is a packaging material, change the font color to red.
     if (product.quantity == -1) {
-      var rowDatas = sheetObject?.row(products.indexOf(product) + 1);
-
-      for (var rowData in rowDatas!) {
-        sheetObject?.updateCell(rowData!.cellIndex, rowData.value,
-            cellStyle: packagingMaterialStyle);
-      }
+      sheetObject?.updateSelectedRowStyle(
+          products.indexOf(product) + 1, CellStyle(fontColorHex: "#FF0000"));
     }
   }
 
