@@ -147,6 +147,8 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
     quantity: -1,
     totalPrice: '',
     pricePerUnit: packagingMaterialPrice,
+    moreDetails:
+        'TODO: fill in the amount of packaging material and the total price.',
   ));
 
   return eanProducts;
