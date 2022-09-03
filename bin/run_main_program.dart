@@ -25,13 +25,22 @@ Future<Box<HiveProduct>> runMainProgram(
   var selectedStore = argResults[ArgSelector.foodOnlineStore.value] as String;
   var exportFilesPath = argResults[ArgSelector.exportPath.value] as String;
   var exportFilesFormat = argResults[ArgSelector.exportFormat.value] as String;
-
+  /*
+      Check the HTML file name (it should contain k-ruoka or s-kaupat)
+      (By default, selectedStore is s-kaupat)
+  */
+  selectedStore = selectedHtmlFile.contains('k-ruoka.fi')
+      ? ShopSelector.kRuoka.value
+      : selectedStore;
   printSelectedValues(selectedTextFile, selectedHtmlFile, selectedStore,
       exportFilesPath, exportFilesFormat);
 
   try {
     if (ShopSelector.sKaupat.value == selectedStore) {
-      var receiptProducts = await readReceiptProducts(selectedTextFile!);
+      if (selectedTextFile == null) {
+        throw Exception('Text file is required for S-Kaupat');
+      }
+      var receiptProducts = await readReceiptProducts(selectedTextFile);
       var eanProducts =
           await readEANProducts(selectedHtmlFile, ShopSelector.sKaupat);
 
