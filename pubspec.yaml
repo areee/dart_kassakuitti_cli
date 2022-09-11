@@ -19,6 +19,3 @@ dependencies:
   intl: ^0.17.0
   path: ^1.8.2
   yaml: ^3.1.1
-
-assets:
-  - assets/files/
