@@ -50,7 +50,7 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
           .ceil(); // e.g. 0.2 -> 1 (round up) or 0.5 -> 1 (round up)
 
       eanProducts.add(EANProduct(
-        ean: productEan,
+        eanCode: productEan,
         name: productName,
         quantity: quantity,
         totalPrice: productPrice,
@@ -96,7 +96,7 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
           .ceil(); // e.g. 0.2 -> 1 (round up) or 0.5 -> 1 (round up)
 
       eanProducts.add(EANProduct(
-        ean: eanCode,
+        eanCode: eanCode,
         name: productName,
         quantity: quantity,
         totalPrice: productPrice,
@@ -115,7 +115,7 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
   var homeDeliveryPrice = homeDeliveryPriceSection.children[1].text;
 
   eanProducts.add(EANProduct(
-    ean: '',
+    eanCode: '',
     name: homeDeliveryText,
     quantity: 1,
     totalPrice: homeDeliveryPrice,
@@ -142,11 +142,13 @@ Future<List<EANProduct>> loadHtmlFromAssets(String filePath) async {
       .trim();
 
   eanProducts.add(EANProduct(
-    ean: '',
+    eanCode: '',
     name: packagingMaterialTerm,
     quantity: -1,
     totalPrice: '',
     pricePerUnit: packagingMaterialPrice,
+    moreDetails:
+        'TODO: fill in the amount of packaging material and the total price.',
   ));
 
   return eanProducts;

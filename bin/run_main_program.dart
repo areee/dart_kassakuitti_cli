@@ -4,12 +4,15 @@ import 'package:args/args.dart';
 import 'package:hive/hive.dart';
 
 import 'ean_products_2_csv.dart';
+import 'ean_products_2_xlsx.dart';
 import 'models/hive_product.dart';
 import 'read_ean_products.dart';
 import 'specific/s_kaupat/ean_handler.dart';
 import 'specific/s_kaupat/read_receipt_products.dart';
 import 'specific/s_kaupat/receipt_products_2_csv.dart';
+import 'specific/s_kaupat/receipt_products_2_xlsx.dart';
 import 'utils/arg_selector_helper.dart';
+import 'utils/export_format_helper.dart';
 import 'utils/printing_helper.dart';
 import 'utils/shop_selector_helper.dart';
 
@@ -20,27 +23,60 @@ Future<Box<HiveProduct>> runMainProgram(
   var selectedTextFile = argResults[ArgSelector.textFile.value] as String?;
   var selectedHtmlFile = argResults[ArgSelector.htmlFile.value] as String;
   var selectedStore = argResults[ArgSelector.foodOnlineStore.value] as String;
-  var csvFilesPath = argResults[ArgSelector.csvPath.value] as String;
-
-  printSelectedValues(
-      selectedTextFile, selectedHtmlFile, selectedStore, csvFilesPath);
+  var exportFilesPath = argResults[ArgSelector.exportPath.value] as String;
+  var exportFilesFormat = argResults[ArgSelector.exportFormat.value] as String;
+  /*
+      Check the HTML file name (it should contain k-ruoka or s-kaupat)
+      (By default, selectedStore is s-kaupat)
+  */
+  selectedStore = selectedHtmlFile.contains('k-ruoka.fi')
+      ? ShopSelector.kRuoka.value
+      : selectedStore;
+  printSelectedValues(selectedTextFile, selectedHtmlFile, selectedStore,
+      exportFilesPath, exportFilesFormat);
 
   try {
     if (ShopSelector.sKaupat.value == selectedStore) {
-      var receiptProducts =
-          await readReceiptProducts(selectedTextFile!, csvFilesPath);
-      var eanProducts = await readEANProducts(
-          selectedHtmlFile, ShopSelector.sKaupat, csvFilesPath);
+      if (selectedTextFile == null) {
+        throw Exception('Text file is required for S-Kaupat');
+      }
+      var receiptProducts = await readReceiptProducts(selectedTextFile);
+      var eanProducts =
+          await readEANProducts(selectedHtmlFile, ShopSelector.sKaupat);
 
       await eanHandler(receiptProducts, eanProducts.toList(), hiveProducts);
 
-      receiptProducts2CSV(receiptProducts, csvFilesPath);
-      eanProducts2CSV(eanProducts, csvFilesPath, ShopSelector.sKaupat.name);
+      // Export products to csv files
+      if (exportFilesFormat == ExportFormat.csv.name) {
+        receiptProducts2CSV(receiptProducts, exportFilesPath);
+        eanProducts2CSV(
+            eanProducts, exportFilesPath, ShopSelector.sKaupat.name);
+      }
+      // Export products to Excel (xlsx) files
+      else if (exportFilesFormat == ExportFormat.excel.name) {
+        receiptProducts2Excel(receiptProducts, exportFilesPath);
+        eanProducts2Excel(
+            eanProducts, exportFilesPath, ShopSelector.sKaupat.name);
+      } else {
+        print('Unknow export format');
+        exitCode = 1;
+      }
     } else if (ShopSelector.kRuoka.value == selectedStore) {
-      var eanProducts = await readEANProducts(
-          selectedHtmlFile, ShopSelector.kRuoka, csvFilesPath);
+      var eanProducts =
+          await readEANProducts(selectedHtmlFile, ShopSelector.kRuoka);
 
-      eanProducts2CSV(eanProducts, csvFilesPath, ShopSelector.kRuoka.name);
+      // Export products to csv file
+      if (exportFilesFormat == ExportFormat.csv.name) {
+        eanProducts2CSV(eanProducts, exportFilesPath, ShopSelector.kRuoka.name);
+      }
+      // Export products to Excel (xlsx) file
+      else if (exportFilesFormat == ExportFormat.excel.name) {
+        eanProducts2Excel(
+            eanProducts, exportFilesPath, ShopSelector.kRuoka.name);
+      } else {
+        print('Unknow export format');
+        exitCode = 1;
+      }
     } else {
       print('Unknown store: $selectedStore');
       exitCode = 1;

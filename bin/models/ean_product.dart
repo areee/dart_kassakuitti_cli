@@ -1,5 +1,5 @@
 class EANProduct {
-  final String ean;
+  final String eanCode;
   final String name;
   final int quantity;
   final String totalPrice;
@@ -7,7 +7,7 @@ class EANProduct {
   final String moreDetails;
 
   EANProduct(
-      {this.ean = '0000000000000',
+      {this.eanCode = '0000000000000',
       this.name = 'Default EAN product name',
       this.quantity = 1,
       this.totalPrice = '0',

@@ -4,7 +4,7 @@ import '../../models/receipt_product.dart';
 import 'strings_to_receipt_products.dart';
 
 Future<List<ReceiptProduct>> readReceiptProducts(
-    String filePath, String csvFilePath) async {
+    String filePath) async {
   var lines = await readReceiptFile(filePath);
   return strings2ReceiptProducts(lines ?? []);
 }

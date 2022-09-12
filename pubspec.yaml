@@ -1,14 +1,10 @@
 name: dart_kassakuitti_cli
 description: A simple Dart CLI app to handle a cash receipt coming from S-kaupat or K-ruoka (two Finnish food online stores).
-version: 0.15.0
+version: 1.0.0
 homepage: https://github.com/areee/dart_kassakuitti_cli
 
 environment:
-  sdk: '>=2.17.3 <3.0.0'
-
-
-# dependencies:
-#   path: ^1.8.0
+  sdk: '>=2.18.0 <3.0.0'
 
 dev_dependencies:
   build_runner: ^2.2.0
@@ -17,11 +13,9 @@ dev_dependencies:
 dependencies: 
   ansicolor: ^2.0.1
   args: ^2.3.1
+  excel: ^2.0.0-null-safety-3
   hive: ^2.2.3
   html: ^0.15.0
   intl: ^0.17.0
   path: ^1.8.2
   yaml: ^3.1.1
-
-assets:
-  - assets/files/

@@ -26,4 +26,4 @@ alias kassakuitti='dart run $HOME/Documents/dart_kassakuitti_cli/bin/dart_kassak
 If you're unsure where to save the alias, this might help you:
 
 - If you're using _Zsh_ as your shell, use `~/.zshrc` profile file.
-- If you're using _Bash_ as your shell, use `~/.bash_profile` profile file.
+- If you're using _Bash_ as your shell, you could use `~/.bashrc` or `~/.bash_profile` profile file (or e.g. `~/.bash_aliases` file).

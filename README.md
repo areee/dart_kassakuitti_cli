@@ -3,7 +3,7 @@
 
 # dart_kassakuitti_cli
 
-> A simple Dart CLI app to handle a cash receipt coming from S-kaupat or K-ruoka (two Finnish food online stores).
+> A simple Dart CLI app to handle a cash receipt coming from S-kaupat or K-ruoka (two Finnish food online stores). Fully compatible with macOS, Linux & Windows.
 
 ## Installation
 
@@ -30,21 +30,29 @@ See the installation in [its own page](https://github.com/areee/dart_kassakuitti
 The basic usage looks like this:
 
 ```
-kassakuitti run -t [a path to the cash receipt file] -h [a path to the EAN file] -s [S-kaupat or K-ruoka] -c [a path to generated CSV files]
+kassakuitti run -t [a path to the cash receipt file] -h [a path to the EAN file] -s [S-kaupat or K-ruoka] -p [a path to generated files] -f [csv or Excel = xlsx]
 ```
 
-You can define
-- a cash receipt (`-t` = text file),
-- an EAN products file (`-h` = html file),
-- optionally: which food online store to use (`-s` = store) and
-- where to save the output files (`-c` = CSV file).
+#### Choices (flags) for `kassakuitti run` command
 
-S-kaupat is a default choice for the food online store selection (`-s`).
+Mandatory | Abbreviation | Meaning | Default choice
+:---: | :---: | :---: | :---:
+✅ | `-t` | **Text** file (a cash receipt) | -
+✅ | `-h` | **Html** file (an EAN products file) | -
+&nbsp; | `-s` | Which food online **store** to use | S-kaupat
+&nbsp; | `-p` | **Path** where to save the output files | User's Downloads folder (`~/Downloads`)
+&nbsp; | `-f` | In which file **format** the output files will be saved | csv
 
-#### An example
+#### An example #1 (minimum choices)
 
 ```
-kassakuitti run -t /Users/username/Downloads/cash_receipt.txt -h /Users/username/Downloads/https___www.s-kaupat.fi_tilaus_product_id-generating_time.html -s S-kaupat -c ~/Downloads
+kassakuitti run -t /Users/username/Downloads/cash_receipt.txt -h /Users/username/Downloads/https___www.s-kaupat.fi_tilaus_product_id-generating_time.html
+```
+
+#### An example #2 (maximum choices)
+
+```
+kassakuitti run -t /Users/username/Downloads/cash_receipt.txt -h /Users/username/Downloads/https___www.s-kaupat.fi_tilaus_product_id-generating_time.html -s S-kaupat -p ~/Downloads -f csv
 ```
 
 ### Help
