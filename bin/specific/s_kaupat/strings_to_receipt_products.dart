@@ -102,8 +102,7 @@ List<ReceiptProduct> strings2ReceiptProducts(List<String> rows) {
 
     // A "normal" row:
     else {
-      var items = item.split(RegExp(r'\s{11,33}'));
-
+      var items = item.split(RegExp(r'\s{8,35}'));
       var name = items[0];
       var price = items[1];
 
