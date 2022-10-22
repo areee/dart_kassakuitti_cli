@@ -10,6 +10,8 @@ List<ReceiptProduct> strings2ReceiptProducts(List<String> rows) {
   for (var item in rows) {
     item = item.trim();
     item = item.toLowerCase();
+    // Replace non-breaking space with a normal space
+    item = item.replaceAll(RegExp(r'\u00a0'), ' ');
 
     // Do not handle sum lines (after a row of strokes):
     if (item.contains('----------')) {
