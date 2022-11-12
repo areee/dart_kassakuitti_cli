@@ -1,11 +1,10 @@
 import 'dart:io';
 
 import 'package:hive/hive.dart';
+import 'package:kassakuitti/kassakuitti.dart';
 
-import '../../models/ean_product.dart';
-import '../../models/hive_product.dart';
-import '../../models/receipt_product.dart';
-import '../../utils/ansipen_helper.dart';
+import 'models/hive_product.dart';
+import 'utils/ansipen_helper.dart';
 
 /// Handles the EAN products using Hive storage.
 Future<Box<HiveProduct>> eanHandler(List<ReceiptProduct> receiptProducts,
