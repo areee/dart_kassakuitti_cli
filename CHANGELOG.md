@@ -6,4 +6,4 @@
 
 ## 0.10.0 - 1.0.2
 
-- Basic logic for S-kaupat & K-ruoka
+- Basic logic for S-kaupat & K-ruoka.
