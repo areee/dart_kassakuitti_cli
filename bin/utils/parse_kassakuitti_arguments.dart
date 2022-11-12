@@ -1,8 +1,7 @@
 import 'package:args/args.dart';
+import 'package:kassakuitti/kassakuitti.dart';
 
 import 'arg_selector_helper.dart';
-import 'export_format_helper.dart';
-import 'shop_selector_helper.dart';
 
 ArgParser getParser() {
   final parser = ArgParser()
@@ -23,21 +22,22 @@ ArgParser getParser() {
       ArgSelector.foodOnlineStore.value,
       abbr: ArgSelector.foodOnlineStore.value.substring(0, 1),
       help: 'Food online store',
-      defaultsTo: ShopSelector.sKaupat.value,
-      allowed: [ShopSelector.sKaupat.value, ShopSelector.kRuoka.value],
+      defaultsTo: SelectedShop.sKaupat.shopName,
+      allowed: [SelectedShop.sKaupat.shopName, SelectedShop.kRuoka.shopName],
     )
-    ..addOption(
-      ArgSelector.exportPath.value,
-      abbr: ArgSelector.exportPath.value.substring(0, 1),
-      help: 'Export path for output files',
-      defaultsTo: '~/Downloads',
-    )
+    // TODO: Implement this to Kassakuitti package:
+    // ..addOption(
+    //   ArgSelector.exportPath.value,
+    //   abbr: ArgSelector.exportPath.value.substring(0, 1),
+    //   help: 'Export path for output files',
+    //   defaultsTo: '~/Downloads',
+    // )
     ..addOption(
       ArgSelector.exportFormat.value,
       abbr: ArgSelector.exportFormat.value.substring(0, 1),
       help: 'Export format for output files',
-      defaultsTo: ExportFormat.csv.name,
-      allowed: [ExportFormat.csv.name, ExportFormat.excel.name],
+      defaultsTo: SelectedFileFormat.xlsx.name,
+      allowed: [SelectedFileFormat.csv.name, SelectedFileFormat.xlsx.name],
     );
 
   return parser;

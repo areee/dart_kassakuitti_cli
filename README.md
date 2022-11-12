@@ -40,8 +40,7 @@ Mandatory | Abbreviation | Meaning | Default choice
 ✅ | `-t` | **Text** file (a cash receipt) | -
 ✅ | `-h` | **Html** file (an EAN products file) | -
 &nbsp; | `-s` | Which food online **store** to use | S-kaupat
-&nbsp; | `-p` | **Path** where to save the output files | User's Downloads folder (`~/Downloads`)
-&nbsp; | `-f` | In which file **format** the output files will be saved | csv
+&nbsp; | `-f` | In which file **format** the output files will be saved | xlsx (Excel)
 
 #### An example #1 (minimum choices)
 
@@ -52,7 +51,7 @@ kassakuitti run -t /Users/username/Downloads/cash_receipt.txt -h /Users/username
 #### An example #2 (maximum choices)
 
 ```
-kassakuitti run -t /Users/username/Downloads/cash_receipt.txt -h /Users/username/Downloads/https___www.s-kaupat.fi_tilaus_product_id-generating_time.html -s S-kaupat -p ~/Downloads -f csv
+kassakuitti run -t /Users/username/Downloads/cash_receipt.txt -h /Users/username/Downloads/https___www.s-kaupat.fi_tilaus_product_id-generating_time.html -s S-kaupat -p ~/Downloads -f xlsx
 ```
 
 ### Help
