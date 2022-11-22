@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:hive/hive.dart';
+import 'package:path/path.dart';
 
 import 'models/hive_product.dart';
+import 'utils/date_helper.dart';
 import 'utils/extensions/string_extension.dart';
+import 'utils/home_directory_helper.dart';
 
 /// Hive handling (CRUD for storage handling).
 Future<Box<HiveProduct>> hiveHandling(Box<HiveProduct> hiveProducts) async {
@@ -17,6 +20,7 @@ Future<Box<HiveProduct>> hiveHandling(Box<HiveProduct> hiveProducts) async {
     4. Update
     5. Delete
     6. Count
+    7. Export to CSV
     Empty command or something else to exit.
     ''');
 
@@ -40,6 +44,9 @@ Future<Box<HiveProduct>> hiveHandling(Box<HiveProduct> hiveProducts) async {
         break;
       case '6':
         _countProducts(hiveProducts);
+        break;
+      case '7':
+        await _exportToCsv(hiveProducts);
         break;
       default:
         print('Exiting...');
@@ -218,4 +225,37 @@ int _getOrderNumberAndPrintProduct(Box<HiveProduct> hiveProducts) {
 /// Counts the products in the storage.
 void _countProducts(Box<HiveProduct> hiveProducts) {
   print('Amount of products: ${hiveProducts.length}');
+}
+
+/// Exports the products to a CSV file.
+Future<void> _exportToCsv(Box<HiveProduct> hiveProducts) async {
+  print('Do you want to export all Hive products to a CSV file? (y/n)');
+  var input = stdin.readLineSync();
+
+  if (input == 'y') {
+    var csv = StringBuffer();
+
+    // Write the header:
+    var header = ['Receipt name', 'EAN name'];
+    csv.write('${header.join(';')}\n');
+
+    // Write the products:
+    for (var key in hiveProducts.keys) {
+      var hiveProduct = hiveProducts.get(key)!;
+      var productDataList = [
+        hiveProduct.receiptName,
+        hiveProduct.eanName,
+      ];
+      csv.write('${productDataList.join(';')}\n');
+    }
+
+    // Currently saves the CSV file in the Downloads folder:
+    var filePath = join(getUserHomeDirectory(), 'Downloads',
+        'hiveProducts_${formattedDateTime()}.csv');
+    var file = File(filePath);
+    await file.writeAsString(csv.toString());
+    print('CSV file exported!');
+  } else {
+    print('CSV file not exported!');
+  }
 }
