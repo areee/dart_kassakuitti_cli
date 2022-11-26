@@ -85,4 +85,13 @@ extension BoxHiveProductExtension on Box<HiveProduct> {
     if (input == null) return null;
     return int.tryParse(input);
   }
+
+  /// Returns the product by the key number.
+  /// If the product is not found, returns null.
+  HiveProduct? getProductByKey(int key) {
+    if (isEmpty) {
+      return null;
+    }
+    return get(key);
+  }
 }

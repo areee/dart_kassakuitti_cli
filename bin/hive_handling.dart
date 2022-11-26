@@ -125,78 +125,88 @@ void _searchByKeyword(Box<HiveProduct> hiveProducts) {
 Future<void> _updateProduct(Box<HiveProduct> hiveProducts) async {
   print('Enter search term of the product:');
   var searchTerm = stdin.readLineSync();
+  if (searchTerm.isNullOrEmpty()) return;
 
-  if (searchTerm.isNotNullOrEmpty()) {
-    print('You entered: $searchTerm');
-    var orderNumber =
-        hiveProducts.getOrderNumberOfProductBySearchTerm(searchTerm!);
-    if (orderNumber == null) {
-      print('Product not found!');
-      return;
-    }
+  print('You entered: $searchTerm');
+  var orderNumber =
+      hiveProducts.getOrderNumberOfProductBySearchTerm(searchTerm!);
+  if (orderNumber == null) {
+    print('Product not found!');
+    return;
+  }
 
-    print('Enter the new receipt name of the product '
-        '(keep empty to not change):');
-    var receiptNameInput = stdin.readLineSync();
-    var receiptName = receiptNameInput.isNullOrEmpty()
-        ? hiveProducts.get(orderNumber)!.receiptName
-        : receiptNameInput;
+  print(hiveProducts.getProductByKey(orderNumber));
 
-    print('Enter the new EAN name of the product '
-        '(keep empty to not change):');
-    var eanNameInput = stdin.readLineSync();
-    var eanName = eanNameInput.isNullOrEmpty()
-        ? hiveProducts.get(orderNumber)!.eanName
-        : eanNameInput;
+  print('\nEnter the new receipt name of the product '
+      '(keep empty to not change):');
+  var receiptNameInput = stdin.readLineSync();
+  var receiptName = receiptNameInput.isNullOrEmpty()
+      ? hiveProducts.get(orderNumber)!.receiptName
+      : receiptNameInput;
 
-    print('(Optional) Enter the new unit price of the product '
-        '(keep empty to not change):');
-    var priceStr = stdin.readLineSync();
-    var price = priceStr.isNullOrEmpty()
-        ? hiveProducts.get(orderNumber)!.price
-        : priceStr.toDoubleOrNull();
+  print('Enter the new EAN name of the product '
+      '(keep empty to not change):');
+  var eanNameInput = stdin.readLineSync();
+  var eanName = eanNameInput.isNullOrEmpty()
+      ? hiveProducts.get(orderNumber)!.eanName
+      : eanNameInput;
 
-    print('(Optional) Enter the new EAN code of the product '
-        '(keep empty to not change):');
-    var eanCode = stdin.readLineSync();
-    eanCode = eanCode.isNullOrEmpty()
-        ? hiveProducts.get(orderNumber)!.eanCode
-        : eanCode.isEan13()
-            ? eanCode
-            : null;
+  print('(Optional) Enter the new unit price of the product '
+      '(keep empty to not change):');
+  var priceStr = stdin.readLineSync();
+  var price = priceStr.isNullOrEmpty()
+      ? hiveProducts.get(orderNumber)!.price
+      : priceStr.toDoubleOrNull();
 
-    if (receiptName.isNotNullOrEmpty() && eanName.isNotNullOrEmpty()) {
-      print('''You entered:
+  print('(Optional) Enter the new EAN code of the product '
+      '(keep empty to not change):');
+  var eanCode = stdin.readLineSync();
+  eanCode = eanCode.isNullOrEmpty()
+      ? hiveProducts.get(orderNumber)!.eanCode
+      : eanCode.isEan13()
+          ? eanCode
+          : null;
+
+  if (receiptName.isNotNullOrEmpty() && eanName.isNotNullOrEmpty()) {
+    print('''You entered:
     Receipt name: $receiptName
     EAN name: $eanName
     Price: ${price ?? 'not set'}
     EAN code: ${eanCode.isNullOrEmpty() ? 'not set' : eanCode}
     ''');
-      print('Do you want to update this product? (y/n)');
-      var input = stdin.readLineSync();
+    print('Do you want to update this product? (y/n)');
+    var input = stdin.readLineSync();
 
-      if (input == 'y') {
-        await hiveProducts.put(
-            orderNumber,
-            HiveProduct(
-              receiptName: receiptName!,
-              eanName: eanName!,
-              price: price,
-              eanCode: eanCode,
-            ));
-        print('Product updated!');
-      } else {
-        print('Product not updated!');
-      }
+    if (input == 'y') {
+      await hiveProducts.put(
+          orderNumber,
+          HiveProduct(
+            receiptName: receiptName!,
+            eanName: eanName!,
+            price: price,
+            eanCode: eanCode,
+          ));
+      print('Product updated!');
+    } else {
+      print('Product not updated!');
     }
   }
 }
 
 /// Delete a product from the storage.
 Future<void> _deleteProduct(Box<HiveProduct> hiveProducts) async {
-  var orderNumber = _getOrderNumberAndPrintProduct(hiveProducts);
-  if (orderNumber == -1) return;
+  print('Enter search term of the product:');
+  var searchTerm = stdin.readLineSync();
+  if (searchTerm.isNullOrEmpty()) return;
 
+  print('You entered: $searchTerm');
+  var orderNumber =
+      hiveProducts.getOrderNumberOfProductBySearchTerm(searchTerm!);
+  if (orderNumber == null) {
+    print('Product not found!');
+    return;
+  }
+  print(hiveProducts.getProductByKey(orderNumber));
   print('Do you want to delete this product? (y/n)');
   var input = stdin.readLineSync();
 
