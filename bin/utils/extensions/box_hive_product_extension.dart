@@ -25,8 +25,8 @@ extension BoxHiveProductExtension on Box<HiveProduct> {
     }
 
     var foundProducts = values.where((product) =>
-        product.receiptName.contains(keyword) ||
-        product.eanName.contains(keyword));
+        product.receiptName.toLowerCase().contains(keyword.toLowerCase()) ||
+        product.eanName.toLowerCase().contains(keyword.toLowerCase()));
 
     if (foundProducts.isEmpty) {
       print('No products found.');
@@ -55,8 +55,8 @@ extension BoxHiveProductExtension on Box<HiveProduct> {
     }
 
     var foundProducts = values.where((product) =>
-        product.receiptName.contains(searchTerm) ||
-        product.eanName.contains(searchTerm));
+        product.receiptName.toLowerCase().contains(searchTerm.toLowerCase()) ||
+        product.eanName.toLowerCase().contains(searchTerm.toLowerCase()));
 
     if (foundProducts.isEmpty) {
       return null;
