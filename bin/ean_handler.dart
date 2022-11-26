@@ -86,7 +86,8 @@ String? _filterHiveProducts(
 
   var filteredHiveProducts = hiveProductsValues.where((hiveProduct) =>
       hiveProduct.receiptName == receiptProduct.name &&
-      hiveProduct.price == receiptProduct.pricePerUnit);
+      (hiveProduct.price == null ||
+          hiveProduct.price == receiptProduct.pricePerUnit));
   /*
   If the receipt product is already in the hive products,
   get the ean product name from the hive product.
