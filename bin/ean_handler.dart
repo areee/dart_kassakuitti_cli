@@ -84,10 +84,13 @@ String? _filterHiveProducts(
     Iterable<HiveProduct> hiveProductsValues, ReceiptProduct receiptProduct) {
   String? eanProductName;
 
+  var filterPrice = receiptProduct.quantity == 1
+      ? receiptProduct.totalPrice
+      : receiptProduct.pricePerUnit;
+
   var filteredHiveProducts = hiveProductsValues.where((hiveProduct) =>
       hiveProduct.receiptName == receiptProduct.name &&
-      (hiveProduct.price == null ||
-          hiveProduct.price == receiptProduct.pricePerUnit));
+      (hiveProduct.price == null || hiveProduct.price == filterPrice));
   /*
   If the receipt product is already in the hive products,
   get the ean product name from the hive product.
@@ -96,7 +99,7 @@ String? _filterHiveProducts(
     print(greenPen().write(
         '\tFound ${filteredHiveProducts.length} pcs in the hive products!'));
     eanProductName = filteredHiveProducts.first.eanName;
-    print('\teanProductName in Hive: $eanProductName');
+    print('\tEAN product name in Hive: $eanProductName');
   }
   return eanProductName;
 }
