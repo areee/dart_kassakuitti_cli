@@ -219,57 +219,6 @@ Future<void> _deleteProduct(Box<HiveProduct> hiveProducts) async {
   }
 }
 
-/// Asks the user to give an order number.
-int? _askUserToGiveOrderNumber() {
-  print('Enter the order number of the product:');
-  var orderNumber = stdin.readLineSync();
-
-  if (orderNumber.isNotNullOrEmpty()) {
-    return int.tryParse(orderNumber!);
-  }
-  return null;
-}
-
-/// Checks if an order number is valid.
-bool _isValidOrderNumber(int? orderNumber) {
-  return orderNumber != null && orderNumber >= 0;
-}
-
-/// Handles an order number.
-int _handleOrderNumber() {
-  var orderNumber = _askUserToGiveOrderNumber();
-
-  if (!_isValidOrderNumber(orderNumber)) {
-    print('Invalid order number!');
-    return -1;
-  }
-  return orderNumber!;
-}
-
-/// Gets a product.
-HiveProduct? _getProduct(Box<HiveProduct> hiveProducts, int orderNumber) {
-  var product = hiveProducts.get(orderNumber);
-
-  if (product == null) {
-    print('Product not found!');
-    return null;
-  }
-
-  print('Product: $product');
-  return product;
-}
-
-/// Gets an order number (and gives a product information).
-int _getOrderNumberAndPrintProduct(Box<HiveProduct> hiveProducts) {
-  var orderNumber = _handleOrderNumber();
-  if (orderNumber == -1) return -1;
-
-  var product = _getProduct(hiveProducts, orderNumber);
-  if (product == null) return -1;
-
-  return orderNumber;
-}
-
 /// Exports the products to a CSV file.
 Future<void> _exportToCsv(Box<HiveProduct> hiveProducts) async {
   print('Do you want to export all Hive products '
