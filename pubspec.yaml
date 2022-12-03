@@ -12,6 +12,7 @@ dependencies:
   hive: ^2.2.3
   intl: ^0.17.0
   kassakuitti: ^0.2.2
+  mime: ^1.0.3
   path: ^1.8.2
   yaml: ^3.1.1
 

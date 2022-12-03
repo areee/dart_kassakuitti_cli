@@ -4,6 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:path/path.dart';
 
 import 'models/hive_product.dart';
+import 'utils/ansipen_helper.dart';
 import 'utils/date_helper.dart';
 import 'utils/extensions/box_hive_product_extension.dart';
 import 'utils/extensions/string_extension.dart';
@@ -258,63 +259,66 @@ Future<void> _exportToCsv(Box<HiveProduct> hiveProducts) async {
 Future<void> _importFromCsv(Box<HiveProduct> hiveProducts) async {
   print('Do you want to import and replace all current Hive products '
       '(${hiveProducts.length} pcs.) with products from a CSV file? (y/n)');
+  print(redPen()
+      .write('WARNING: This will overwrite the existing Hive database!'));
   var input = stdin.readLineSync();
-
-  if (input == 'y') {
-    print('Enter the path to the CSV file:');
-    var filePath = stdin.readLineSync();
-
-    if (filePath.isNotNullOrEmpty()) {
-      var file = File(filePath!);
-      if (await file.exists()) {
-        var csv = await file.readAsString();
-        var lines = csv.split('\n');
-
-        if (lines.isNotEmpty) {
-          print('Enter the separator:');
-          var separator = stdin.readLineSync();
-
-          if (separator.isNotNullOrEmpty()) {
-            var header = lines[0].split(separator!);
-            var productIndex = header.indexOf('Receipt name');
-            var eanNameIndex = header.indexOf('EAN name');
-            var priceIndex = header.indexOf('Unit price');
-            var eanCodeIndex = header.indexOf('EAN code');
-
-            if (productIndex != -1 &&
-                eanNameIndex != -1 &&
-                priceIndex != -1 &&
-                eanCodeIndex != -1) {
-              // Delete all current products:
-              await hiveProducts.deleteAll(hiveProducts.keys);
-
-              // Add the new products:
-              for (var i = 1; i < lines.length; i++) {
-                var line = lines[i];
-                var productDataList = line.split(separator);
-
-                var product = HiveProduct(
-                  receiptName: productDataList[productIndex],
-                  eanName: productDataList[eanNameIndex],
-                  price: productDataList[priceIndex].isNotEmpty
-                      ? double.tryParse(productDataList[priceIndex])
-                      : null,
-                  eanCode: productDataList[eanCodeIndex].isNotEmpty
-                      ? productDataList[eanCodeIndex]
-                      : null,
-                );
-
-                await hiveProducts.add(product);
-              }
-              print('Products imported!');
-            } else {
-              print('Invalid CSV file!');
-            }
-          }
-        }
-      }
-    }
-  } else {
+  if (input != 'y') {
     print('Products not imported!');
+    return;
+  }
+  print('Enter the path to the CSV file:');
+  var filePath = stdin.readLineSync();
+  if (!filePath.isCsvFile()) {
+    print('Invalid file path!');
+    return;
+  }
+  var file = File(filePath!);
+  if (!await file.exists()) {
+    print('File does not exist!');
+    return;
+  }
+  var csv = await file.readAsString();
+  var lines = csv.split('\n');
+  if (lines.isEmpty) {
+    print('CSV file is empty!');
+    return;
+  }
+  print('Enter the separator:');
+  var separator = stdin.readLineSync();
+  if (separator.isNullOrEmpty()) {
+    print('Invalid separator!');
+    return;
+  }
+  var header = lines[0].split(separator!);
+  var productIndex = header.indexOf('Receipt name');
+  var eanNameIndex = header.indexOf('EAN name');
+  var priceIndex = header.indexOf('Unit price');
+  var eanCodeIndex = header.indexOf('EAN code');
+
+  if (productIndex != -1 &&
+      eanNameIndex != -1 &&
+      priceIndex != -1 &&
+      eanCodeIndex != -1) {
+    // Delete all current products:
+    await hiveProducts.deleteAll(hiveProducts.keys);
+
+    // Add the new products:
+    for (var i = 1; i < lines.length; i++) {
+      var line = lines[i];
+      if (line.isEmpty) continue;
+      var productDataList = line.split(separator);
+
+      await hiveProducts.add(HiveProduct(
+        receiptName: productDataList[productIndex],
+        eanName: productDataList[eanNameIndex],
+        price: productDataList[priceIndex].toDoubleOrNull(),
+        eanCode: productDataList[eanCodeIndex].isEan13()
+            ? productDataList[eanCodeIndex]
+            : null,
+      ));
+    }
+    print('Products imported!');
+  } else {
+    print('Invalid CSV file!');
   }
 }
