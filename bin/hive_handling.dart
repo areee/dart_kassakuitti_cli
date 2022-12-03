@@ -81,8 +81,8 @@ Future<void> _addProduct(Box<HiveProduct> hiveProducts) async {
     print('''You entered:
     Receipt name: $receiptName
     EAN name: $eanName
-    Price: ${price ?? 'not set'}
-    EAN code: ${eanCode.isNullOrEmpty() ? 'not set' : eanCode}
+    Price: $price
+    EAN code: $eanCode
     ''');
     print('Do you want to add this product? (y/n)');
     var input = stdin.readLineSync();
@@ -278,7 +278,8 @@ Future<void> _importFromCsv(Box<HiveProduct> hiveProducts) async {
     return;
   }
   var csv = await file.readAsString();
-  var lines = csv.split('\n');
+  // Split lines with \r\n (Windows) or \n (Linux):
+  var lines = csv.split(RegExp(r'\r?\n'));
   if (lines.isEmpty) {
     print('CSV file is empty!');
     return;
@@ -317,8 +318,12 @@ Future<void> _importFromCsv(Box<HiveProduct> hiveProducts) async {
             : null,
       ));
     }
-    print('Products imported!');
+    print('${hiveProducts.length} products imported!');
   } else {
-    print('Invalid CSV file!');
+    print('''
+Invalid CSV file!
+The CSV file must contain the following columns:
+Receipt name, EAN name, Unit price, EAN code
+Current columns: ${header.join(', ')}''');
   }
 }
