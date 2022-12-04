@@ -77,28 +77,27 @@ Future<void> _addProduct(Box<HiveProduct> hiveProducts) async {
   var eanCode = stdin.readLineSync();
   eanCode = eanCode.isEan13() ? eanCode : null;
 
-  if (receiptName.isNotNullOrEmpty() && eanName.isNotNullOrEmpty()) {
-    print('''You entered:
-    Receipt name: $receiptName
-    EAN name: $eanName
-    Price: $price
-    EAN code: $eanCode
-    ''');
-    print('Do you want to add this product? (y/n)');
-    var input = stdin.readLineSync();
-    if (input != 'y') {
-      print('Product not added!');
-      return;
-    }
-    await hiveProducts.add(HiveProduct(
-      receiptName: receiptName!,
-      eanName: eanName!,
-      price: price,
-      eanCode: eanCode,
-    ));
-    print('Product added!');
-    hiveProducts.countProducts();
+  if (receiptName.isNullOrEmpty() || eanName.isNullOrEmpty()) {
+    print('Receipt name and EAN name are required.');
+    return;
   }
+  var hiveProduct = HiveProduct(
+    receiptName: receiptName!,
+    eanName: eanName!,
+    price: price,
+    eanCode: eanCode,
+  );
+  print('You entered:');
+  print(hiveProduct);
+  print('Do you want to add this product? (y/n)');
+  var input = stdin.readLineSync();
+  if (input != 'y') {
+    print('Product not added!');
+    return;
+  }
+  await hiveProducts.add(hiveProduct);
+  print('Product added!');
+  hiveProducts.countProducts();
 }
 
 /// Reads all products from the storage.
@@ -112,7 +111,6 @@ void _readAllProducts(Box<HiveProduct> hiveProducts) {
 void _searchByKeyword(Box<HiveProduct> hiveProducts) {
   print('Enter a keyword:');
   var keyword = stdin.readLineSync();
-
   if (keyword.isNullOrEmpty()) {
     return;
   }
@@ -167,30 +165,24 @@ Future<void> _updateProduct(Box<HiveProduct> hiveProducts) async {
           : null;
 
   if (receiptName.isNullOrEmpty() || eanName.isNullOrEmpty()) {
-    print('Receipt name and EAN name must not be empty!');
+    print('Receipt name and EAN name are required.');
     return;
   }
-  print('''You entered:
-    Receipt name: $receiptName
-    EAN name: $eanName
-    Price: ${price ?? 'not set'}
-    EAN code: ${eanCode.isNullOrEmpty() ? 'not set' : eanCode}
-    ''');
+  var hiveProduct = HiveProduct(
+    receiptName: receiptName!,
+    eanName: eanName!,
+    price: price,
+    eanCode: eanCode,
+  );
+  print('You entered:');
+  print(hiveProduct);
   print('Do you want to update this product? (y/n)');
   var input = stdin.readLineSync();
-
   if (input != 'y') {
     print('Product not updated!');
     return;
   }
-  await hiveProducts.put(
-      orderNumber,
-      HiveProduct(
-        receiptName: receiptName!,
-        eanName: eanName!,
-        price: price,
-        eanCode: eanCode,
-      ));
+  await hiveProducts.put(orderNumber, hiveProduct);
   print('Product updated!');
 }
 

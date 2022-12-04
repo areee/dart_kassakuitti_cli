@@ -25,9 +25,9 @@ class HiveProduct extends HiveObject {
 
   @override
   String toString() {
-    return 'receiptName: $receiptName, '
-        'eanName: $eanName, '
+    return 'receipt name: $receiptName, '
+        'EAN name: $eanName, '
         'price: ${price ?? 'not set'}, '
-        'eanCode: ${eanCode ?? 'not set'}';
+        'EAN code: ${eanCode ?? 'not set'}';
   }
 }
