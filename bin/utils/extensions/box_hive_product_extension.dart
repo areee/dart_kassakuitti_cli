@@ -18,28 +18,33 @@ extension BoxHiveProductExtension on Box<HiveProduct> {
   }
 
   /// Searches for products by keyword.
+  // TODO: A duplicate?
   void searchByKeyword(String keyword) {
     if (isEmpty) {
       print('No products found.');
       return;
     }
-
-    var foundProducts = values.where((product) =>
-        product.receiptName.toLowerCase().contains(keyword.toLowerCase()) ||
-        product.eanName.toLowerCase().contains(keyword.toLowerCase()));
-
-    if (foundProducts.isEmpty) {
+    var foundProducts = getProductsBySearchTerm(keyword);
+    if (foundProducts == null || foundProducts.isEmpty) {
       print('No products found.');
       return;
     }
+    _countFoundProducts(foundProducts.length);
+    _printFoundProducts(foundProducts);
+  }
 
-    var amount = foundProducts.length;
-    print('Found $amount ${amount == 1 ? 'product' : 'products'}:');
-
+  /// Prints found products.
+  void _printFoundProducts(Iterable<HiveProduct> foundProducts) {
     for (var product in foundProducts) {
       var index = keys.firstWhere((key) => get(key) == product);
       print('\t$index: $product');
     }
+  }
+
+  /// Prints found product amount.
+  void _countFoundProducts(int amount) {
+    print('Found $amount '
+        '${amount == 1 ? 'product' : 'products'}');
   }
 
   /// Counts the products in the storage.
@@ -50,35 +55,23 @@ extension BoxHiveProductExtension on Box<HiveProduct> {
   /// Returns the products by given search term.
   /// If the products are not found, returns null.
   Iterable<HiveProduct>? getProductsBySearchTerm(String searchTerm) {
-    if (isEmpty) {
-      return null;
-    }
-
+    if (isEmpty) return null;
     var foundProducts = values.where((product) =>
         product.receiptName.toLowerCase().contains(searchTerm.toLowerCase()) ||
         product.eanName.toLowerCase().contains(searchTerm.toLowerCase()));
-
-    if (foundProducts.isEmpty) {
-      return null;
-    }
-
+    if (foundProducts.isEmpty) return null;
     return foundProducts;
   }
 
-  /// Returns order number of the product by given search term.
+  /// Returns order number of the product by given keyword.
   /// If the products are not found, returns null.
-  int? getOrderNumberOfProductBySearchTerm(String searchTerm) {
-    var foundProducts = getProductsBySearchTerm(searchTerm);
-
-    if (foundProducts == null) return null;
-
-    var amount = foundProducts.length;
-    print('Found $amount ${amount == 1 ? 'product' : 'products'}:');
-
-    for (var product in foundProducts) {
-      var index = keys.firstWhere((key) => get(key) == product);
-      print('\t$index: $product');
-    }
+  // TODO: A duplicate?
+  int? getOrderNumberOfProductByKeyword(String keyword) {
+    if (isEmpty) return null;
+    var foundProducts = getProductsBySearchTerm(keyword);
+    if (foundProducts == null || foundProducts.isEmpty) return null;
+    _countFoundProducts(foundProducts.length);
+    _printFoundProducts(foundProducts);
 
     print('\nPlease enter the number of the product you want to select: ');
     var input = stdin.readLineSync();

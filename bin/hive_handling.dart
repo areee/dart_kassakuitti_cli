@@ -125,8 +125,7 @@ Future<void> _updateProduct(Box<HiveProduct> hiveProducts) async {
   if (searchTerm.isNullOrEmpty()) return;
 
   print('You entered: $searchTerm');
-  var orderNumber =
-      hiveProducts.getOrderNumberOfProductBySearchTerm(searchTerm!);
+  var orderNumber = hiveProducts.getOrderNumberOfProductByKeyword(searchTerm!);
   if (orderNumber == null) {
     print('Product not found!');
     return;
@@ -193,8 +192,7 @@ Future<void> _deleteProduct(Box<HiveProduct> hiveProducts) async {
   if (searchTerm.isNullOrEmpty()) return;
 
   print('You entered: $searchTerm');
-  var orderNumber =
-      hiveProducts.getOrderNumberOfProductBySearchTerm(searchTerm!);
+  var orderNumber = hiveProducts.getOrderNumberOfProductByKeyword(searchTerm!);
   if (orderNumber == null) {
     print('Product not found!');
     return;
