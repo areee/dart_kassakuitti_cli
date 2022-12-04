@@ -86,19 +86,18 @@ Future<void> _addProduct(Box<HiveProduct> hiveProducts) async {
     ''');
     print('Do you want to add this product? (y/n)');
     var input = stdin.readLineSync();
-
-    if (input == 'y') {
-      await hiveProducts.add(HiveProduct(
-        receiptName: receiptName!,
-        eanName: eanName!,
-        price: price,
-        eanCode: eanCode,
-      ));
-      print('Product added!');
-      hiveProducts.countProducts();
-    } else {
+    if (input != 'y') {
       print('Product not added!');
+      return;
     }
+    await hiveProducts.add(HiveProduct(
+      receiptName: receiptName!,
+      eanName: eanName!,
+      price: price,
+      eanCode: eanCode,
+    ));
+    print('Product added!');
+    hiveProducts.countProducts();
   }
 }
 
@@ -106,7 +105,6 @@ Future<void> _addProduct(Box<HiveProduct> hiveProducts) async {
 void _readAllProducts(Box<HiveProduct> hiveProducts) {
   hiveProducts.countProducts();
   print('All products:');
-  // _printProducts(products: hiveProducts);
   hiveProducts.readAllProducts();
 }
 
@@ -115,11 +113,11 @@ void _searchByKeyword(Box<HiveProduct> hiveProducts) {
   print('Enter a keyword:');
   var keyword = stdin.readLineSync();
 
-  if (keyword.isNotNullOrEmpty()) {
-    print('You entered: $keyword');
-
-    hiveProducts.searchByKeyword(keyword!);
+  if (keyword.isNullOrEmpty()) {
+    return;
   }
+  print('You entered: $keyword');
+  hiveProducts.searchByKeyword(keyword!);
 }
 
 /// Updates a product in the storage.
@@ -168,30 +166,32 @@ Future<void> _updateProduct(Box<HiveProduct> hiveProducts) async {
           ? eanCode
           : null;
 
-  if (receiptName.isNotNullOrEmpty() && eanName.isNotNullOrEmpty()) {
-    print('''You entered:
+  if (receiptName.isNullOrEmpty() || eanName.isNullOrEmpty()) {
+    print('Receipt name and EAN name must not be empty!');
+    return;
+  }
+  print('''You entered:
     Receipt name: $receiptName
     EAN name: $eanName
     Price: ${price ?? 'not set'}
     EAN code: ${eanCode.isNullOrEmpty() ? 'not set' : eanCode}
     ''');
-    print('Do you want to update this product? (y/n)');
-    var input = stdin.readLineSync();
+  print('Do you want to update this product? (y/n)');
+  var input = stdin.readLineSync();
 
-    if (input == 'y') {
-      await hiveProducts.put(
-          orderNumber,
-          HiveProduct(
-            receiptName: receiptName!,
-            eanName: eanName!,
-            price: price,
-            eanCode: eanCode,
-          ));
-      print('Product updated!');
-    } else {
-      print('Product not updated!');
-    }
+  if (input != 'y') {
+    print('Product not updated!');
+    return;
   }
+  await hiveProducts.put(
+      orderNumber,
+      HiveProduct(
+        receiptName: receiptName!,
+        eanName: eanName!,
+        price: price,
+        eanCode: eanCode,
+      ));
+  print('Product updated!');
 }
 
 /// Delete a product from the storage.
@@ -211,13 +211,13 @@ Future<void> _deleteProduct(Box<HiveProduct> hiveProducts) async {
   print('Do you want to delete this product? (y/n)');
   var input = stdin.readLineSync();
 
-  if (input == 'y') {
-    await hiveProducts.delete(orderNumber);
-    print('Product deleted!');
-    hiveProducts.countProducts();
-  } else {
+  if (input != 'y') {
     print('Product not deleted!');
+    return;
   }
+  await hiveProducts.delete(orderNumber);
+  print('Product deleted!');
+  hiveProducts.countProducts();
 }
 
 /// Exports the products to a CSV file.
@@ -226,33 +226,33 @@ Future<void> _exportToCsv(Box<HiveProduct> hiveProducts) async {
       '(${hiveProducts.length} pcs.) to a CSV file? (y/n)');
   var input = stdin.readLineSync();
 
-  if (input == 'y') {
-    var csv = StringBuffer();
-
-    // Write the header:
-    var header = ['Receipt name', 'EAN name', 'Unit price', 'EAN code'];
-    csv.write('${header.join(';')}\n');
-
-    // Write the products:
-    for (var product in hiveProducts.values) {
-      var row = [
-        product.receiptName,
-        product.eanName,
-        product.price ?? '',
-        product.eanCode ?? '',
-      ];
-      csv.write('${row.join(';')}\n');
-    }
-
-    // Currently saves the CSV file in the Downloads folder:
-    var filePath = join(getUserHomeDirectory(), 'Downloads',
-        'hiveProducts_${formattedDateTime()}.csv');
-    var file = File(filePath);
-    await file.writeAsString(csv.toString());
-    print('CSV file exported!');
-  } else {
+  if (input != 'y') {
     print('CSV file not exported!');
+    return;
   }
+  var csv = StringBuffer();
+
+  // Write the header:
+  var header = ['Receipt name', 'EAN name', 'Unit price', 'EAN code'];
+  csv.write('${header.join(';')}\n');
+
+  // Write the products:
+  for (var product in hiveProducts.values) {
+    var row = [
+      product.receiptName,
+      product.eanName,
+      product.price ?? '',
+      product.eanCode ?? '',
+    ];
+    csv.write('${row.join(';')}\n');
+  }
+
+  // Currently saves the CSV file in the Downloads folder:
+  var filePath = join(getUserHomeDirectory(), 'Downloads',
+      'hiveProducts_${formattedDateTime()}.csv');
+  var file = File(filePath);
+  await file.writeAsString(csv.toString());
+  print('CSV file exported!');
 }
 
 /// Imports products from a CSV file.
@@ -278,18 +278,16 @@ Future<void> _importFromCsv(Box<HiveProduct> hiveProducts) async {
     return;
   }
   var csv = await file.readAsString();
-  // Split lines with \r\n (Windows) or \n (Linux):
-  var lines = csv.split(RegExp(r'\r?\n'));
+  // Split lines with \r\n (Windows), \n (Linux) or \r (Mac):
+  var lines = csv.split(RegExp(r'\r\n|\n|\r'));
   if (lines.isEmpty) {
     print('CSV file is empty!');
     return;
   }
-  print('Enter the separator:');
+  print('(Optional) Enter the separator (the default is ";"):');
   var separator = stdin.readLineSync();
-  if (separator.isNullOrEmpty()) {
-    print('Invalid separator!');
-    return;
-  }
+  if (separator.isNullOrEmpty()) separator = ';';
+
   var header = lines[0].split(separator!);
   var productIndex = header.indexOf('Receipt name');
   var eanNameIndex = header.indexOf('EAN name');
