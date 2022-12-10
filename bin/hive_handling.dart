@@ -118,14 +118,23 @@ void _searchByKeyword(Box<HiveProduct> hiveProducts) {
   hiveProducts.searchByKeyword(keyword!);
 }
 
+/// Asks the user to enter the number of the product.
+int? _getOrderNumberOfProduct() {
+  print('\nPlease enter the number of the product you want to select: ');
+  var input = stdin.readLineSync();
+  if (input == null) return null;
+  return int.tryParse(input);
+}
+
 /// Updates a product in the storage.
 Future<void> _updateProduct(Box<HiveProduct> hiveProducts) async {
   print('Enter search term of the product:');
-  var searchTerm = stdin.readLineSync();
-  if (searchTerm.isNullOrEmpty()) return;
+  var keyword = stdin.readLineSync();
+  if (keyword.isNullOrEmpty()) return;
 
-  print('You entered: $searchTerm');
-  var orderNumber = hiveProducts.getOrderNumberOfProductByKeyword(searchTerm!);
+  print('You entered: $keyword');
+  hiveProducts.searchByKeyword(keyword!);
+  var orderNumber = _getOrderNumberOfProduct();
   if (orderNumber == null) {
     print('Product not found!');
     return;
@@ -188,11 +197,12 @@ Future<void> _updateProduct(Box<HiveProduct> hiveProducts) async {
 /// Delete a product from the storage.
 Future<void> _deleteProduct(Box<HiveProduct> hiveProducts) async {
   print('Enter search term of the product:');
-  var searchTerm = stdin.readLineSync();
-  if (searchTerm.isNullOrEmpty()) return;
+  var keyword = stdin.readLineSync();
+  if (keyword.isNullOrEmpty()) return;
 
-  print('You entered: $searchTerm');
-  var orderNumber = hiveProducts.getOrderNumberOfProductByKeyword(searchTerm!);
+  print('You entered: $keyword');
+  hiveProducts.searchByKeyword(keyword!);
+  var orderNumber = _getOrderNumberOfProduct();
   if (orderNumber == null) {
     print('Product not found!');
     return;

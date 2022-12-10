@@ -18,7 +18,6 @@ extension BoxHiveProductExtension on Box<HiveProduct> {
   }
 
   /// Searches for products by keyword.
-  // TODO: A duplicate?
   void searchByKeyword(String keyword) {
     if (isEmpty) {
       print('No products found.');
@@ -61,22 +60,6 @@ extension BoxHiveProductExtension on Box<HiveProduct> {
         product.eanName.toLowerCase().contains(searchTerm.toLowerCase()));
     if (foundProducts.isEmpty) return null;
     return foundProducts;
-  }
-
-  /// Returns order number of the product by given keyword.
-  /// If the products are not found, returns null.
-  // TODO: A duplicate?
-  int? getOrderNumberOfProductByKeyword(String keyword) {
-    if (isEmpty) return null;
-    var foundProducts = getProductsBySearchTerm(keyword);
-    if (foundProducts == null || foundProducts.isEmpty) return null;
-    _countFoundProducts(foundProducts.length);
-    _printFoundProducts(foundProducts);
-
-    print('\nPlease enter the number of the product you want to select: ');
-    var input = stdin.readLineSync();
-    if (input == null) return null;
-    return int.tryParse(input);
   }
 
   /// Returns the product by the key number.
