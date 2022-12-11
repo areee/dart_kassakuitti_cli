@@ -19,17 +19,23 @@ class HiveProductAdapter extends TypeAdapter<HiveProduct> {
     return HiveProduct(
       receiptName: fields[0] as String,
       eanName: fields[1] as String,
+      price: fields[2] as double?,
+      eanCode: fields[3] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, HiveProduct obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.receiptName)
       ..writeByte(1)
-      ..write(obj.eanName);
+      ..write(obj.eanName)
+      ..writeByte(2)
+      ..write(obj.price)
+      ..writeByte(3)
+      ..write(obj.eanCode);
   }
 
   @override

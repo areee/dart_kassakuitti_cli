@@ -10,10 +10,24 @@ class HiveProduct extends HiveObject {
   @HiveField(1)
   String eanName;
 
-  HiveProduct({required this.receiptName, required this.eanName});
+  @HiveField(2)
+  double? price;
+
+  @HiveField(3)
+  String? eanCode;
+
+  HiveProduct({
+    required this.receiptName,
+    required this.eanName,
+    this.price,
+    this.eanCode,
+  });
 
   @override
   String toString() {
-    return 'receiptName: $receiptName, eanName: $eanName';
+    return 'receipt name: $receiptName, '
+        'EAN name: $eanName, '
+        'price: ${price ?? 'not set'}, '
+        'EAN code: ${eanCode ?? 'not set'}';
   }
 }

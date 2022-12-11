@@ -22,7 +22,7 @@ Future<Box<HiveProduct>> eanHandler(List<ReceiptProduct> receiptProducts,
     print(receiptProduct);
 
     String? eanProductName =
-        _filterHiveProducts(hiveProducts.values, receiptProduct.name);
+        _filterHiveProducts(hiveProducts.values, receiptProduct);
     print(peachPen().write('EAN product name: $eanProductName'));
 
     var filteredEanProducts =
@@ -55,7 +55,7 @@ Future<Box<HiveProduct>> eanHandler(List<ReceiptProduct> receiptProducts,
     }
 
     String? eanProductName =
-        _filterHiveProducts(hiveProducts.values, nonFoundReceiptProduct.name);
+        _filterHiveProducts(hiveProducts.values, nonFoundReceiptProduct);
     print(peachPen().write('EAN product name: $eanProductName'));
 
     var filteredEanProducts = _filterEANProducts(
@@ -81,11 +81,16 @@ Future<Box<HiveProduct>> eanHandler(List<ReceiptProduct> receiptProducts,
 }
 
 String? _filterHiveProducts(
-    Iterable<HiveProduct> hiveProductsValues, String receiptProductName) {
+    Iterable<HiveProduct> hiveProductsValues, ReceiptProduct receiptProduct) {
   String? eanProductName;
 
-  var filteredHiveProducts = hiveProductsValues
-      .where((hiveProduct) => hiveProduct.receiptName == receiptProductName);
+  var filterPrice = receiptProduct.quantity == 1
+      ? receiptProduct.totalPrice
+      : receiptProduct.pricePerUnit;
+
+  var filteredHiveProducts = hiveProductsValues.where((hiveProduct) =>
+      hiveProduct.receiptName == receiptProduct.name &&
+      (hiveProduct.price == null || hiveProduct.price == filterPrice));
   /*
   If the receipt product is already in the hive products,
   get the ean product name from the hive product.
@@ -94,7 +99,7 @@ String? _filterHiveProducts(
     print(greenPen().write(
         '\tFound ${filteredHiveProducts.length} pcs in the hive products!'));
     eanProductName = filteredHiveProducts.first.eanName;
-    print('\teanProductName in Hive: $eanProductName');
+    print('\tEAN product name in Hive: $eanProductName');
   }
   return eanProductName;
 }
@@ -149,7 +154,11 @@ Future<void> _handleFoundCases(
       receiptProduct.eanCode = selectedEanProduct.eanCode;
 
       await hiveProducts.add(HiveProduct(
-          receiptName: receiptProduct.name, eanName: selectedEanProduct.name));
+        receiptName: receiptProduct.name,
+        eanName: selectedEanProduct.name,
+        price: receiptProduct.pricePerUnit,
+        eanCode: selectedEanProduct.eanCode,
+      ));
       print(
           peachPen().write('Amount of hive products: ${hiveProducts.length}'));
     } else {

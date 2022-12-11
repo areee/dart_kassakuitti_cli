@@ -4,7 +4,9 @@ import 'package:hive/hive.dart';
 import 'package:path/path.dart';
 
 import 'models/hive_product.dart';
+import 'utils/ansipen_helper.dart';
 import 'utils/date_helper.dart';
+import 'utils/extensions/box_hive_product_extension.dart';
 import 'utils/extensions/string_extension.dart';
 import 'utils/home_directory_helper.dart';
 
@@ -21,6 +23,7 @@ Future<Box<HiveProduct>> hiveHandling(Box<HiveProduct> hiveProducts) async {
     5. Delete
     6. Count
     7. Export to CSV
+    8. Import from CSV
     Empty command or something else to exit.
     ''');
 
@@ -43,10 +46,13 @@ Future<Box<HiveProduct>> hiveHandling(Box<HiveProduct> hiveProducts) async {
         await _deleteProduct(hiveProducts);
         break;
       case '6':
-        _countProducts(hiveProducts);
+        hiveProducts.countProducts();
         break;
       case '7':
         await _exportToCsv(hiveProducts);
+        break;
+      case '8':
+        await _importFromCsv(hiveProducts);
         break;
       default:
         print('Exiting...');
@@ -58,204 +64,264 @@ Future<Box<HiveProduct>> hiveHandling(Box<HiveProduct> hiveProducts) async {
 /// Adds a product to the storage.
 Future<void> _addProduct(Box<HiveProduct> hiveProducts) async {
   print('Enter the receipt name of the product:');
-  var name = stdin.readLineSync();
+  var receiptName = stdin.readLineSync();
 
   print('Enter the EAN name of the product:');
   var eanName = stdin.readLineSync();
 
-  if (name.isNotNullOrEmpty() && eanName.isNotNullOrEmpty()) {
-    print('You entered: $name, $eanName');
-    print('Do you want to add this product? (y/n)');
-    var input = stdin.readLineSync();
+  print('(Optional) Enter the unit price of the product:');
+  var priceStr = stdin.readLineSync();
+  var price = priceStr.toDoubleOrNull();
 
-    if (input == 'y') {
-      await hiveProducts
-          .add(HiveProduct(receiptName: name!, eanName: eanName!));
-      print('Product added!');
-      _countProducts(hiveProducts);
-    } else {
-      print('Product not added!');
-    }
+  print('(Optional) Enter the EAN code of the product:');
+  var eanCode = stdin.readLineSync();
+  eanCode = eanCode.isEan13() ? eanCode : null;
+
+  if (receiptName.isNullOrEmpty() || eanName.isNullOrEmpty()) {
+    print('Receipt name and EAN name are required.');
+    return;
   }
+  var hiveProduct = HiveProduct(
+    receiptName: receiptName!,
+    eanName: eanName!,
+    price: price,
+    eanCode: eanCode,
+  );
+  print('You entered:');
+  print(hiveProduct);
+  print('Do you want to add this product? (y/n)');
+  var input = stdin.readLineSync();
+  if (input != 'y') {
+    print('Product not added!');
+    return;
+  }
+  await hiveProducts.add(hiveProduct);
+  print('Product added!');
+  hiveProducts.countProducts();
 }
 
 /// Reads all products from the storage.
 void _readAllProducts(Box<HiveProduct> hiveProducts) {
-  _countProducts(hiveProducts);
+  hiveProducts.countProducts();
   print('All products:');
-  _printProducts(products: hiveProducts);
-}
-
-/// Prints Hive products.
-void _printProducts(
-    {required Box<HiveProduct> products, Iterable<dynamic>? filteredProducts}) {
-  if (filteredProducts == null) {
-    for (var product in products.keys) {
-      _printSingleProduct(products: products, product: product);
-    }
-  } else {
-    for (var product in filteredProducts) {
-      _printSingleProduct(products: products, product: product);
-    }
-  }
-}
-
-/// Prints single Hive product.
-void _printSingleProduct(
-    {required Box<HiveProduct> products, required dynamic product}) {
-  print('\t#$product: ${products.get(product)}');
+  hiveProducts.readAllProducts();
 }
 
 /// Search by keyword in the storage.
 void _searchByKeyword(Box<HiveProduct> hiveProducts) {
   print('Enter a keyword:');
   var keyword = stdin.readLineSync();
-
-  if (keyword.isNotNullOrEmpty()) {
-    print('You entered: $keyword');
-
-    var filteredProducts = hiveProducts.keys.where((key) => hiveProducts
-        .get(key)!
-        .receiptName
-        .toLowerCase()
-        .contains(keyword!.toLowerCase()));
-
-    var amount = filteredProducts.length;
-
-    print('Found $amount ${amount == 1 ? 'product' : 'products'}:');
-
-    _printProducts(products: hiveProducts, filteredProducts: filteredProducts);
+  if (keyword.isNullOrEmpty()) {
+    return;
   }
+  print('You entered: $keyword');
+  hiveProducts.searchByKeyword(keyword!);
+}
+
+/// Asks the user to enter the number of the product.
+int? _getOrderNumberOfProduct() {
+  print('\nPlease enter the number of the product you want to select: ');
+  var input = stdin.readLineSync();
+  if (input == null) return null;
+  return int.tryParse(input);
 }
 
 /// Updates a product in the storage.
 Future<void> _updateProduct(Box<HiveProduct> hiveProducts) async {
-  var orderNumber = _getOrderNumberAndPrintProduct(hiveProducts);
-  if (orderNumber == -1) return;
+  print('Enter search term of the product:');
+  var keyword = stdin.readLineSync();
+  if (keyword.isNullOrEmpty()) return;
 
-  print('Enter the new receipt name of the product:');
-  var name = stdin.readLineSync();
-
-  print('Enter the new EAN name of the product:');
-  var eanName = stdin.readLineSync();
-
-  if (name.isNotNullOrEmpty() && eanName.isNotNullOrEmpty()) {
-    print('You entered: $name, $eanName');
-    print('Do you want to update this product? (y/n)');
-    var input = stdin.readLineSync();
-
-    if (input == 'y') {
-      await hiveProducts.put(
-          orderNumber, HiveProduct(receiptName: name!, eanName: eanName!));
-      print('Product updated!');
-    } else {
-      print('Product not updated!');
-    }
+  print('You entered: $keyword');
+  hiveProducts.searchByKeyword(keyword!);
+  var orderNumber = _getOrderNumberOfProduct();
+  if (orderNumber == null) {
+    print('Product not found!');
+    return;
   }
+
+  print(hiveProducts.getProductByKey(orderNumber));
+
+  print('\nEnter the new receipt name of the product '
+      '(keep empty to not change):');
+  var receiptNameInput = stdin.readLineSync();
+  var receiptName = receiptNameInput.isNullOrEmpty()
+      ? hiveProducts.get(orderNumber)!.receiptName
+      : receiptNameInput;
+
+  print('Enter the new EAN name of the product '
+      '(keep empty to not change):');
+  var eanNameInput = stdin.readLineSync();
+  var eanName = eanNameInput.isNullOrEmpty()
+      ? hiveProducts.get(orderNumber)!.eanName
+      : eanNameInput;
+
+  print('(Optional) Enter the new unit price of the product '
+      '(keep empty to not change):');
+  var priceStr = stdin.readLineSync();
+  var price = priceStr.isNullOrEmpty()
+      ? hiveProducts.get(orderNumber)!.price
+      : priceStr.toDoubleOrNull();
+
+  print('(Optional) Enter the new EAN code of the product '
+      '(keep empty to not change):');
+  var eanCode = stdin.readLineSync();
+  eanCode = eanCode.isNullOrEmpty()
+      ? hiveProducts.get(orderNumber)!.eanCode
+      : eanCode.isEan13()
+          ? eanCode
+          : null;
+
+  if (receiptName.isNullOrEmpty() || eanName.isNullOrEmpty()) {
+    print('Receipt name and EAN name are required.');
+    return;
+  }
+  var hiveProduct = HiveProduct(
+    receiptName: receiptName!,
+    eanName: eanName!,
+    price: price,
+    eanCode: eanCode,
+  );
+  print('You entered:');
+  print(hiveProduct);
+  print('Do you want to update this product? (y/n)');
+  var input = stdin.readLineSync();
+  if (input != 'y') {
+    print('Product not updated!');
+    return;
+  }
+  await hiveProducts.put(orderNumber, hiveProduct);
+  print('Product updated!');
 }
 
 /// Delete a product from the storage.
 Future<void> _deleteProduct(Box<HiveProduct> hiveProducts) async {
-  var orderNumber = _getOrderNumberAndPrintProduct(hiveProducts);
-  if (orderNumber == -1) return;
+  print('Enter search term of the product:');
+  var keyword = stdin.readLineSync();
+  if (keyword.isNullOrEmpty()) return;
 
+  print('You entered: $keyword');
+  hiveProducts.searchByKeyword(keyword!);
+  var orderNumber = _getOrderNumberOfProduct();
+  if (orderNumber == null) {
+    print('Product not found!');
+    return;
+  }
+  print(hiveProducts.getProductByKey(orderNumber));
   print('Do you want to delete this product? (y/n)');
   var input = stdin.readLineSync();
 
-  if (input == 'y') {
-    await hiveProducts.delete(orderNumber);
-    print('Product deleted!');
-    _countProducts(hiveProducts);
-  } else {
+  if (input != 'y') {
     print('Product not deleted!');
+    return;
   }
-}
-
-/// Asks the user to give an order number.
-int? _askUserToGiveOrderNumber() {
-  print('Enter the order number of the product:');
-  var orderNumber = stdin.readLineSync();
-
-  if (orderNumber.isNotNullOrEmpty()) {
-    return int.tryParse(orderNumber!);
-  }
-  return null;
-}
-
-/// Checks if an order number is valid.
-bool _isValidOrderNumber(int? orderNumber) {
-  return orderNumber != null && orderNumber >= 0;
-}
-
-/// Handles an order number.
-int _handleOrderNumber() {
-  var orderNumber = _askUserToGiveOrderNumber();
-
-  if (!_isValidOrderNumber(orderNumber)) {
-    print('Invalid order number!');
-    return -1;
-  }
-  return orderNumber!;
-}
-
-/// Gets a product.
-HiveProduct? _getProduct(Box<HiveProduct> hiveProducts, int orderNumber) {
-  var product = hiveProducts.get(orderNumber);
-
-  if (product == null) {
-    print('Product not found!');
-    return null;
-  }
-
-  print('Product: $product');
-  return product;
-}
-
-/// Gets an order number (and gives a product information).
-int _getOrderNumberAndPrintProduct(Box<HiveProduct> hiveProducts) {
-  var orderNumber = _handleOrderNumber();
-  if (orderNumber == -1) return -1;
-
-  var product = _getProduct(hiveProducts, orderNumber);
-  if (product == null) return -1;
-
-  return orderNumber;
-}
-
-/// Counts the products in the storage.
-void _countProducts(Box<HiveProduct> hiveProducts) {
-  print('Amount of products: ${hiveProducts.length}');
+  await hiveProducts.delete(orderNumber);
+  print('Product deleted!');
+  hiveProducts.countProducts();
 }
 
 /// Exports the products to a CSV file.
 Future<void> _exportToCsv(Box<HiveProduct> hiveProducts) async {
-  print('Do you want to export all Hive products to a CSV file? (y/n)');
+  print('Do you want to export all Hive products '
+      '(${hiveProducts.length} pcs.) to a CSV file? (y/n)');
   var input = stdin.readLineSync();
 
-  if (input == 'y') {
-    var csv = StringBuffer();
-
-    // Write the header:
-    var header = ['Receipt name', 'EAN name'];
-    csv.write('${header.join(';')}\n');
-
-    // Write the products:
-    for (var key in hiveProducts.keys) {
-      var hiveProduct = hiveProducts.get(key)!;
-      var productDataList = [
-        hiveProduct.receiptName,
-        hiveProduct.eanName,
-      ];
-      csv.write('${productDataList.join(';')}\n');
-    }
-
-    // Currently saves the CSV file in the Downloads folder:
-    var filePath = join(getUserHomeDirectory(), 'Downloads',
-        'hiveProducts_${formattedDateTime()}.csv');
-    var file = File(filePath);
-    await file.writeAsString(csv.toString());
-    print('CSV file exported!');
-  } else {
+  if (input != 'y') {
     print('CSV file not exported!');
+    return;
+  }
+  var csv = StringBuffer();
+
+  // Write the header:
+  var header = ['Receipt name', 'EAN name', 'Unit price', 'EAN code'];
+  csv.write('${header.join(';')}\n');
+
+  // Write the products:
+  for (var product in hiveProducts.values) {
+    var row = [
+      product.receiptName,
+      product.eanName,
+      product.price ?? '',
+      product.eanCode ?? '',
+    ];
+    csv.write('${row.join(';')}\n');
+  }
+
+  // Currently saves the CSV file in the Downloads folder:
+  var filePath = join(getUserHomeDirectory(), 'Downloads',
+      'hiveProducts_${formattedDateTime()}.csv');
+  var file = File(filePath);
+  await file.writeAsString(csv.toString());
+  print('CSV file exported!');
+}
+
+/// Imports products from a CSV file.
+Future<void> _importFromCsv(Box<HiveProduct> hiveProducts) async {
+  print('Do you want to import and replace all current Hive products '
+      '(${hiveProducts.length} pcs.) with products from a CSV file? (y/n)');
+  print(redPen()
+      .write('WARNING: This will overwrite the existing Hive database!'));
+  var input = stdin.readLineSync();
+  if (input != 'y') {
+    print('Products not imported!');
+    return;
+  }
+  print('Enter the path to the CSV file:');
+  var filePath = stdin.readLineSync();
+  if (!filePath.isCsvFile()) {
+    print('Invalid file path!');
+    return;
+  }
+  var file = File(filePath!);
+  if (!await file.exists()) {
+    print('File does not exist!');
+    return;
+  }
+  var csv = await file.readAsString();
+  // Split lines with \r\n (Windows), \n (Linux) or \r (Mac):
+  var lines = csv.split(RegExp(r'\r\n|\n|\r'));
+  if (lines.isEmpty) {
+    print('CSV file is empty!');
+    return;
+  }
+  print('(Optional) Enter the separator (the default is ";"):');
+  var separator = stdin.readLineSync();
+  if (separator.isNullOrEmpty()) separator = ';';
+
+  var header = lines[0].split(separator!);
+  var productIndex = header.indexOf('Receipt name');
+  var eanNameIndex = header.indexOf('EAN name');
+  var priceIndex = header.indexOf('Unit price');
+  var eanCodeIndex = header.indexOf('EAN code');
+
+  if (productIndex != -1 &&
+      eanNameIndex != -1 &&
+      priceIndex != -1 &&
+      eanCodeIndex != -1) {
+    // Delete all current products:
+    await hiveProducts.deleteAll(hiveProducts.keys);
+
+    // Add the new products:
+    for (var i = 1; i < lines.length; i++) {
+      var line = lines[i];
+      if (line.isEmpty) continue;
+      var productDataList = line.split(separator);
+
+      await hiveProducts.add(HiveProduct(
+        receiptName: productDataList[productIndex],
+        eanName: productDataList[eanNameIndex],
+        price: productDataList[priceIndex].toDoubleOrNull(),
+        eanCode: productDataList[eanCodeIndex].isEan13()
+            ? productDataList[eanCodeIndex]
+            : null,
+      ));
+    }
+    print('${hiveProducts.length} products imported!');
+  } else {
+    print('''
+Invalid CSV file!
+The CSV file must contain the following columns:
+Receipt name, EAN name, Unit price, EAN code
+Current columns: ${header.join(', ')}''');
   }
 }
