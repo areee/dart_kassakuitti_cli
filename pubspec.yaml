@@ -10,10 +10,10 @@ dependencies:
   ansicolor: ^2.0.1
   args: ^2.3.1
   hive: ^2.2.3
-  intl: ^0.17.0
-  kassakuitti: ^0.2.2
+  intl: ^0.18.0
+  kassakuitti: ^1.0.0-dev.1
   mime: ^1.0.3
-  path: ^1.8.2
+  path: ^1.8.3
   yaml: ^3.1.1
 
 dev_dependencies:
