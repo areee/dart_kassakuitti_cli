@@ -156,7 +156,9 @@ Future<void> _handleFoundCases(
       await hiveProducts.add(HiveProduct(
         receiptName: receiptProduct.name,
         eanName: selectedEanProduct.name,
-        price: receiptProduct.pricePerUnit,
+        price: receiptProduct.quantity == 1
+            ? receiptProduct.totalPrice
+            : receiptProduct.pricePerUnit,
         eanCode: selectedEanProduct.eanCode,
       ));
       print(
