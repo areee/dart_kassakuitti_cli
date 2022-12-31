@@ -1,3 +1,8 @@
+## 2.3.0
+
+- Update some dependencies.
+- When asking a user to give a proper number of a product (when there are multiple found products in the "run mode"), save correctly price to Hive products (use the total price when there's only one product in the receipt product; otherwise use the price per unit).
+
 ## 2.2.0
 
 - Add price & EAN code fields for a HiveProduct object. Add them when solving products in "run mode".
