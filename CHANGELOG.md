@@ -1,3 +1,8 @@
+## 2.4.0
+
+- Update dependencies.
+- Add dependabot.yml to automate package updates.
+
 ## 2.3.0
 
 - Update some dependencies.
