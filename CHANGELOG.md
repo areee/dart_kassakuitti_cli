@@ -1,7 +1,8 @@
 ## 2.4.0
 
-- Update dependencies.
+- Update dependencies & Dart SDK version.
 - Add dependabot.yml to automate package updates.
+- Add "prefer_single_quotes" linter.
 
 ## 2.3.0
 
