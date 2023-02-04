@@ -1,3 +1,10 @@
+## 2.4.0
+
+- Update dependencies & Dart SDK version.
+- Add dependabot.yml to automate package updates.
+- Add "prefer_single_quotes" linter.
+- Remove 1 unused import from BoxHiveProductExtension.
+
 ## 2.3.0
 
 - Update some dependencies.

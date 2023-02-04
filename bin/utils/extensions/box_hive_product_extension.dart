@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:hive/hive.dart';
 
 import '../../models/hive_product.dart';
