@@ -1,3 +1,7 @@
+## 2.7.0
+
+- Update dependencies.
+
 ## 2.6.0
 
 - Update dependencies & Dart SDK version (Dart 2.19.4).
