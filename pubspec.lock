@@ -325,10 +325,10 @@ packages:
     dependency: "direct main"
     description:
       name: kassakuitti
-      sha256: "7f468a0c89a2f0ca73e4e806190a2382676f62e30f6cfd8e4898b844329c5fe1"
+      sha256: fc26e7df38e99d1c6f3a1ae71dc716c480162631680c63fe7580de81bc8d2e66
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.0"
+    version: "0.5.1"
   lints:
     dependency: "direct dev"
     description:
@@ -501,10 +501,10 @@ packages:
     dependency: transitive
     description:
       name: source_span
-      sha256: dd904f795d4b4f3b870833847c461801f6750a9fa8e61ea5ac53f9422b31f250
+      sha256: "53e943d4206a5e30df338fd4c6e7a077e02254531b138a15aec3bd143c1a8b3c"
       url: "https://pub.dev"
     source: hosted
-    version: "1.9.1"
+    version: "1.10.0"
   stack_trace:
     dependency: transitive
     description:
