@@ -1,3 +1,7 @@
+## 2.10.0
+
+- Update a dependency.
+
 ## 2.9.0
 
 - Update dependencies.
