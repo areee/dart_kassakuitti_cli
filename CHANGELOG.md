@@ -1,3 +1,8 @@
+## 2.11.0
+
+- Update a dependency (`kassakuitti`).
+  - It now seems to be more accurate with less previous problems with div parsing in S-kaupat HTML file.
+
 ## 2.10.0
 
 - Update a dependency.
