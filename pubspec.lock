@@ -325,10 +325,10 @@ packages:
     dependency: "direct main"
     description:
       name: kassakuitti
-      sha256: "34c5670099211f5198bb5c228bf49a1b02d56747dac311f0f00dfc41f29cf769"
+      sha256: af2721b11587f641aad81348b55ca410293c5c293ea9673ebfb93dd65801d1eb
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.2"
+    version: "0.6.0"
   lints:
     dependency: "direct dev"
     description:
