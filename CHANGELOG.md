@@ -1,3 +1,7 @@
+## 2.12.0
+
+- Update some dependencies & Dart SDK version (Dart 3.0.0).
+
 ## 2.11.0
 
 - Update a dependency (`kassakuitti`).
