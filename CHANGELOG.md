@@ -1,3 +1,7 @@
+## 2.14.0
+
+- Update some dependencies & Dart SDK version (Dart 3.1.5).
+
 ## 2.13.0
 
 - Update some dependencies & Dart SDK version (Dart 3.1.2).
